@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Projetos & Apps Open-Source</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0b0c10',
+                        cardBg: '#151821',
+                        borderColor: '#232736',
+                        accent: '#38bdf8'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-darkBg text-slate-100 font-sans min-h-screen p-6 md:p-12">
+
+    <div class="max-w-5xl mx-auto space-y-8">
+        
+        <!-- Header -->
+        <header class="space-y-4">
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight">
+                Stuff I've <span class="text-accent">built.</span>
+            </h1>
+            <p class="text-slate-400 text-lg max-w-2xl">
+                Catálogo de projetos open-source, ferramentas e aplicativos desktop que desenvolvo.
+            </p>
+            
+            <!-- Redes Sociais -->
+            <div class="flex flex-wrap gap-2 pt-2">
+                <a href="https://github.com/suiciniv-dev" target="_blank" class="px-3 py-1 bg-cardBg border border-borderColor rounded-full text-xs font-semibold hover:border-slate-400 transition">GitHub</a>
+            </div>
+        </header>
+
+        <!-- Grid de Apps -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- Card: ControlSensors -->
+            <div class="bg-cardBg border border-borderColor rounded-2xl p-5 flex flex-col justify-between hover:border-slate-500 transition shadow-xl">
+                <div class="space-y-4">
+                    <div class="flex justify-between items-start">
+                        <div class="w-12 h-12 bg-darkBg border border-borderColor rounded-xl flex items-center justify-center text-2xl">
+                            🖥️
+                        </div>
+                        <span class="text-xs bg-darkBg border border-borderColor px-2.5 py-1 rounded-full text-slate-400 font-mono">
+                            ★ open-source
+                        </span>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-bold">ControlSensors HUD</h3>
+                        <p class="text-slate-400 text-sm mt-1">
+                            HUD de monitoramento em tempo real para gabinete/telas secundárias. CPU, GPU, RAM, clima e visualizador de áudio reativo.
+                        </p>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="flex flex-wrap gap-1.5">
+                        <span class="text-[10px] bg-darkBg border border-borderColor px-2 py-0.5 rounded text-slate-300">C#</span>
+                        <span class="text-[10px] bg-darkBg border border-borderColor px-2 py-0.5 rounded text-slate-300">WPF</span>
+                        <span class="text-[10px] bg-darkBg border border-borderColor px-2 py-0.5 rounded text-slate-300">Desktop</span>
+                    </div>
+                </div>
+
+                <!-- Botões de Ação -->
+                <div class="flex gap-2 pt-6">
+                    <a href="https://github.com/suiciniv-dev/ControlSensors" target="_blank" 
+                       class="flex-1 text-center bg-accent text-slate-950 text-xs font-bold py-2 rounded-lg hover:opacity-90 transition">
+                        GitHub
+                    </a>
+                    <a href="https://github.com/suiciniv-dev/ControlSensors/releases/latest" target="_blank" 
+                       class="flex-1 text-center bg-darkBg border border-borderColor text-xs font-semibold py-2 rounded-lg hover:border-slate-400 transition">
+                        Download
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
