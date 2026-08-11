@@ -3,84 +3,595 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meus Projetos & Apps Open-Source</title>
+
+    <title>suiciniv.dev — Projects & Apps</title>
+
+    <meta name="description"
+          content="Projetos open-source, ferramentas e aplicativos Windows desenvolvidos com C# e .NET.">
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <script>
         tailwind.config = {
             darkMode: 'class',
+
             theme: {
                 extend: {
                     colors: {
-                        darkBg: '#0b0c10',
-                        cardBg: '#151821',
-                        borderColor: '#232736',
-                        accent: '#38bdf8'
+                        bg: '#07090d',
+                        surface: '#0d1117',
+                        surface2: '#11161e',
+                        line: '#1c2530',
+
+                        dotnet: '#512bd4',
+                        csharp: '#9b4dca',
+
+                        accent: '#38bdf8',
+                        accent2: '#6366f1'
+                    },
+
+                    boxShadow: {
+                        glow: '0 0 40px rgba(56,189,248,.08)',
+                        purple: '0 0 50px rgba(81,43,212,.15)'
                     }
                 }
             }
         }
     </script>
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background:
+                radial-gradient(
+                    circle at 80% 10%,
+                    rgba(81, 43, 212, .12),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 10% 30%,
+                    rgba(56, 189, 248, .06),
+                    transparent 30%
+                ),
+                #07090d;
+        }
+
+        /* Grid de fundo */
+        .grid-bg {
+            background-image:
+                linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+
+            background-size: 40px 40px;
+
+            mask-image: linear-gradient(
+                to bottom,
+                black 0%,
+                transparent 80%
+            );
+        }
+
+        /* Glow do C# */
+        .csharp-glow {
+            box-shadow:
+                0 0 30px rgba(155, 77, 202, .15),
+                inset 0 0 30px rgba(155, 77, 202, .03);
+        }
+
+        .project-card {
+            transition:
+                transform .3s ease,
+                border-color .3s ease,
+                box-shadow .3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+
+            border-color: rgba(81, 43, 212, .5);
+
+            box-shadow:
+                0 20px 70px rgba(0,0,0,.35),
+                0 0 50px rgba(81,43,212,.08);
+        }
+
+        .terminal-line::before {
+            content: ">";
+            color: #38bdf8;
+            margin-right: 10px;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .45;
+            }
+        }
+    </style>
 </head>
-<body class="bg-darkBg text-slate-100 font-sans min-h-screen p-6 md:p-12">
 
-    <div class="max-w-5xl mx-auto space-y-8">
-        
-        <!-- Header -->
-        <header class="space-y-4">
-            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight">
-                Stuff I've <span class="text-accent">built.</span>
+<body class="text-slate-100 min-h-screen">
+
+    <!-- Background -->
+    <div class="grid-bg fixed inset-0 pointer-events-none"></div>
+
+    <main class="relative max-w-6xl mx-auto px-6 py-8 md:px-10 md:py-14">
+
+        <!-- NAVBAR -->
+        <nav class="flex items-center justify-between mb-24">
+
+            <div class="flex items-center gap-3">
+
+                <div class="w-9 h-9 rounded-lg bg-[#512bd4]
+                            flex items-center justify-center
+                            font-black text-white shadow-purple">
+                    C#
+                </div>
+
+                <span class="font-semibold tracking-tight">
+                    suiciniv<span class="text-slate-500">.dev</span>
+                </span>
+
+            </div>
+
+            <a
+                href="https://github.com/suiciniv-dev"
+                target="_blank"
+                class="text-sm text-slate-400 hover:text-white transition">
+                GitHub ↗
+            </a>
+
+        </nav>
+
+
+        <!-- HERO -->
+        <section class="max-w-4xl mb-24">
+
+            <div class="inline-flex items-center gap-2
+                        px-3 py-1.5 mb-6
+                        rounded-full
+                        border border-slate-800
+                        bg-slate-900/50
+                        text-xs text-slate-400">
+
+                <span class="w-1.5 h-1.5 rounded-full bg-green-400 pulse"></span>
+
+                Building things with C# & .NET
+            </div>
+
+
+            <h1 class="text-5xl md:text-7xl
+                       font-black tracking-tight leading-[1.05]">
+
+                Software I
+                <span class="text-transparent bg-clip-text
+                             bg-gradient-to-r from-[#38bdf8]
+                             via-[#6366f1]
+                             to-[#9b4dca]">
+                    built.
+                </span>
+
             </h1>
-            <p class="text-slate-400 text-lg max-w-2xl">
-                Catálogo de projetos open-source, ferramentas e aplicativos desktop que desenvolvo.
+
+
+            <p class="mt-7 text-lg md:text-xl
+                      text-slate-400
+                      max-w-2xl leading-relaxed">
+
+                Projetos open-source, ferramentas e aplicativos
+                Windows desenvolvidos com foco em performance,
+                simplicidade e utilidade.
+
             </p>
-            
-            <!-- Redes Sociais -->
-            <div class="flex flex-wrap gap-2 pt-2">
-                <a href="https://github.com/suiciniv-dev" target="_blank" class="px-3 py-1 bg-cardBg border border-borderColor rounded-full text-xs font-semibold hover:border-slate-400 transition">GitHub</a>
+
+
+            <div class="flex flex-wrap gap-3 mt-8">
+
+                <a
+                    href="https://github.com/suiciniv-dev"
+                    target="_blank"
+                    class="px-5 py-2.5 rounded-lg
+                           border border-slate-700
+                           bg-slate-900/70
+                           hover:bg-slate-800
+                           transition
+                           text-sm font-semibold">
+
+                    GitHub
+                </a>
+
+                <a
+                    href="#projects"
+                    class="px-5 py-2.5 rounded-lg
+                           bg-white text-black
+                           hover:bg-slate-200
+                           transition
+                           text-sm font-semibold">
+
+                    Ver projetos ↓
+                </a>
+
             </div>
-        </header>
 
-        <!-- Grid de Apps -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        </section>
 
-            <!-- Card: ControlSensors -->
-            <div class="bg-cardBg border border-borderColor rounded-2xl p-5 flex flex-col justify-between hover:border-slate-500 transition shadow-xl">
-                <div class="space-y-4">
-                    <div class="flex justify-between items-start">
-                        <div class="w-12 h-12 bg-darkBg border border-borderColor rounded-xl flex items-center justify-center text-2xl">
-                            🖥️
+
+        <!-- PROJECTS -->
+        <section id="projects">
+
+            <div class="flex items-end justify-between mb-6">
+
+                <div>
+                    <p class="text-xs uppercase tracking-[.2em]
+                              text-slate-500 font-semibold">
+                        Featured project
+                    </p>
+
+                    <h2 class="text-2xl font-bold mt-2">
+                        Projetos
+                    </h2>
+                </div>
+
+                <span class="text-xs text-slate-600 font-mono">
+                    01 project
+                </span>
+
+            </div>
+
+
+            <!-- PROJECT CARD -->
+            <article
+                class="project-card
+                       bg-surface/80
+                       border border-line
+                       rounded-3xl
+                       overflow-hidden
+                       csharp-glow">
+
+                <div class="grid lg:grid-cols-[1.2fr_.8fr]">
+
+                    <!-- LEFT -->
+                    <div class="p-7 md:p-10">
+
+                        <!-- Project header -->
+                        <div class="flex items-start justify-between gap-4">
+
+                            <div class="flex items-center gap-4">
+
+                                <div class="w-14 h-14
+                                            rounded-2xl
+                                            bg-gradient-to-br
+                                            from-[#512bd4]
+                                            to-[#9b4dca]
+                                            flex items-center justify-center
+                                            text-white
+                                            text-xl font-black
+                                            shadow-purple">
+
+                                    C#
+                                </div>
+
+                                <div>
+
+                                    <h3 class="text-2xl font-bold">
+                                        ControlSensors HUD
+                                    </h3>
+
+                                    <p class="text-sm text-slate-500 mt-1">
+                                        Windows Desktop Application
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <span
+                                class="hidden sm:inline-flex
+                                       items-center gap-2
+                                       px-3 py-1.5
+                                       rounded-full
+                                       bg-green-500/5
+                                       border border-green-500/20
+                                       text-xs text-green-400">
+
+                                <span class="w-1.5 h-1.5
+                                             rounded-full bg-green-400"></span>
+
+                                Open Source
+
+                            </span>
+
                         </div>
-                        <span class="text-xs bg-darkBg border border-borderColor px-2.5 py-1 rounded-full text-slate-400 font-mono">
-                            ★ open-source
-                        </span>
-                    </div>
 
-                    <div>
-                        <h3 class="text-xl font-bold">ControlSensors HUD</h3>
-                        <p class="text-slate-400 text-sm mt-1">
-                            HUD de monitoramento em tempo real para gabinete/telas secundárias. CPU, GPU, RAM, clima e visualizador de áudio reativo.
+
+                        <!-- Description -->
+                        <p class="mt-8
+                                  text-slate-400
+                                  leading-relaxed
+                                  max-w-xl">
+
+                            HUD de monitoramento em tempo real para
+                            gabinetes e telas secundárias.
+                            Monitore CPU, GPU, RAM, armazenamento,
+                            clima e áudio diretamente do Windows.
+
                         </p>
+
+
+                        <!-- Tech -->
+                        <div class="flex flex-wrap gap-2 mt-7">
+
+                            <span class="tech">
+                                C#
+                            </span>
+
+                            <span class="tech">
+                                WPF
+                            </span>
+
+                            <span class="tech">
+                                .NET
+                            </span>
+
+                            <span class="tech">
+                                Windows
+                            </span>
+
+                            <span class="tech">
+                                Open Source
+                            </span>
+
+                        </div>
+
+
+                        <!-- Buttons -->
+                        <div class="flex flex-wrap gap-3 mt-9">
+                            <a
+                                href="https://github.com/suiciniv-dev/ControlSensors"
+                                target="_blank"
+                                class="px-5 py-3
+                                       rounded-xl
+                                       border border-slate-700
+                                       bg-slate-900
+                                       hover:bg-slate-800
+                                       transition
+                                       text-sm font-semibold">
+
+                                View source ↗
+                            </a>
+
+                        </div>
+
                     </div>
 
-                    <!-- Tags -->
-                    <div class="flex flex-wrap gap-1.5">
-                        <span class="text-[10px] bg-darkBg border border-borderColor px-2 py-0.5 rounded text-slate-300">C#</span>
-                        <span class="text-[10px] bg-darkBg border border-borderColor px-2 py-0.5 rounded text-slate-300">WPF</span>
-                        <span class="text-[10px] bg-darkBg border border-borderColor px-2 py-0.5 rounded text-slate-300">Desktop</span>
+
+                    <!-- RIGHT / TERMINAL -->
+                    <div
+                        class="relative
+                               border-t lg:border-t-0
+                               lg:border-l
+                               border-line
+                               bg-[#090c11]
+                               p-6 md:p-8
+                               flex items-center">
+
+                        <div class="w-full
+                                    rounded-2xl
+                                    border border-slate-800
+                                    bg-[#06080b]
+                                    overflow-hidden
+                                    shadow-2xl">
+
+                            <!-- Terminal bar -->
+                            <div class="h-10
+                                        px-4
+                                        border-b border-slate-800
+                                        flex items-center
+                                        gap-2">
+
+                                <span class="w-2.5 h-2.5
+                                             rounded-full bg-red-500/70"></span>
+
+                                <span class="w-2.5 h-2.5
+                                             rounded-full bg-yellow-500/70"></span>
+
+                                <span class="w-2.5 h-2.5
+                                             rounded-full bg-green-500/70"></span>
+
+                                <span class="ml-3
+                                             text-[10px]
+                                             text-slate-600
+                                             font-mono">
+                                    ControlSensors.exe
+                                </span>
+
+                            </div>
+
+
+                            <!-- Terminal content -->
+                            <div class="p-5 font-mono text-xs
+                                        leading-7 text-slate-500">
+
+                                <div class="terminal-line">
+                                    ControlSensors starting...
+                                </div>
+
+                                <div class="terminal-line text-slate-400">
+                                    Loading hardware sensors
+                                </div>
+
+                                <div class="terminal-line text-slate-400">
+                                    CPU ............ OK
+                                </div>
+
+                                <div class="terminal-line text-slate-400">
+                                    GPU ............ OK
+                                </div>
+
+                                <div class="terminal-line text-slate-400">
+                                    Memory ......... OK
+                                </div>
+
+                                <div class="terminal-line text-slate-400">
+                                    Audio .......... OK
+                                </div>
+
+                                <div class="terminal-line text-green-400">
+                                    Dashboard ready.
+                                </div>
+
+                                <div class="mt-3 text-slate-700">
+                                    ─────────────────────
+                                </div>
+
+                                <div class="text-cyan-400">
+                                    ● SYSTEM ONLINE
+                                </div>
+
+                            </div>
+
+                        </div>
+
                     </div>
+
                 </div>
 
-                <!-- Botões de Ação -->
-                <div class="flex gap-2 pt-6">
-                    <a href="https://github.com/suiciniv-dev/ControlSensors" target="_blank" 
-                       class="flex-1 text-center bg-accent text-slate-950 text-xs font-bold py-2 rounded-lg hover:opacity-90 transition">
-                        GitHub
-                    </a>
+            </article>
+
+        </section>
+
+
+        <!-- TECHNOLOGIES -->
+        <section class="mt-24">
+
+            <p class="text-xs uppercase tracking-[.2em]
+                      text-slate-500 font-semibold">
+                Stack
+            </p>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-5">
+
+                <div class="stack-card">
+                    <strong>C#</strong>
+                    <span>Language</span>
                 </div>
+
+                <div class="stack-card">
+                    <strong>.NET</strong>
+                    <span>Platform</span>
+                </div>
+
+                <div class="stack-card">
+                    <strong>WPF</strong>
+                    <span>Desktop UI</span>
+                </div>
+
+                <div class="stack-card">
+                    <strong>Windows</strong>
+                    <span>Target platform</span>
+                </div>
+
             </div>
 
-        </div>
-    </div>
+        </section>
+
+
+        <!-- FOOTER -->
+        <footer
+            class="mt-24 pt-8
+                   border-t border-slate-900
+                   flex flex-col md:flex-row
+                   justify-between gap-4
+                   text-xs text-slate-600">
+
+            <span>
+                Built with C# & .NET
+            </span>
+
+            <span>
+                © 2026 suiciniv.dev
+            </span>
+
+        </footer>
+
+    </main>
+
+
+    <!-- Tailwind custom components -->
+    <style>
+
+        .tech {
+            display: inline-flex;
+            align-items: center;
+
+            padding: .35rem .65rem;
+
+            border-radius: .5rem;
+
+            background: #090c11;
+
+            border: 1px solid #1c2530;
+
+            color: #94a3b8;
+
+            font-size: .7rem;
+
+            font-family: monospace;
+
+            transition: all .2s;
+        }
+
+        .tech:hover {
+            border-color: #512bd4;
+            color: white;
+        }
+
+
+        .stack-card {
+            padding: 1.25rem;
+
+            border: 1px solid #1c2530;
+
+            background: rgba(13,17,23,.7);
+
+            border-radius: 1rem;
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: .25rem;
+
+            transition: all .2s;
+        }
+
+        .stack-card:hover {
+            border-color: #334155;
+            background: #11161e;
+        }
+
+        .stack-card strong {
+            font-size: 1rem;
+            color: #e2e8f0;
+        }
+
+        .stack-card span {
+            font-size: .7rem;
+            color: #64748b;
+        }
+
+    </style>
 
 </body>
 </html>
