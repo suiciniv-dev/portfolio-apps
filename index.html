@@ -10,6 +10,21 @@
     <meta name="description"
           content="Projetos, aplicativos e ferramentas desenvolvidos com C# e .NET. Projetos pessoais e profissionais.">
 
+    <!-- Open Graph / LinkedIn / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://suiciniv.dev/">
+    <meta property="og:title" content="suiciniv.dev — Software I built.">
+    <meta property="og:description" content="Desenvolvedor Especialista no ecossistema C# .NET com quase 7 anos de vivência em tecnologia. Projetos pessoais e profissionais.">
+    <!-- Crie um print do seu site e substitua a URL abaixo -->
+    <meta property="og:image" content="https://suiciniv.dev/assets/preview.jpg"> 
+
+    <!-- Twitter / X -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="suiciniv.dev — Projects & Apps">
+    <meta property="twitter:description" content="Desenvolvedor Especialista no ecossistema C# .NET com quase 7 anos de vivência em tecnologia.">
+    <!-- Crie um print do seu site e substitua a URL abaixo -->
+    <meta property="twitter:image" content="https://suiciniv.dev/assets/preview.jpg">
+
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
@@ -310,6 +325,18 @@
             font-weight: 600;
         }
 
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
     </style>
 
 </head>
@@ -397,28 +424,42 @@
 
 
                 <!-- Instagram -->
-
                 <a
                     href="https://www.instagram.com/vini1piress/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="social-link text-sm">
-
+                    class="px-5 py-2.5
+                           rounded-lg
+                           border border-pink-500/20
+                           bg-pink-500/5
+                           text-pink-300
+                           hover:bg-pink-500/10
+                           hover:border-pink-500/40
+                           transition
+                           text-sm font-semibold">
+    
                     Instagram ↗
-
+    
                 </a>
-
-
+    
+    
                 <!-- LinkedIn -->
-
                 <a
                     href="https://www.linkedin.com/in/vin%C3%ADcius-pires-da-silva-094066204/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="social-link text-sm">
-
+                    class="px-5 py-2.5
+                           rounded-lg
+                           border border-blue-500/20
+                           bg-blue-500/5
+                           text-blue-300
+                           hover:bg-blue-500/10
+                           hover:border-blue-500/40
+                           transition
+                           text-sm font-semibold">
+    
                     LinkedIn ↗
-
+    
                 </a>
 
             </div>
@@ -553,45 +594,6 @@
 
                 </a>
 
-                                <!-- Instagram -->
-                <a
-                    href="https://www.instagram.com/vini1piress/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="px-5 py-2.5
-                           rounded-lg
-                           border border-pink-500/20
-                           bg-pink-500/5
-                           text-pink-300
-                           hover:bg-pink-500/10
-                           hover:border-pink-500/40
-                           transition
-                           text-sm font-semibold">
-    
-                    Instagram ↗
-    
-                </a>
-    
-    
-                <!-- LinkedIn -->
-                <a
-                    href="https://www.linkedin.com/in/vin%C3%ADcius-pires-da-silva-094066204/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="px-5 py-2.5
-                           rounded-lg
-                           border border-blue-500/20
-                           bg-blue-500/5
-                           text-blue-300
-                           hover:bg-blue-500/10
-                           hover:border-blue-500/40
-                           transition
-                           text-sm font-semibold">
-    
-                    LinkedIn ↗
-    
-                </a>
-
 
 
                 <!-- Projects -->
@@ -611,11 +613,53 @@
 
                 </a>
 
+                <!-- Download CV -->
+
+                <a
+                    href="Currículo - Vinícius Pires da Silva.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="px-5 py-2.5
+                           rounded-lg
+                           bg-gradient-to-r from-[#512bd4] to-[#6366f1]
+                           text-white
+                           hover:brightness-110
+                           transition
+                           text-sm
+                           font-semibold
+                           shadow-purple">
+
+                    Baixar CV ↓
+
+                </a>
+
             </div>
 
         </section>
 
+        <!-- ========================================================= -->
+        <!-- BACKGROUND / SOBRE MIM -->
+        <!-- ========================================================= -->
 
+        <section class="max-w-4xl mb-32 reveal">
+            
+            <p class="text-xs uppercase tracking-[.2em] text-slate-500 font-semibold mb-4">Background</p>
+            
+            <h2 class="text-3xl font-bold mb-6">Sobre mim</h2>
+            
+            <div class="text-slate-400 leading-relaxed text-sm md:text-base space-y-4 max-w-3xl">
+                <p>
+                    Desenvolvedor de Software Especialista no ecossistema C# .NET com quase 7 anos de vivência em tecnologia. Atualmente atuo no desenvolvimento de soluções backend e fullstack para sistemas de gestão de ponto, com forte experiência em arquiteturas multitenancy utilizando ABP Framework e PostgreSQL.
+                </p>
+                <p>
+                    Possuo sólido domínio na criação de APIs RESTful, interfaces modernas com Blazor e aplicações multiplataforma com .NET MAUI. Integração contínua em nuvem utilizando Microsoft Azure.
+                </p>
+                <p>
+                    Perfil autodidata com capacidade comprovada na resolução de problemas complexos e modernização de sistemas legados.
+                </p>
+            </div>
+            
+        </section>
 
         <!-- ========================================================= -->
         <!-- PROJECTS -->
@@ -629,7 +673,7 @@
             <div
                 class="flex items-end
                        justify-between
-                       mb-6">
+                       mb-6 reveal">
 
 
                 <div>
@@ -647,7 +691,7 @@
 
 
                     <h2
-                        class="text-2xl
+                        class="text-3xl
                                font-bold
                                mt-2">
 
@@ -676,7 +720,7 @@
             <!-- ===================================================== -->
 
             <article
-                class="project-card
+                class="project-card reveal
                        bg-surface/80
                        border border-line
                        rounded-3xl
@@ -1100,7 +1144,7 @@
             <!-- ===================================================== -->
 
             <article
-                class="project-card
+                class="project-card reveal
                        bg-surface/80
                        border border-line
                        rounded-3xl
@@ -1686,7 +1730,7 @@
         <!-- STACK -->
         <!-- ========================================================= -->
 
-        <section class="mt-24">
+        <section class="mt-24 reveal">
 
 
             <p
@@ -1785,6 +1829,22 @@
         </section>
 
 
+        <!-- ========================================================= -->
+        <!-- CALL TO ACTION -->
+        <!-- ========================================================= -->
+        
+        <section class="mt-32 mb-10 text-center reveal">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Bora conversar?</h2>
+            
+            <p class="text-slate-400 mb-8 max-w-md mx-auto text-sm md:text-base">
+                Estou sempre aberto a trocar ideias sobre tecnologia, arquitetura de software ou novas oportunidades.
+            </p>
+            
+            <a href="mailto:vinips00@gmail.com" 
+               class="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-[#512bd4] to-[#6366f1] text-white hover:brightness-110 transition font-semibold shadow-purple text-lg">
+                ✉ Entrar em contato
+            </a>
+        </section>
 
         <!-- ========================================================= -->
         <!-- FOOTER -->
@@ -1818,6 +1878,19 @@
         </footer>
 
     </main>
+
+    <!-- Scroll Reveal Script -->
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+    </script>
 
 </body>
 
