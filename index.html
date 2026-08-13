@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR" class="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,7 @@
     <title>suiciniv.dev — Projects & Apps</title>
 
     <meta name="description"
-          content="Aplicativos inúteis (úteis), ferramentas e projetos desenvolvidos com C# e .NET.">
+          content="Projetos, aplicativos e ferramentas desenvolvidos com C# e .NET. Projetos pessoais e profissionais.">
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -39,10 +40,13 @@
         }
     </script>
 
+
     <style>
+
         html {
             scroll-behavior: smooth;
         }
+
 
         body {
             background:
@@ -59,6 +63,9 @@
                 #07090d;
         }
 
+
+        /* Background grid */
+
         .grid-bg {
             background-image:
                 linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
@@ -73,11 +80,24 @@
             );
         }
 
+
+        /* Project glow */
+
         .csharp-glow {
             box-shadow:
                 0 0 30px rgba(155, 77, 202, .15),
                 inset 0 0 30px rgba(155, 77, 202, .03);
         }
+
+
+        .blue-glow {
+            box-shadow:
+                0 0 30px rgba(56, 189, 248, .10),
+                inset 0 0 30px rgba(56, 189, 248, .02);
+        }
+
+
+        /* Project cards */
 
         .project-card {
             transition:
@@ -85,6 +105,7 @@
                 border-color .3s ease,
                 box-shadow .3s ease;
         }
+
 
         .project-card:hover {
             transform: translateY(-4px);
@@ -96,17 +117,25 @@
                 0 0 50px rgba(81,43,212,.08);
         }
 
+
+        /* Terminal */
+
         .terminal-line::before {
             content: ">";
             color: #38bdf8;
             margin-right: 10px;
         }
 
+
+        /* Pulse */
+
         .pulse {
             animation: pulse 2s infinite;
         }
 
+
         @keyframes pulse {
+
             0%, 100% {
                 opacity: 1;
             }
@@ -114,201 +143,281 @@
             50% {
                 opacity: .45;
             }
+
         }
+
+
+        /* Tech tags */
+
+        .tech {
+            display: inline-flex;
+
+            align-items: center;
+
+            padding: .35rem .65rem;
+
+            border-radius: .5rem;
+
+            background: #090c11;
+
+            border: 1px solid #1c2530;
+
+            color: #94a3b8;
+
+            font-size: .7rem;
+
+            font-family: monospace;
+
+            transition: all .2s;
+        }
+
+
+        .tech:hover {
+            border-color: #512bd4;
+
+            color: white;
+        }
+
+
+        /* Stack cards */
+
+        .stack-card {
+            padding: 1.25rem;
+
+            border: 1px solid #1c2530;
+
+            background: rgba(13,17,23,.7);
+
+            border-radius: 1rem;
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: .25rem;
+
+            transition: all .2s;
+        }
+
+
+        .stack-card:hover {
+            border-color: #334155;
+
+            background: #11161e;
+        }
+
+
+        .stack-card strong {
+            font-size: 1rem;
+
+            color: #e2e8f0;
+        }
+
+
+        .stack-card span {
+            font-size: .7rem;
+
+            color: #64748b;
+        }
+
+
+        /* Social links */
 
         .social-link {
+            color: #64748b;
+
             transition:
                 color .2s ease,
-                border-color .2s ease,
-                background .2s ease;
+                transform .2s ease;
         }
 
+
         .social-link:hover {
-            background: rgba(255,255,255,.03);
+            color: white;
+
+            transform: translateY(-1px);
         }
+
+
+        /* Store buttons */
+
+        .store-button {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: .6rem;
+
+            padding: .7rem 1rem;
+
+            border-radius: .75rem;
+
+            border: 1px solid #1c2530;
+
+            background: #090c11;
+
+            color: #cbd5e1;
+
+            font-size: .75rem;
+
+            font-weight: 600;
+
+            transition: all .2s ease;
+        }
+
+
+        .store-button:hover {
+            background: #11161e;
+
+            border-color: #475569;
+
+            color: white;
+
+            transform: translateY(-1px);
+        }
+
+
+        .store-icon {
+            width: 18px;
+
+            height: 18px;
+
+            flex-shrink: 0;
+        }
+
+
+        /* Professional badge */
+
+        .professional-badge {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: .5rem;
+
+            padding: .35rem .7rem;
+
+            border-radius: 999px;
+
+            background: rgba(99,102,241,.08);
+
+            border: 1px solid rgba(99,102,241,.25);
+
+            color: #a5b4fc;
+
+            font-size: .7rem;
+
+            font-weight: 600;
+        }
+
     </style>
+
 </head>
+
 
 <body class="text-slate-100 min-h-screen">
 
+
     <!-- Background -->
+
     <div class="grid-bg fixed inset-0 pointer-events-none"></div>
+
 
     <main class="relative max-w-6xl mx-auto px-6 py-8 md:px-10 md:py-14">
 
+
+        <!-- ========================================================= -->
         <!-- NAVBAR -->
-        <nav class="flex flex-col sm:flex-row
-                    items-start sm:items-center
-                    justify-between
+        <!-- ========================================================= -->
+
+        <nav class="flex flex-col md:flex-row
+                    md:items-center
+                    md:justify-between
                     gap-5
                     mb-24">
 
+
             <!-- Logo -->
+
             <div class="flex items-center gap-3">
 
-                <div class="w-9 h-9 rounded-lg bg-[#512bd4]
-                            flex items-center justify-center
-                            font-black text-white shadow-purple">
+                <div
+                    class="w-9 h-9
+                           rounded-lg
+                           bg-[#512bd4]
+                           flex items-center
+                           justify-center
+                           font-black
+                           text-white
+                           shadow-purple">
 
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="21"
-                        height="21"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.8"
-                        stroke-linecap="round"
-                        stroke-linejoin="round">
-
-                        <rect x="3" y="4" width="18" height="13" rx="2" />
-
-                        <path d="M8 21h8" />
-                        <path d="M12 17v4" />
-
-                        <path d="M7 13l2-2 2 1 3-4 3 2" />
-
-                    </svg>
+                    C#
 
                 </div>
 
+
                 <span class="font-semibold tracking-tight">
+
                     suiciniv<span class="text-slate-500">.dev</span>
+
                 </span>
 
             </div>
 
 
-            <!-- SOCIAL LINKS -->
-            <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+            <!-- Socials -->
 
-                <!-- GitHub pessoal -->
+            <div class="flex flex-wrap items-center gap-5">
+
+
+                <!-- GitHub -->
+
                 <a
                     href="https://github.com/suiciniv-dev"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="social-link
-                           inline-flex items-center gap-2
-                           px-3 py-2
-                           rounded-lg
-                           text-sm
-                           text-slate-400
-                           hover:text-white">
+                    class="social-link text-sm">
 
-                    <!-- GitHub -->
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="currentColor">
-
-                        <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2.17c-3.2.7-3.88-1.36-3.88-1.36-.53-1.34-1.28-1.69-1.28-1.69-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.26-1.28-5.26-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18A11.1 11.1 0 0 1 12 6.02c.98 0 1.97.13 2.89.38 2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.77.12 3.06.74.81 1.19 1.84 1.19 3.1 0 4.43-2.71 5.4-5.29 5.69.41.35.78 1.04.78 2.1v3.11c0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z" />
-
-                    </svg>
-
-                    GitHub
+                    GitHub pessoal ↗
 
                 </a>
 
 
-                <!-- GitHub Empresa -->
+                <!-- Company GitHub -->
+
                 <a
                     href="https://github.com/simix-viniciussilva"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="social-link
-                           inline-flex items-center gap-2
-                           px-3 py-2
-                           rounded-lg
-                           text-sm
-                           text-slate-400
-                           hover:text-[#c4b5fd]">
+                    class="social-link text-sm">
 
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="currentColor">
-
-                        <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2.17c-3.2.7-3.88-1.36-3.88-1.36-.53-1.34-1.28-1.69-1.28-1.69-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.26-1.28-5.26-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18A11.1 11.1 0 0 1 12 6.02c.98 0 1.97.13 2.89.38 2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.77.12 3.06.74.81 1.19 1.84 1.19 3.1 0 4.43-2.71 5.4-5.29 5.69.41.35.78 1.04.78 2.1v3.11c0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z" />
-
-                    </svg>
-
-                    Simix
+                    GitHub Empresa ↗
 
                 </a>
 
 
                 <!-- Instagram -->
+
                 <a
                     href="https://www.instagram.com/vini1piress/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label="Instagram"
-                    class="social-link
-                           inline-flex items-center gap-2
-                           px-3 py-2
-                           rounded-lg
-                           text-sm
-                           text-slate-400
-                           hover:text-pink-400">
+                    class="social-link text-sm">
 
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.8"
-                        stroke-linecap="round"
-                        stroke-linejoin="round">
-
-                        <rect x="3" y="3" width="18" height="18" rx="5" />
-
-                        <circle cx="12" cy="12" r="4" />
-
-                        <circle
-                            cx="17.5"
-                            cy="6.5"
-                            r=".7"
-                            fill="currentColor" />
-
-                    </svg>
-
-                    Instagram
+                    Instagram ↗
 
                 </a>
 
 
                 <!-- LinkedIn -->
+
                 <a
                     href="https://www.linkedin.com/in/vin%C3%ADcius-pires-da-silva-094066204/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label="LinkedIn"
-                    class="social-link
-                           inline-flex items-center gap-2
-                           px-3 py-2
-                           rounded-lg
-                           text-sm
-                           text-slate-400
-                           hover:text-[#60a5fa]">
+                    class="social-link text-sm">
 
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="currentColor">
-
-                        <path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0zM.5 8h4.9v15H.5V8zm7.5 0h4.7v2.05h.07c.65-1.2 2.25-2.47 4.63-2.47 4.95 0 5.87 3.26 5.87 7.5V23h-4.9v-7.02c0-1.67-.03-3.82-2.33-3.82-2.33 0-2.69 1.82-2.69 3.7V23H8V8z" />
-
-                    </svg>
-
-                    LinkedIn
+                    LinkedIn ↗
 
                 </a>
 
@@ -317,62 +426,93 @@
         </nav>
 
 
+
+        <!-- ========================================================= -->
         <!-- HERO -->
+        <!-- ========================================================= -->
+
         <section class="max-w-4xl mb-24">
 
-            <div class="inline-flex items-center gap-2
-                        px-3 py-1.5 mb-6
-                        rounded-full
-                        border border-slate-800
-                        bg-slate-900/50
-                        text-xs text-slate-400">
 
-                <span class="w-1.5 h-1.5
-                             rounded-full
-                             bg-green-400
-                             pulse"></span>
+            <!-- Status -->
 
-                Building things with C# & .NET
+            <div
+                class="inline-flex items-center gap-2
+                       px-3 py-1.5
+                       mb-6
+                       rounded-full
+                       border border-slate-800
+                       bg-slate-900/50
+                       text-xs
+                       text-slate-400">
+
+                <span
+                    class="w-1.5 h-1.5
+                           rounded-full
+                           bg-green-400
+                           pulse">
+                </span>
+
+                Software developer · C# & .NET
 
             </div>
 
 
-            <h1 class="text-5xl md:text-7xl
-                       font-black tracking-tight
+
+            <!-- Title -->
+
+            <h1
+                class="text-5xl md:text-7xl
+                       font-black
+                       tracking-tight
                        leading-[1.05]">
 
-                Aplicativos
+                Software I
 
-                <span class="text-transparent
-                             bg-clip-text
-                             bg-gradient-to-r
-                             from-[#38bdf8]
-                             via-[#6366f1]
-                             to-[#9b4dca]">
+                <span
+                    class="text-transparent
+                           bg-clip-text
+                           bg-gradient-to-r
+                           from-[#38bdf8]
+                           via-[#6366f1]
+                           to-[#9b4dca]">
 
-                    inúteis (úteis).
+                    built.
 
                 </span>
 
             </h1>
 
 
-            <p class="mt-7 text-lg md:text-xl
-                      text-slate-400
-                      max-w-2xl
-                      leading-relaxed">
 
-                Projetos open-source, ferramentas e aplicativos
-                Windows que talvez ninguém tenha pedido,
-                mas que eu achei que deveriam existir.
+            <!-- Description -->
+
+            <p
+                class="mt-7
+                       text-lg md:text-xl
+                       text-slate-400
+                       max-w-2xl
+                       leading-relaxed">
+
+                Projetos, aplicativos e ferramentas desenvolvidos
+                com foco em performance, simplicidade e utilidade.
+
+                <span class="text-slate-600">
+                    Algumas ideias são úteis.
+                    Outras... eu só queria ver funcionando.
+                </span>
 
             </p>
 
 
-            <!-- HERO BUTTONS -->
+
+            <!-- Hero buttons -->
+
             <div class="flex flex-wrap gap-3 mt-8">
 
-                <!-- GitHub pessoal -->
+
+                <!-- GitHub -->
+
                 <a
                     href="https://github.com/suiciniv-dev"
                     target="_blank"
@@ -383,14 +523,17 @@
                            bg-slate-900/70
                            hover:bg-slate-800
                            transition
-                           text-sm font-semibold">
+                           text-sm
+                           font-semibold">
 
                     GitHub pessoal ↗
 
                 </a>
 
 
-                <!-- GitHub Empresa -->
+
+                <!-- Company GitHub -->
+
                 <a
                     href="https://github.com/simix-viniciussilva"
                     target="_blank"
@@ -403,62 +546,27 @@
                            hover:bg-[#512bd4]/20
                            hover:border-[#512bd4]/70
                            transition
-                           text-sm font-semibold">
+                           text-sm
+                           font-semibold">
 
                     GitHub Empresa ↗
 
                 </a>
 
 
-                <!-- Instagram -->
-                <a
-                    href="https://www.instagram.com/vini1piress/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="px-5 py-2.5
-                           rounded-lg
-                           border border-pink-500/20
-                           bg-pink-500/5
-                           text-pink-300
-                           hover:bg-pink-500/10
-                           hover:border-pink-500/40
-                           transition
-                           text-sm font-semibold">
 
-                    Instagram ↗
+                <!-- Projects -->
 
-                </a>
-
-
-                <!-- LinkedIn -->
-                <a
-                    href="https://www.linkedin.com/in/vin%C3%ADcius-pires-da-silva-094066204/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="px-5 py-2.5
-                           rounded-lg
-                           border border-blue-500/20
-                           bg-blue-500/5
-                           text-blue-300
-                           hover:bg-blue-500/10
-                           hover:border-blue-500/40
-                           transition
-                           text-sm font-semibold">
-
-                    LinkedIn ↗
-
-                </a>
-
-
-                <!-- Projetos -->
                 <a
                     href="#projects"
                     class="px-5 py-2.5
                            rounded-lg
-                           bg-white text-black
+                           bg-white
+                           text-black
                            hover:bg-slate-200
                            transition
-                           text-sm font-semibold">
+                           text-sm
+                           font-semibold">
 
                     Ver projetos ↓
 
@@ -469,25 +577,40 @@
         </section>
 
 
+
+        <!-- ========================================================= -->
         <!-- PROJECTS -->
+        <!-- ========================================================= -->
+
         <section id="projects">
 
-            <div class="flex items-end
-                        justify-between mb-6">
+
+            <!-- Section header -->
+
+            <div
+                class="flex items-end
+                       justify-between
+                       mb-6">
+
 
                 <div>
 
-                    <p class="text-xs uppercase
-                              tracking-[.2em]
-                              text-slate-500
-                              font-semibold">
+                    <p
+                        class="text-xs
+                               uppercase
+                               tracking-[.2em]
+                               text-slate-500
+                               font-semibold">
 
-                        Featured project
+                        Projects & Apps
 
                     </p>
 
-                    <h2 class="text-2xl
-                               font-bold mt-2">
+
+                    <h2
+                        class="text-2xl
+                               font-bold
+                               mt-2">
 
                         Projetos
 
@@ -495,96 +618,113 @@
 
                 </div>
 
-                <span class="text-xs
-                             text-slate-600
-                             font-mono">
 
-                    01 project
+                <span
+                    class="text-xs
+                           text-slate-600
+                           font-mono">
+
+                    02 projects
 
                 </span>
 
             </div>
 
 
-            <!-- PROJECT CARD -->
+
+            <!-- ===================================================== -->
+            <!-- CONTROLSENSORS -->
+            <!-- ===================================================== -->
+
             <article
                 class="project-card
                        bg-surface/80
                        border border-line
                        rounded-3xl
                        overflow-hidden
-                       csharp-glow">
+                       csharp-glow
+                       mb-8">
 
-                <div class="grid
-                            lg:grid-cols-[1.2fr_.8fr]">
+
+                <div
+                    class="grid
+                           lg:grid-cols-[1.2fr_.8fr]">
 
 
                     <!-- LEFT -->
+
                     <div class="p-7 md:p-10">
 
-                        <!-- Project header -->
-                        <div class="flex items-start
-                                    justify-between
-                                    gap-4">
 
-                            <div class="flex items-center
-                                        gap-4">
+                        <!-- Header -->
+
+                        <div
+                            class="flex items-start
+                                   justify-between
+                                   gap-4">
+
+
+                            <div
+                                class="flex items-center
+                                       gap-4">
+
 
                                 <!-- Monitor icon -->
-                                <div class="w-14 h-14
-                                            rounded-2xl
-                                            bg-gradient-to-br
-                                            from-[#512bd4]
-                                            to-[#9b4dca]
-                                            flex items-center
-                                            justify-center
-                                            text-white
-                                            shadow-purple">
+
+                                <div
+                                    class="w-14 h-14
+                                           rounded-2xl
+                                           bg-gradient-to-br
+                                           from-[#512bd4]
+                                           to-[#9b4dca]
+                                           flex items-center
+                                           justify-center
+                                           text-white
+                                           shadow-purple">
 
                                     <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="30"
-                                        height="30"
+                                        class="w-8 h-8"
                                         viewBox="0 0 24 24"
                                         fill="none"
                                         stroke="currentColor"
-                                        stroke-width="1.6"
+                                        stroke-width="1.8"
                                         stroke-linecap="round"
                                         stroke-linejoin="round">
 
-                                        <!-- Monitor -->
                                         <rect
                                             x="3"
                                             y="4"
                                             width="18"
                                             height="13"
-                                            rx="2" />
+                                            rx="2">
+                                        </rect>
 
-                                        <!-- Stand -->
-                                        <path d="M8 21h8" />
-                                        <path d="M12 17v4" />
-
-                                        <!-- Sensor graph -->
                                         <path
-                                            d="M6.5 13l2.2-2.4
-                                               2.2 1.5
-                                               3.1-4
-                                               3.5 2.2" />
+                                            d="M8 21h8">
+                                        </path>
+
+                                        <path
+                                            d="M12 17v4">
+                                        </path>
 
                                     </svg>
 
                                 </div>
 
+
                                 <div>
 
-                                    <h3 class="text-2xl
+                                    <h3
+                                        class="text-2xl
                                                font-bold">
 
                                         ControlSensors HUD
 
                                     </h3>
 
-                                    <p class="text-sm
+
+                                    <p
+                                        class="text-sm
                                               text-slate-500
                                               mt-1">
 
@@ -597,7 +737,8 @@
                             </div>
 
 
-                            <!-- Open Source badge -->
+                            <!-- Open source -->
+
                             <span
                                 class="hidden sm:inline-flex
                                        items-center gap-2
@@ -605,11 +746,14 @@
                                        rounded-full
                                        bg-green-500/5
                                        border border-green-500/20
-                                       text-xs text-green-400">
+                                       text-xs
+                                       text-green-400">
 
-                                <span class="w-1.5 h-1.5
-                                             rounded-full
-                                             bg-green-400"></span>
+                                <span
+                                    class="w-1.5 h-1.5
+                                           rounded-full
+                                           bg-green-400">
+                                </span>
 
                                 Open Source
 
@@ -618,100 +762,112 @@
                         </div>
 
 
+
                         <!-- Description -->
-                        <p class="mt-8
-                                  text-slate-400
-                                  leading-relaxed
-                                  max-w-xl">
+
+                        <p
+                            class="mt-8
+                                   text-slate-400
+                                   leading-relaxed
+                                   max-w-xl">
 
                             HUD de monitoramento em tempo real para
                             gabinetes e telas secundárias.
+
                             Monitore CPU, GPU, RAM, armazenamento,
                             clima e áudio diretamente do Windows.
 
                         </p>
 
 
-                        <!-- Tech -->
-                        <div class="flex flex-wrap
-                                    gap-2 mt-7">
 
-                            <span class="tech">
-                                C#
-                            </span>
+                        <!-- Technologies -->
 
-                            <span class="tech">
-                                WPF
-                            </span>
+                        <div
+                            class="flex flex-wrap
+                                   gap-2
+                                   mt-7">
 
-                            <span class="tech">
-                                .NET
-                            </span>
+                            <span class="tech">C#</span>
 
-                            <span class="tech">
-                                Windows
-                            </span>
+                            <span class="tech">WPF</span>
 
-                            <span class="tech">
-                                Open Source
-                            </span>
+                            <span class="tech">.NET</span>
+
+                            <span class="tech">Windows</span>
+
+                            <span class="tech">Open Source</span>
 
                         </div>
+
 
 
                         <!-- Release -->
-                        <div class="flex items-center gap-2 mt-7">
 
-                            <span class="w-1.5 h-1.5
-                                         rounded-full
-                                         bg-green-400"></span>
+                        <div
+                            class="flex items-center
+                                   gap-2
+                                   mt-7">
 
-                            <span class="text-xs
-                                         text-slate-500
-                                         font-mono">
-
-                                Latest release
-
+                            <span
+                                class="w-1.5 h-1.5
+                                       rounded-full
+                                       bg-green-400">
                             </span>
 
-                            <span class="text-xs text-green-400 font-mono">
+
+                            <span
+                                class="text-xs
+                                       text-slate-500
+                                       font-mono">
+
                                 Latest release
+
                             </span>
 
                         </div>
 
 
+
                         <!-- Buttons -->
-                        <div class="flex flex-wrap
-                                    gap-3 mt-5">
 
-                            <!-- DOWNLOAD -->
+                        <div
+                            class="flex flex-wrap
+                                   gap-3
+                                   mt-5">
+
+
+                            <!-- Download -->
+
                             <a
-                                    href="https://github.com/suiciniv-dev/ControlSensors/releases/latest"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="inline-flex
-                                           items-center
-                                           gap-2
-                                           px-5 py-3
-                                           rounded-xl
-                                           bg-gradient-to-r
-                                           from-[#512bd4]
-                                           to-[#6366f1]
-                                           text-white
-                                           hover:brightness-110
-                                           transition
-                                           text-sm
-                                           font-semibold
-                                           shadow-purple">
-                                
-                                    <span>↓</span>
-                                
-                                    Download latest
-                                
-                                </a>
+                                href="https://github.com/suiciniv-dev/ControlSensors/releases/latest"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="inline-flex
+                                       items-center
+                                       gap-2
+                                       px-5 py-3
+                                       rounded-xl
+                                       bg-gradient-to-r
+                                       from-[#512bd4]
+                                       to-[#6366f1]
+                                       text-white
+                                       hover:brightness-110
+                                       transition
+                                       text-sm
+                                       font-semibold
+                                       shadow-purple">
+                            
+                                <span>↓</span>
+                            
+                                Download
+                            
+                            </a>
 
-                            <!-- SOURCE -->
+
+
+                            <!-- Source -->
+
                             <a
                                 href="https://github.com/suiciniv-dev/ControlSensors"
                                 target="_blank"
@@ -735,9 +891,11 @@
                         </div>
 
 
-                        <p class="mt-3
-                                  text-[11px]
-                                  text-slate-600">
+
+                        <p
+                            class="mt-3
+                                   text-[11px]
+                                   text-slate-600">
 
                             Windows 10/11 · Free & Open Source
 
@@ -746,7 +904,9 @@
                     </div>
 
 
-                    <!-- RIGHT / TERMINAL -->
+
+                    <!-- TERMINAL -->
+
                     <div
                         class="relative
                                border-t
@@ -756,6 +916,7 @@
                                bg-[#090c11]
                                p-6 md:p-8
                                flex items-center">
+
 
                         <div
                             class="w-full
@@ -767,6 +928,7 @@
 
 
                             <!-- Terminal bar -->
+
                             <div
                                 class="h-10
                                        px-4
@@ -774,17 +936,24 @@
                                        flex items-center
                                        gap-2">
 
-                                <span class="w-2.5 h-2.5
-                                             rounded-full
-                                             bg-red-500/70"></span>
+                                <span
+                                    class="w-2.5 h-2.5
+                                           rounded-full
+                                           bg-red-500/70">
+                                </span>
 
-                                <span class="w-2.5 h-2.5
-                                             rounded-full
-                                             bg-yellow-500/70"></span>
+                                <span
+                                    class="w-2.5 h-2.5
+                                           rounded-full
+                                           bg-yellow-500/70">
+                                </span>
 
-                                <span class="w-2.5 h-2.5
-                                             rounded-full
-                                             bg-green-500/70"></span>
+                                <span
+                                    class="w-2.5 h-2.5
+                                           rounded-full
+                                           bg-green-500/70">
+                                </span>
+
 
                                 <span
                                     class="ml-3
@@ -799,7 +968,9 @@
                             </div>
 
 
+
                             <!-- Terminal content -->
+
                             <div
                                 class="p-5
                                        font-mono
@@ -811,49 +982,57 @@
                                     ControlSensors starting...
                                 </div>
 
-                                <div class="terminal-line
-                                            text-slate-400">
+                                <div
+                                    class="terminal-line
+                                           text-slate-400">
 
                                     Loading hardware sensors
 
                                 </div>
 
-                                <div class="terminal-line
-                                            text-slate-400">
+                                <div
+                                    class="terminal-line
+                                           text-slate-400">
 
                                     CPU ............ OK
 
                                 </div>
 
-                                <div class="terminal-line
-                                            text-slate-400">
+                                <div
+                                    class="terminal-line
+                                           text-slate-400">
 
                                     GPU ............ OK
 
                                 </div>
 
-                                <div class="terminal-line
-                                            text-slate-400">
+                                <div
+                                    class="terminal-line
+                                           text-slate-400">
 
                                     Memory ......... OK
 
                                 </div>
 
-                                <div class="terminal-line
-                                            text-slate-400">
+                                <div
+                                    class="terminal-line
+                                           text-slate-400">
 
                                     Audio .......... OK
 
                                 </div>
 
-                                <div class="terminal-line
-                                            text-green-400">
+                                <div
+                                    class="terminal-line
+                                           text-green-400">
 
                                     Dashboard ready.
 
                                 </div>
 
-                                <div class="mt-3 text-slate-700">
+                                <div
+                                    class="mt-3
+                                           text-slate-700">
 
                                     ─────────────────────
 
@@ -875,26 +1054,621 @@
 
             </article>
 
+
+
+            <!-- ===================================================== -->
+            <!-- SIMIX PONTO -->
+            <!-- ===================================================== -->
+
+            <article
+                class="project-card
+                       bg-surface/80
+                       border border-line
+                       rounded-3xl
+                       overflow-hidden
+                       blue-glow">
+
+
+                <div
+                    class="grid
+                           lg:grid-cols-[1.2fr_.8fr]">
+
+
+                    <!-- LEFT -->
+
+                    <div class="p-7 md:p-10">
+
+
+                        <!-- Header -->
+
+                        <div
+                            class="flex items-start
+                                   justify-between
+                                   gap-4">
+
+
+                            <div
+                                class="flex items-center
+                                       gap-4">
+
+                                <!-- App icon -->
+                                
+                                <div
+                                    class="w-14 h-14
+                                           rounded-2xl
+                                           overflow-hidden
+                                           flex items-center
+                                           justify-center
+                                           shadow-lg
+                                           transition-transform duration-300
+                                           hover:scale-105">
+                                
+                                    <img
+                                        src="assets/simix-ponto.png"
+                                        alt="Ícone Símix Ponto"
+                                        class="w-full h-full object-cover">
+                                
+                                </div>
+                                                                
+                                
+                                <div>
+                                
+                                    <h3
+                                        class="text-2xl
+                                               font-bold">
+                                
+                                        Símix Ponto
+                                
+                                    </h3>
+                                
+                                
+                                    <p
+                                        class="text-sm
+                                              text-slate-500
+                                              mt-1">
+                                
+                                        Mobile Application · Android & iOS
+                                
+                                    </p>
+                                
+                                </div>
+
+
+                            <!-- Professional badge -->
+
+                            <span
+                                class="hidden sm:inline-flex
+                                       professional-badge">
+
+                                <span>◆</span>
+
+                                Projeto profissional
+
+                            </span>
+
+                        </div>
+
+
+
+                        <!-- Description -->
+
+                            <p class="mt-8
+                                      text-slate-400
+                                      leading-relaxed
+                                      max-w-xl">
+                            
+                                Aplicativo de registro de ponto integrado ao ecossistema
+                                Símix Ponto.
+                            
+                                Possui registros em tempo real, com suporte online e offline,
+                                verificação facial utilizando Azure AI, geolocalização através
+                                de recursos nativos do .NET MAUI e módulos de segurança para
+                                prevenção de localização falsificada (Fake GPS).
+                            
+                                Também conta com módulo específico para registro de ponto de
+                                motoristas e comunicação com sistemas legados, como o PcPonto,
+                                além da integração com a atual plataforma SaaS multitenant
+                                Símix Ponto.
+                            
+                            </p>
+
+                        </p>
+
+
+
+                        <!-- Technologies -->
+
+                       <div class="flex flex-wrap gap-2 mt-7">
+
+                            <span class="tech">C#</span>
+                            <span class="tech">.NET MAUI</span>
+                            <span class="tech">Azure AI</span>
+                            <span class="tech">Geolocation</span>
+                            <span class="tech">Offline First</span>
+                            <span class="tech">SaaS</span>
+                            <span class="tech">Multitenant</span>
+                            <span class="tech">REST API</span>
+                        
+                        </div>
+
+
+
+                        <!-- Contribution -->
+
+                        <div
+                            class="mt-7
+                                   p-4
+                                   rounded-xl
+                                   bg-[#090c11]
+                                   border border-slate-800">
+
+
+                            <div
+                                class="flex items-center
+                                       gap-2
+                                       mb-2">
+
+                                <span
+                                    class="w-1.5 h-1.5
+                                           rounded-full
+                                           bg-indigo-400">
+                                </span>
+
+
+                    <span
+                        class="text-xs
+                               text-indigo-300
+                               font-semibold">
+                    
+                        Minha atuação
+                    
+                    </span>
+                    
+                    </div>
+                    
+                    
+                    <p
+                        class="text-xs
+                               text-slate-500
+                               leading-relaxed">
+                    
+                        Atuação no desenvolvimento, evolução e manutenção do
+                        aplicativo, com responsabilidade direta pela integração
+                        e testes da verificação facial.
+                    
+                        Liderei a implementação da integração facial, incluindo
+                        sua validação e testes, além de participar ativamente do
+                        redesign do aplicativo, modernizando sua interface e
+                        experiência de uso.
+                    
+                        Também fui o principal responsável pela adaptação e
+                        disponibilização do aplicativo para iOS, além das
+                        integrações com a plataforma Símix Ponto e seus serviços.
+                    
+                    </p>
+
+                            </p>
+
+                        </div>
+
+
+
+                        <!-- Store buttons -->
+
+                        <div
+                            class="flex flex-wrap
+                                   gap-3
+                                   mt-7">
+
+
+                            <!-- Google Play -->
+
+                            <a
+                                href="https://play.google.com/store/apps/details?id=com.simix.ponto.app"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="store-button">
+
+                                <svg
+                                    class="store-icon"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor">
+
+                                    <path
+                                        d="M3.5 2.8c-.3.3-.5.8-.5 1.4v15.6c0 .6.2 1.1.5 1.4l.1.1L14.4 12v-.2L3.6 2.7l-.1.1z">
+                                    </path>
+
+                                    <path
+                                        d="M17.8 15.6 14.4 12v-.2l3.4-3.6.1.1 4.1 2.3c1.2.7 1.2 1.8 0 2.5l-4.1 2.3-.1.2z">
+                                    </path>
+
+                                    <path
+                                        d="M17.7 15.5 14.4 12 3.5 21.2c.4.4 1 .4 1.6.1l12.6-5.8z">
+                                    </path>
+
+                                    <path
+                                        d="M17.7 8.5 5.1 2.7c-.6-.3-1.2-.3-1.6.1L14.4 12l3.3-3.5z">
+                                    </path>
+
+                                </svg>
+
+
+                                Google Play ↗
+
+                            </a>
+
+
+
+                            <!-- App Store -->
+
+                            <a
+                                href="https://apps.apple.com/us/app/s%C3%ADmix-ponto/id6454298944"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="store-button">
+
+                                <svg
+                                    class="store-icon"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor">
+
+                                    <path
+                                        d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.39 1.8-3.13 1.87-2.39 5.98.48 7.13-.57 1.5-1.31 2.98-2.52 4.09zM12.03 7.25C11.88 5.02 13.69 3.18 15.78 3c.29 2.58-2.34 4.5-3.75 4.25z">
+                                    </path>
+
+                                </svg>
+
+
+                                App Store ↗
+
+                            </a>
+
+                        </div>
+
+
+
+                        <p
+                            class="mt-3
+                                   text-[11px]
+                                   text-slate-600">
+
+                            Android · iOS · Aplicativo em produção
+
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- RIGHT -->
+
+                    <div
+                        class="relative
+                               border-t
+                               lg:border-t-0
+                               lg:border-l
+                               border-line
+                               bg-[#090c11]
+                               p-6 md:p-8
+                               flex items-center">
+
+
+                        <div class="w-full">
+
+
+                            <!-- Architecture visual -->
+
+                            <div
+                                class="rounded-2xl
+                                       border border-slate-800
+                                       bg-[#06080b]
+                                       overflow-hidden
+                                       shadow-2xl">
+
+
+                                <!-- Header -->
+
+                                <div
+                                    class="h-10
+                                           px-4
+                                           border-b border-slate-800
+                                           flex items-center
+                                           justify-between">
+
+                                    <span
+                                        class="text-[10px]
+                                               text-slate-600
+                                               font-mono">
+
+                                        simix-ponto.app
+
+                                    </span>
+
+
+                                    <span
+                                        class="text-[10px]
+                                               text-green-400
+                                               font-mono">
+
+                                        ● ONLINE
+
+                                    </span>
+
+                                </div>
+
+
+
+                                <!-- Architecture -->
+
+                                <div
+                                    class="p-6
+                                           space-y-4">
+
+
+                                    <!-- Mobile -->
+
+                                    <div
+                                        class="flex items-center
+                                               gap-3
+                                               p-3
+                                               rounded-xl
+                                               border border-slate-800
+                                               bg-slate-900/40">
+
+                                        <div
+                                            class="w-9 h-9
+                                                   rounded-lg
+                                                   bg-blue-500/10
+                                                   border border-blue-500/20
+                                                   flex items-center
+                                                   justify-center
+                                                   text-blue-400">
+
+                                            📱
+
+                                        </div>
+
+
+                                        <div>
+
+                                            <div
+                                                class="text-xs
+                                                       text-slate-300
+                                                       font-semibold">
+
+                                                Mobile App
+
+                                            </div>
+
+                                            <div
+                                                class="text-[10px]
+                                                       text-slate-600
+                                                       font-mono">
+
+                                                .NET MAUI
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <!-- Connection -->
+
+                                    <div
+                                        class="flex justify-center
+                                               text-slate-700
+                                               text-xs">
+
+                                        ↓
+
+                                    </div>
+
+
+
+                                    <!-- SaaS -->
+
+                                    <div
+                                        class="flex items-center
+                                               gap-3
+                                               p-3
+                                               rounded-xl
+                                               border border-indigo-500/20
+                                               bg-indigo-500/5">
+
+                                        <div
+                                            class="w-9 h-9
+                                                   rounded-lg
+                                                   bg-indigo-500/10
+                                                   border border-indigo-500/20
+                                                   flex items-center
+                                                   justify-center
+                                                   text-indigo-400">
+
+                                            ☁
+
+                                        </div>
+
+
+                                        <div>
+
+                                            <div
+                                                class="text-xs
+                                                       text-slate-300
+                                                       font-semibold">
+
+                                                Símix Ponto SaaS
+
+                                            </div>
+
+                                            <div
+                                                class="text-[10px]
+                                                       text-slate-600
+                                                       font-mono">
+
+                                                Multitenant
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <!-- Connection -->
+
+                                    <div
+                                        class="flex justify-center
+                                               text-slate-700
+                                               text-xs">
+
+                                        ↕
+                                    </div>
+
+
+
+                                    <!-- Azure -->
+
+                                    <div
+                                        class="flex items-center
+                                               gap-3
+                                               p-3
+                                               rounded-xl
+                                               border border-sky-500/20
+                                               bg-sky-500/5">
+
+                                        <div
+                                            class="w-9 h-9
+                                                   rounded-lg
+                                                   bg-sky-500/10
+                                                   border border-sky-500/20
+                                                   flex items-center
+                                                   justify-center
+                                                   text-sky-400">
+
+                                            ◇
+
+                                        </div>
+
+
+                                        <div>
+
+                                            <div
+                                                class="text-xs
+                                                       text-slate-300
+                                                       font-semibold">
+
+                                                Azure Services
+
+                                            </div>
+
+                                            <div
+                                                class="text-[10px]
+                                                       text-slate-600
+                                                       font-mono">
+
+                                                Face · Location · Cloud
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <!-- Legacy -->
+
+                                    <div
+                                        class="flex items-center
+                                               gap-3
+                                               p-3
+                                               rounded-xl
+                                               border border-slate-800
+                                               bg-slate-900/40">
+
+                                        <div
+                                            class="w-9 h-9
+                                                   rounded-lg
+                                                   bg-slate-800
+                                                   flex items-center
+                                                   justify-center
+                                                   text-slate-400">
+
+                                            ◈
+
+                                        </div>
+
+
+                                        <div>
+
+                                            <div
+                                                class="text-xs
+                                                       text-slate-300
+                                                       font-semibold">
+
+                                               PcPonto
+
+                                            </div>
+
+                                            <div
+                                                class="text-[10px]
+                                                       text-slate-600
+                                                       font-mono">
+
+                                                Integration
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </article>
+
         </section>
 
 
-        <!-- TECHNOLOGIES -->
+
+        <!-- ========================================================= -->
+        <!-- STACK -->
+        <!-- ========================================================= -->
+
         <section class="mt-24">
 
-            <p class="text-xs uppercase
-                      tracking-[.2em]
-                      text-slate-500
-                      font-semibold">
+
+            <p
+                class="text-xs
+                       uppercase
+                       tracking-[.2em]
+                       text-slate-500
+                       font-semibold">
 
                 Stack
 
             </p>
 
 
-            <div class="grid
-                        grid-cols-2
-                        md:grid-cols-4
-                        gap-3 mt-5">
+            <div
+                class="grid
+                       grid-cols-2
+                       md:grid-cols-4
+                       gap-3
+                       mt-5">
+
 
                 <div class="stack-card">
 
@@ -916,6 +1690,42 @@
 
                 <div class="stack-card">
 
+                    <strong>Azure</strong>
+
+                    <span>Cloud</span>
+
+                </div>
+
+
+                <div class="stack-card">
+
+                    <strong>Blazor</strong>
+
+                    <span>Web UI</span>
+
+                </div>
+
+
+                <div class="stack-card">
+
+                    <strong>.NET MAUI</strong>
+
+                    <span>Mobile</span>
+
+                </div>
+
+
+                <div class="stack-card">
+
+                    <strong>SQL</strong>
+
+                    <span>Database</span>
+
+                </div>
+
+
+                <div class="stack-card">
+
                     <strong>WPF</strong>
 
                     <span>Desktop UI</span>
@@ -925,9 +1735,9 @@
 
                 <div class="stack-card">
 
-                    <strong>Windows</strong>
+                    <strong>Multitenancy</strong>
 
-                    <span>Target platform</span>
+                    <span>SaaS Architecture</span>
 
                 </div>
 
@@ -936,9 +1746,14 @@
         </section>
 
 
+
+        <!-- ========================================================= -->
         <!-- FOOTER -->
+        <!-- ========================================================= -->
+
         <footer
-            class="mt-24 pt-8
+            class="mt-24
+                   pt-8
                    border-t border-slate-900
                    flex flex-col
                    md:flex-row
@@ -947,83 +1762,24 @@
                    text-xs
                    text-slate-600">
 
-            <span>
-                Built with C# & .NET
-            </span>
 
             <span>
+
+                Software developer · C# & .NET
+
+            </span>
+
+
+            <span>
+
                 © 2026 suiciniv.dev
+
             </span>
 
         </footer>
 
     </main>
 
-
-    <!-- Tailwind custom components -->
-    <style>
-
-        .tech {
-            display: inline-flex;
-            align-items: center;
-
-            padding: .35rem .65rem;
-
-            border-radius: .5rem;
-
-            background: #090c11;
-
-            border: 1px solid #1c2530;
-
-            color: #94a3b8;
-
-            font-size: .7rem;
-
-            font-family: monospace;
-
-            transition: all .2s;
-        }
-
-        .tech:hover {
-            border-color: #512bd4;
-            color: white;
-        }
-
-
-        .stack-card {
-            padding: 1.25rem;
-
-            border: 1px solid #1c2530;
-
-            background: rgba(13,17,23,.7);
-
-            border-radius: 1rem;
-
-            display: flex;
-
-            flex-direction: column;
-
-            gap: .25rem;
-
-            transition: all .2s;
-        }
-
-        .stack-card:hover {
-            border-color: #334155;
-            background: #11161e;
-        }
-
-        .stack-card strong {
-            font-size: 1rem;
-            color: #e2e8f0;
-        }
-
-        .stack-card span {
-            font-size: .7rem;
-            color: #64748b;
-        }
-
-    </style>
-
 </body>
+
 </html>
