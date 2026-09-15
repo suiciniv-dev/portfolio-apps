@@ -1,1935 +1,803 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
-
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>suiciniv.dev — Projects & Apps</title>
-
-    <meta name="description"
-          content="Projetos, aplicativos e ferramentas desenvolvidos com C# e .NET. Projetos pessoais e profissionais.">
-
-    <!-- Open Graph / LinkedIn / WhatsApp -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://suiciniv.dev/">
-    <meta property="og:title" content="suiciniv.dev — Software I built.">
-    <meta property="og:description" content="Desenvolvedor Especialista no ecossistema C# .NET com quase 7 anos de vivência em tecnologia. Projetos pessoais e profissionais.">
-    <!-- Crie um print do seu site e substitua a URL abaixo -->
-    <meta property="og:image" content="https://suiciniv.dev/assets/preview.jpg"> 
-
-    <!-- Twitter / X -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="suiciniv.dev — Projects & Apps">
-    <meta property="twitter:description" content="Desenvolvedor Especialista no ecossistema C# .NET com quase 7 anos de vivência em tecnologia.">
-    <!-- Crie um print do seu site e substitua a URL abaixo -->
-    <meta property="twitter:image" content="https://suiciniv.dev/assets/preview.jpg">
-
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-
-            theme: {
-                extend: {
-                    colors: {
-                        bg: '#07090d',
-                        surface: '#0d1117',
-                        surface2: '#11161e',
-                        line: '#1c2530',
-
-                        dotnet: '#512bd4',
-                        csharp: '#9b4dca',
-
-                        accent: '#38bdf8',
-                        accent2: '#6366f1'
-                    },
-
-                    boxShadow: {
-                        glow: '0 0 40px rgba(56,189,248,.08)',
-                        purple: '0 0 50px rgba(81,43,212,.15)'
-                    }
-                }
-            }
-        }
-    </script>
-
-
-    <style>
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-
-        body {
-            background:
-                radial-gradient(
-                    circle at 80% 10%,
-                    rgba(81, 43, 212, .12),
-                    transparent 30%
-                ),
-                radial-gradient(
-                    circle at 10% 30%,
-                    rgba(56, 189, 248, .06),
-                    transparent 30%
-                ),
-                #07090d;
-        }
-
-
-        /* Background grid */
-
-        .grid-bg {
-            background-image:
-                linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
-
-            background-size: 40px 40px;
-
-            mask-image: linear-gradient(
-                to bottom,
-                black 0%,
-                transparent 80%
-            );
-        }
-
-
-        /* Project glow */
-
-        .csharp-glow {
-            box-shadow:
-                0 0 30px rgba(155, 77, 202, .15),
-                inset 0 0 30px rgba(155, 77, 202, .03);
-        }
-
-
-        .blue-glow {
-            box-shadow:
-                0 0 30px rgba(56, 189, 248, .10),
-                inset 0 0 30px rgba(56, 189, 248, .02);
-        }
-
-
-        /* Project cards */
-
-        .project-card {
-            transition:
-                transform .3s ease,
-                border-color .3s ease,
-                box-shadow .3s ease;
-        }
-
-
-        .project-card:hover {
-            transform: translateY(-4px);
-
-            border-color: rgba(81, 43, 212, .5);
-
-            box-shadow:
-                0 20px 70px rgba(0,0,0,.35),
-                0 0 50px rgba(81,43,212,.08);
-        }
-
-
-        /* Terminal */
-
-        .terminal-line::before {
-            content: ">";
-            color: #38bdf8;
-            margin-right: 10px;
-        }
-
-
-        /* Pulse */
-
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-
-
-        @keyframes pulse {
-
-            0%, 100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: .45;
-            }
-
-        }
-
-
-        /* Tech tags */
-
-        .tech {
-            display: inline-flex;
-
-            align-items: center;
-
-            padding: .35rem .65rem;
-
-            border-radius: .5rem;
-
-            background: #090c11;
-
-            border: 1px solid #1c2530;
-
-            color: #94a3b8;
-
-            font-size: .7rem;
-
-            font-family: monospace;
-
-            transition: all .2s;
-        }
-
-
-        .tech:hover {
-            border-color: #512bd4;
-
-            color: white;
-        }
-
-
-        /* Stack cards */
-
-        .stack-card {
-            padding: 1.25rem;
-
-            border: 1px solid #1c2530;
-
-            background: rgba(13,17,23,.7);
-
-            border-radius: 1rem;
-
-            display: flex;
-
-            flex-direction: column;
-
-            gap: .25rem;
-
-            transition: all .2s;
-        }
-
-
-        .stack-card:hover {
-            border-color: #334155;
-
-            background: #11161e;
-        }
-
-
-        .stack-card strong {
-            font-size: 1rem;
-
-            color: #e2e8f0;
-        }
-
-
-        .stack-card span {
-            font-size: .7rem;
-
-            color: #64748b;
-        }
-
-
-        /* Social links */
-
-        .social-link {
-            color: #64748b;
-
-            transition:
-                color .2s ease,
-                transform .2s ease;
-        }
-
-
-        .social-link:hover {
-            color: white;
-
-            transform: translateY(-1px);
-        }
-
-
-        /* Store buttons */
-
-        .store-button {
-            display: inline-flex;
-
-            align-items: center;
-
-            gap: .6rem;
-
-            padding: .7rem 1rem;
-
-            border-radius: .75rem;
-
-            border: 1px solid #1c2530;
-
-            background: #090c11;
-
-            color: #cbd5e1;
-
-            font-size: .75rem;
-
-            font-weight: 600;
-
-            transition: all .2s ease;
-        }
-
-
-        .store-button:hover {
-            background: #11161e;
-
-            border-color: #475569;
-
-            color: white;
-
-            transform: translateY(-1px);
-        }
-
-
-        .store-icon {
-            width: 18px;
-
-            height: 18px;
-
-            flex-shrink: 0;
-        }
-
-
-        /* Professional badge */
-
-        .professional-badge {
-            display: inline-flex;
-
-            align-items: center;
-
-            gap: .5rem;
-
-            padding: .35rem .7rem;
-
-            border-radius: 999px;
-
-            background: rgba(99,102,241,.08);
-
-            border: 1px solid rgba(99,102,241,.25);
-
-            color: #a5b4fc;
-
-            font-size: .7rem;
-
-            font-weight: 600;
-        }
-
-        /* Scroll Reveal Animation */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease-out;
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-    </style>
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>suiciniv.dev — Software I built.</title>
+<meta name="description" content="Desenvolvedor de Software Especialista em C# / .NET. Projetos pessoais e profissionais: apps em produção, HUD de hardware e plataformas SaaS multitenant.">
+<meta name="theme-color" content="#08090c">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://suiciniv.dev/">
+<meta property="og:title" content="suiciniv.dev — Software I built.">
+<meta property="og:description" content="Desenvolvedor Especialista no ecossistema C# .NET com quase 7 anos de vivência em tecnologia.">
+<meta property="og:image" content="https://suiciniv.dev/assets/preview.jpg">
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:title" content="suiciniv.dev — Projects & Apps">
+<meta property="twitter:image" content="https://suiciniv.dev/assets/preview.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:#08090c;color:#e8ebf0;font-family:'Instrument Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:#a898ff;text-decoration:none}
+  a:hover{color:#cfc6ff}
+  ::selection{background:#512bd4;color:#fff}
+  h1,h2,h3{font-family:'Space Grotesk','Instrument Sans',sans-serif;margin:0}
+  p{margin:0;text-wrap:pretty}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+  @keyframes lineIn{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
+  @keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+  @keyframes drift{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,-40px,0)}}
+  [data-reveal]{animation:rise .8s cubic-bezier(.2,.7,.2,1) both;animation-timeline:view();animation-range:entry 0% cover 26%}
+  @media (prefers-reduced-motion:reduce){[data-reveal],[data-tline]{animation:none!important;opacity:1!important;transform:none!important}}
+</style>
+<style>
+.hv1:hover{color:#e8ebf0}
+.hv2:hover{color:#e8ebf0}
+.hv3:hover{color:#e8ebf0}
+.hv4:hover{color:#e8ebf0}
+.hv5:hover{color:#fff;border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.07)}
+.hv6:hover{color:#fff;border-color:rgba(56,189,248,.4);background:rgba(56,189,248,.1)}
+.hv7:hover{background:#fff;transform:translateY(-1px)}
+.hv8:hover{filter:brightness(1.12);transform:translateY(-2px)}
+.hv9:hover{border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.07)}
+.hv10:hover{color:#e8ebf0;border-color:rgba(255,255,255,.2)}
+.hv11:hover{filter:brightness(1.12);transform:translateY(-2px)}
+.hv12:hover{border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.07)}
+.hv13:hover{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.07)}
+.hv14:hover{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.07)}
+.hv15:hover{border-color:rgba(109,92,240,.4);background:rgba(17,21,28,.9);transform:translateY(-3px)}
+.hv16:hover{border-color:rgba(109,92,240,.4);background:rgba(17,21,28,.9);transform:translateY(-3px)}
+.hv17:hover{border-color:rgba(109,92,240,.4);background:rgba(17,21,28,.9);transform:translateY(-3px)}
+.hv18:hover{border-color:rgba(109,92,240,.4);background:rgba(17,21,28,.9);transform:translateY(-3px)}
+.hv19:hover{background:#fff;transform:translateY(-2px)}
+.hv20:hover{border-color:rgba(255,255,255,.32);background:rgba(255,255,255,.1)}
+.hv21:hover{color:#fff}
+.hv22:hover{color:#fff}
+.hv23:hover{color:#fff}
+.hv24:hover{color:#fff}
+.hv25:hover{color:#e8ebf0}
+
+/* comandos clicáveis do cartão do Senna */
+.cmd{display:inline-flex;align-items:center;padding:7px 12px;border-radius:9px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);
+  font:400 12px/1 'JetBrains Mono',monospace;color:#9aa5b4;cursor:pointer;
+  transition:border-color .2s,background .2s,color .2s,transform .2s}
+.cmd:hover{border-color:rgba(47,191,99,.45);background:rgba(47,191,99,.07);
+  color:#dfe6ee;transform:translateY(-1px)}
+.cmd:focus-visible{outline:2px solid #2fbf63;outline-offset:2px}
+.cmd[data-ativo]{border-color:rgba(47,191,99,.7);background:rgba(47,191,99,.12);color:#eafff2}
+.cmd-seta{color:#2fbf63;margin-right:7px}
+
+/* legenda das cores, também clicável */
+.leg{display:flex;align-items:center;gap:11px;width:100%;padding:7px 8px;
+  border:1px solid transparent;border-radius:9px;background:none;cursor:pointer;
+  text-align:left;transition:background .2s,border-color .2s}
+.leg:hover{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.09)}
+.leg:focus-visible{outline:2px solid #2fbf63;outline-offset:2px}
+.leg-dot{width:11px;height:11px;border-radius:50%;flex:none}
+.leg-nome{font:600 12.5px/1 'Instrument Sans',sans-serif;color:#c4ccd8;min-width:74px}
+.leg-desc{font:400 12px/1.4 'Instrument Sans',sans-serif;color:#5d6773}
+
+@media (prefers-reduced-motion:reduce){
+  .cmd,.leg{transition:none}
+  .cmd:hover{transform:none}
+}
+</style>
 </head>
+<body>
+<div style="position:relative;min-height:100vh;overflow-x:hidden">
 
+  <div style="position:fixed;inset:0;pointer-events:none;z-index:0;background:
+      radial-gradient(760px 520px at 88% -6%, rgba(81,43,212,.28), transparent 62%),
+      radial-gradient(620px 460px at 4% 22%, rgba(56,189,248,.10), transparent 60%),
+      radial-gradient(900px 700px at 50% 108%, rgba(120,60,220,.10), transparent 60%)"></div>
+  <div style="position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(120% 80% at 50% 0%,#000 10%,transparent 78%)"></div>
 
-<body class="text-slate-100 min-h-screen">
+  <div id="barra" style="position:fixed;top:0;left:0;height:2px;z-index:80;background:linear-gradient(90deg,#38bdf8,#6366f1,#9b4dca);box-shadow:0 0 12px rgba(99,102,241,.6);width:0%"></div>
 
+  <header style="position:sticky;top:0;z-index:60;backdrop-filter:blur(14px);background:rgba(8,9,12,.72);border-bottom:1px solid rgba(255,255,255,.055)">
+    <div style="max-width:1120px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px">
+      <a href="#top" style="display:flex;align-items:center;gap:11px;color:#e8ebf0">
+        <span style="width:34px;height:34px;border-radius:10px;background:linear-gradient(140deg,#6d3ff0,#512bd4);display:flex;align-items:center;justify-content:center;font:700 14px/1 'Space Grotesk',sans-serif;color:#fff;box-shadow:0 6px 24px rgba(81,43,212,.5)">C#</span>
+        <span style="font:600 15px/1 'Space Grotesk',sans-serif;letter-spacing:-.01em">suiciniv<span style="color:#5d6773">.dev</span></span>
+      </a>
+      <nav style="display:none;gap:26px;align-items:center;font:500 13px/1 'Instrument Sans',sans-serif" data-nav>
+        <a href="#sobre" style="color:#8b95a5" class="hv1">Sobre</a>
+        <a href="#projetos" style="color:#8b95a5" class="hv2">Projetos</a>
+        <a href="#atuacao" style="color:#8b95a5" class="hv3">Atuação</a>
+        <a href="#stack" style="color:#8b95a5" class="hv4">Stack</a>
+      </nav>
+      <div style="display:flex;align-items:center;gap:10px">
+        <a href="https://github.com/suiciniv-dev" target="_blank" rel="noopener noreferrer" aria-label="GitHub" style="width:34px;height:34px;border-radius:9px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center;color:#8b95a5;transition:all .2s" class="hv5">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.55v-2.1c-3.2.7-3.88-1.400-3.88-1.400-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.2 1.77 1.2 1.04 1.78 2.72 1.27 3.38.97.1-.75.4-1.27.73-1.56-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.12 3.05.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.4-5.26 5.69.42.36.79 1.07.79 2.15v3.19c0 .3.2.66.8.55A11.5 11.5 0 0 0 23.5 12A11.5 11.5 0 0 0 12 .5Z"/></svg>
+        </a>
+        <a href="https://www.linkedin.com/in/vin%C3%ADcius-pires-da-silva-094066204/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" style="width:34px;height:34px;border-radius:9px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center;color:#8b95a5;transition:all .2s" class="hv6">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 1 1 2.5 6 2.5 2.5 0 0 1 4.98 3.5ZM.9 8.4h8.1V24H.9Zm13.2 0h7.77v2.13h.1a4.6 4.6 0 0 1 4.1-2.26V8.4c-.1 0-.2 0-.3.01V24h-3.9v-8.2c0-2.07-.04-4.73-2.88-4.73-2.88 0-3.32 2.25-3.32 4.58V24h-3.9Z"/></svg>
+        </a>
+        <a href="assets/Currículo - Vinícius Pires da Silva.pdf" download target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:10px;background:#e8ebf0;color:#0a0c10;font:600 12.5px/1 'Instrument Sans',sans-serif;transition:all .2s" class="hv7">Baixar CV</a>
+      </div>
+    </div>
+  </header>
 
-    <!-- Background -->
+  <main id="top" style="position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:0 24px 0">
 
-    <div class="grid-bg fixed inset-0 pointer-events-none"></div>
+    <section style="padding:88px 0 0;max-width:900px">
+      <div style="display:inline-flex;align-items:center;gap:9px;padding:6px 13px 6px 11px;border-radius:999px;border:1px solid rgba(74,222,128,.22);background:rgba(74,222,128,.06);font:500 11.5px/1 'JetBrains Mono',monospace;color:#86efac;letter-spacing:.02em">
+        <span style="width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 10px #4ade80;animation:blink 2.2s infinite"></span>
+        Software Developer · C# &amp; .NET
+      </div>
 
+      <h1 style="margin-top:26px;font:700 clamp(42px,8.4vw,86px)/0.98 'Space Grotesk',sans-serif;letter-spacing:-.035em">
+        Software I
+        <span style="background:linear-gradient(96deg,#7dd3fc,#818cf8 48%,#c084fc);-webkit-background-clip:text;background-clip:text;color:transparent">built.</span>
+      </h1>
 
-    <main class="relative max-w-6xl mx-auto px-6 py-8 md:px-10 md:py-14">
+      <p style="margin-top:26px;max-width:620px;font-size:clamp(16px,1.6vw,19px);line-height:1.62;color:#98a2b1">
+        Projetos, aplicativos e ferramentas com foco em performance, simplicidade e utilidade.
+        <span style="color:#5d6773">Algumas ideias são úteis. Outras… eu só queria ver funcionando.</span>
+      </p>
 
+      <div style="display:flex;flex-wrap:wrap;gap:11px;margin-top:34px">
+        <a href="#projetos" style="display:inline-flex;align-items:center;gap:9px;padding:13px 22px;border-radius:12px;background:linear-gradient(135deg,#6d3ff0,#512bd4);color:#fff;font:600 14px/1 'Instrument Sans',sans-serif;box-shadow:0 10px 34px rgba(81,43,212,.38);transition:all .2s" class="hv8">Ver projetos <span style="font-size:15px">↓</span></a>
+        <button type="button" onclick="copiarEmail(this)" style="display:inline-flex;align-items:center;gap:9px;padding:13px 20px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.035);color:#d4dae3;font:600 14px/1 'Instrument Sans',sans-serif;cursor:pointer;transition:all .2s;font-family:'Instrument Sans',sans-serif" class="hv9">Copiar e-mail</button>
+        <a href="https://github.com/simix-viniciussilva" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:12px;border:1px solid rgba(255,255,255,.09);background:transparent;color:#8b95a5;font:600 14px/1 'Instrument Sans',sans-serif;transition:all .2s" class="hv10">GitHub Empresa ↗</a>
+      </div>
 
-        <!-- ========================================================= -->
-        <!-- NAVBAR -->
-        <!-- ========================================================= -->
+      
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;margin-top:64px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.07);border-radius:16px;overflow:hidden">
+          <div style="padding:20px 22px;background:#0a0c10">
+            <div style="font:700 30px/1 'Space Grotesk',sans-serif;letter-spacing:-.03em;color:#e8ebf0">~7</div>
+            <div style="margin-top:7px;font:500 10.5px/1.4 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#5d6773">anos em tecnologia</div>
+          </div>
+          <div style="padding:20px 22px;background:#0a0c10">
+            <div style="font:700 30px/1 'Space Grotesk',sans-serif;letter-spacing:-.03em;color:#e8ebf0">2</div>
+            <div style="margin-top:7px;font:500 10.5px/1.4 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#5d6773">apps publicados</div>
+          </div>
+          <div style="padding:20px 22px;background:#0a0c10">
+            <div style="font:700 30px/1 'Space Grotesk',sans-serif;letter-spacing:-.03em;color:#e8ebf0">3</div>
+            <div style="margin-top:7px;font:500 10.5px/1.4 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#5d6773">plataformas · win / ios / android</div>
+          </div>
+          <div style="padding:20px 22px;background:#0a0c10">
+            <div style="font:700 30px/1 'Space Grotesk',sans-serif;letter-spacing:-.03em;color:#e8ebf0">SaaS</div>
+            <div style="margin-top:7px;font:500 10.5px/1.4 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#5d6773">multitenant em produção</div>
+          </div>
+        </div>
+      
+    </section>
 
-        <nav class="flex flex-col md:flex-row
-                    md:items-center
-                    md:justify-between
-                    gap-5
-                    mb-24">
+    <section id="sobre" data-reveal style="padding:120px 0 0;scroll-margin-top:90px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:48px;align-items:start">
+        <div>
+          <p style="font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.22em;text-transform:uppercase;color:#5d6773">Background</p>
+          <h2 style="margin-top:14px;font:700 clamp(26px,3vw,36px)/1.1 'Space Grotesk',sans-serif;letter-spacing:-.025em">Sobre mim</h2>
+          <div style="margin-top:22px;display:flex;flex-direction:column;gap:14px;font-size:15px;line-height:1.55;color:#7c8694">
+            <div style="display:flex;gap:12px;align-items:baseline"><span style="font:500 11px/1.6 'JetBrains Mono',monospace;color:#6d5cf0">01</span><span>Backend &amp; fullstack para sistemas de gestão de ponto</span></div>
+            <div style="display:flex;gap:12px;align-items:baseline"><span style="font:500 11px/1.6 'JetBrains Mono',monospace;color:#6d5cf0">02</span><span>Arquiteturas multitenancy com ABP Framework e PostgreSQL</span></div>
+            <div style="display:flex;gap:12px;align-items:baseline"><span style="font:500 11px/1.6 'JetBrains Mono',monospace;color:#6d5cf0">03</span><span>APIs RESTful, Blazor e apps multiplataforma em .NET MAUI</span></div>
+            <div style="display:flex;gap:12px;align-items:baseline"><span style="font:500 11px/1.6 'JetBrains Mono',monospace;color:#6d5cf0">04</span><span>Integração contínua em nuvem com Microsoft Azure</span></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:20px;font-size:15.5px;line-height:1.7;color:#98a2b1;padding-left:0">
+          <p>Desenvolvedor de Software Especialista no ecossistema <strong style="color:#e8ebf0;font-weight:600">C# .NET</strong> com quase 7 anos de vivência em tecnologia. Atualmente atuo no desenvolvimento de soluções backend e fullstack para sistemas de gestão de ponto, com forte experiência em arquiteturas multitenancy utilizando ABP Framework e PostgreSQL.</p>
+          <p>Possuo sólido domínio na criação de APIs RESTful, interfaces modernas com Blazor e aplicações multiplataforma com .NET MAUI, com integração contínua em nuvem utilizando Microsoft Azure.</p>
+          <p style="color:#7c8694">Perfil autodidata, com capacidade comprovada na resolução de problemas complexos e na modernização de sistemas legados.</p>
+        </div>
+      </div>
+    </section>
 
+    <section id="projetos" style="padding:120px 0 0;scroll-margin-top:90px">
+      <div data-reveal style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:26px">
+        <div>
+          <p style="font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.22em;text-transform:uppercase;color:#5d6773">Projects &amp; Apps</p>
+          <h2 style="margin-top:14px;font:700 clamp(26px,3vw,36px)/1.1 'Space Grotesk',sans-serif;letter-spacing:-.025em">Projetos</h2>
+        </div>
+        <span style="font:500 11px/1 'JetBrains Mono',monospace;color:#4a5461">03 / selected work</span>
+      </div>
 
-            <!-- Logo -->
+      <article data-reveal style="border:1px solid rgba(255,255,255,.075);border-radius:24px;overflow:hidden;background:linear-gradient(180deg,rgba(14,17,23,.9),rgba(10,12,16,.9));box-shadow:0 0 60px rgba(47,191,99,.07),0 24px 60px rgba(0,0,0,.4);margin-bottom:26px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))">
+     <div style="padding:clamp(26px,3.4vw,40px)">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
+       <div style="display:flex;align-items:center;gap:15px">
+        <div style="width:52px;height:52px;border-radius:15px;background:linear-gradient(140deg,#2fbf63,#0a2e18);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(47,191,99,.35)">
+         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#eafff2" stroke-width="1.7" stroke-linecap="round"><path d="M12 3v10"/><path d="M8.5 6.5v3"/><path d="M15.5 6.5v3"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M12 17v4"/></svg>
+        </div>
+        <div>
+         <h3 style="font:700 23px/1.15 'Space Grotesk',sans-serif;letter-spacing:-.02em">Senna</h3>
+         <p style="margin-top:6px;font:400 13px/1 'Instrument Sans',sans-serif;color:#5d6773">Assistente de voz · Windows</p>
+        </div>
+       </div>
+       <span style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:rgba(47,191,99,.07);border:1px solid rgba(47,191,99,.22);font:600 11px/1 'Instrument Sans',sans-serif;color:#7fe0a3;white-space:nowrap">
+        <span style="width:6px;height:6px;border-radius:50%;background:#2fbf63"></span>Projeto pessoal
+       </span>
+      </div>
 
-            <div class="flex items-center gap-3">
+      <p style="margin-top:26px;font:400 15px/1.75 'Instrument Sans',sans-serif;color:#8b95a5;max-width:46ch">
+       Um assistente de voz que mora no meu desktop. Chamo pelo nome, peço em
+       português e ele resolve: abre o que preciso para começar a trabalhar,
+       responde sobre o tempo, controla a música. O nome e o design são
+       inspirados no Ayrton Senna — sou um grande fã.
+      </p>
 
-                <div
-                    class="w-9 h-9
-                           rounded-lg
-                           bg-[#512bd4]
-                           flex items-center
-                           justify-center
-                           font-black
-                           text-white
-                           shadow-purple">
+      <p style="margin-top:28px;font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.18em;text-transform:uppercase;color:#5d6773">Clique para ver a esfera reagir</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px"><button type="button" class="cmd" data-roteiro="[[&quot;listening&quot;, 1.3, null], [&quot;processing&quot;, 2.0, null], [&quot;speaking&quot;, 2.8, &quot;Detectei 3 PRs sem o seu review. Abrindo.&quot;]]" onclick="sennaRoteiro(this)"><span class="cmd-seta">&rsaquo;</span>hey senna, meus PRs</button><button type="button" class="cmd" data-roteiro="[[&quot;listening&quot;, 1.1, null], [&quot;processing&quot;, 1.6, null], [&quot;speaking&quot;, 2.8, &quot;Abrindo as abas dos projetos.&quot;]]" onclick="sennaRoteiro(this)"><span class="cmd-seta">&rsaquo;</span>hora do trampo</button><button type="button" class="cmd" data-roteiro="[[&quot;listening&quot;, 1.3, null], [&quot;processing&quot;, 2.4, null], [&quot;speaking&quot;, 3.0, &quot;Amanhã tem chuva a partir das 15 horas.&quot;]]" onclick="sennaRoteiro(this)"><span class="cmd-seta">&rsaquo;</span>vai chover amanhã?</button><button type="button" class="cmd" data-roteiro="[[&quot;listening&quot;, 1.2, null], [&quot;processing&quot;, 1.4, null], [&quot;speaking&quot;, 2.2, &quot;Tocando.&quot;]]" onclick="sennaRoteiro(this)"><span class="cmd-seta">&rsaquo;</span>toca a playlist</button><button type="button" class="cmd" data-roteiro="[[&quot;listening&quot;, 1.1, null], [&quot;processing&quot;, 0.9, null], [&quot;speaking&quot;, 1.8, &quot;Próxima.&quot;]]" onclick="sennaRoteiro(this)"><span class="cmd-seta">&rsaquo;</span>troca a música</button><button type="button" class="cmd" data-roteiro="[[&quot;listening&quot;, 1.1, null], [&quot;processing&quot;, 1.7, null], [&quot;speaking&quot;, 2.4, &quot;Acordando o celular.&quot;]]" onclick="sennaRoteiro(this)"><span class="cmd-seta">&rsaquo;</span>liga o celular</button><button type="button" class="cmd" data-roteiro="[[&quot;listening&quot;, 1.0, null], [&quot;processing&quot;, 0.7, null], [&quot;speaking&quot;, 2.4, &quot;@hora@&quot;]]" onclick="sennaRoteiro(this)"><span class="cmd-seta">&rsaquo;</span>que horas são</button><button type="button" class="cmd" data-roteiro="[[&quot;listening&quot;, 1.0, null], [&quot;processing&quot;, 0.7, null], [&quot;speaking&quot;, 1.8, &quot;Pausado.&quot;]]" onclick="sennaRoteiro(this)"><span class="cmd-seta">&rsaquo;</span>pausa a música</button></div>
 
-                    C#
+      <div style="margin-top:28px;padding:16px 18px;border-radius:14px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06)">
+       <p style="font:400 12.5px/1.7 'Instrument Sans',sans-serif;color:#5d6773">
+        <span style="color:#8b95a5;font-weight:600">Sem download.</span>
+        Foi feito para uma máquina só — a minha. Está aqui como construção, não
+        como produto.
+       </p>
+      </div>
+     </div>
 
+     <div style="border-left:1px solid rgba(255,255,255,.055);background:#06070a;padding:clamp(22px,3vw,34px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px">
+      <canvas id="orb" width="320" height="320" style="width:min(180px,46vw);height:min(180px,46vw);display:block" aria-label="A esfera do Senna, animada"></canvas>
+
+      <div style="text-align:center;min-height:52px;display:flex;flex-direction:column;justify-content:center;gap:7px">
+       <span id="orb-estado" style="font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.18em;text-transform:uppercase;color:#5d6773">Em repouso</span>
+       <span id="orb-fala" style="font:400 13px/1.5 'Instrument Sans',sans-serif;color:#9aa5b4;opacity:0;transition:opacity .35s;max-width:30ch">&nbsp;</span>
+      </div>
+
+      <div style="width:100%;border-top:1px solid rgba(255,255,255,.055);padding-top:20px;display:flex;flex-direction:column;gap:6px"><button type="button" class="leg" onclick="sennaEstado('idle')"><span class="leg-dot" style="background:#2fbf63;box-shadow:0 0 10px #2fbf6399"></span><span class="leg-nome">Em repouso</span><span class="leg-desc">esperando você chamar</span></button><button type="button" class="leg" onclick="sennaEstado('listening')"><span class="leg-dot" style="background:#39ff14;box-shadow:0 0 10px #39ff1499"></span><span class="leg-nome">Ouvindo</span><span class="leg-desc">gravando o que você pediu</span></button><button type="button" class="leg" onclick="sennaEstado('processing')"><span class="leg-dot" style="background:#ffb020;box-shadow:0 0 10px #ffb02099"></span><span class="leg-nome">Pensando</span><span class="leg-desc">buscando a resposta</span></button><button type="button" class="leg" onclick="sennaEstado('speaking')"><span class="leg-dot" style="background:#38bdf8;box-shadow:0 0 10px #38bdf899"></span><span class="leg-nome">Falando</span><span class="leg-desc">respondendo</span></button><button type="button" class="leg" onclick="sennaEstado('muted')"><span class="leg-dot" style="background:#b14ae8;box-shadow:0 0 10px #b14ae899"></span><span class="leg-nome">Mudo</span><span class="leg-desc">silenciado, para reuniões</span></button></div>
+     </div>
+    </div>
+   </article>
+
+   <article data-reveal style="border:1px solid rgba(255,255,255,.075);border-radius:24px;overflow:hidden;background:linear-gradient(180deg,rgba(14,17,23,.9),rgba(10,12,16,.9));box-shadow:0 0 60px rgba(155,77,202,.08),0 24px 60px rgba(0,0,0,.4);margin-bottom:26px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))">
+          <div style="padding:clamp(26px,3.4vw,40px)">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
+              <div style="display:flex;align-items:center;gap:15px">
+                <div style="width:52px;height:52px;border-radius:15px;background:linear-gradient(140deg,#6d3ff0,#9b4dca);display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 10px 30px rgba(129,63,220,.4);flex:none">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path></svg>
                 </div>
-
-
-                <span class="font-semibold tracking-tight">
-
-                    suiciniv<span class="text-slate-500">.dev</span>
-
-                </span>
-
-            </div>
-
-
-            <!-- Socials -->
-
-            <div class="flex flex-wrap items-center gap-5">
-
-
-                <!-- GitHub -->
-
-                <a
-                    href="https://github.com/suiciniv-dev"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="social-link text-sm">
-
-                    GitHub pessoal ↗
-
-                </a>
-
-
-                <!-- Company GitHub -->
-
-                <a
-                    href="https://github.com/simix-viniciussilva"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="social-link text-sm">
-
-                    GitHub Empresa ↗
-
-                </a>
-
-
-                <!-- Instagram -->
-                <a
-                    href="https://www.instagram.com/vini1piress/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="px-5 py-2.5
-                           rounded-lg
-                           border border-pink-500/20
-                           bg-pink-500/5
-                           text-pink-300
-                           hover:bg-pink-500/10
-                           hover:border-pink-500/40
-                           transition
-                           text-sm font-semibold">
-    
-                    Instagram ↗
-    
-                </a>
-    
-    
-                <!-- LinkedIn -->
-                <a
-                    href="https://www.linkedin.com/in/vin%C3%ADcius-pires-da-silva-094066204/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="px-5 py-2.5
-                           rounded-lg
-                           border border-blue-500/20
-                           bg-blue-500/5
-                           text-blue-300
-                           hover:bg-blue-500/10
-                           hover:border-blue-500/40
-                           transition
-                           text-sm font-semibold">
-    
-                    LinkedIn ↗
-    
-                </a>
-
-            </div>
-
-        </nav>
-
-
-
-        <!-- ========================================================= -->
-        <!-- HERO -->
-        <!-- ========================================================= -->
-
-        <section class="max-w-4xl mb-24">
-
-
-            <!-- Status -->
-
-            <div
-                class="inline-flex items-center gap-2
-                       px-3 py-1.5
-                       mb-6
-                       rounded-full
-                       border border-slate-800
-                       bg-slate-900/50
-                       text-xs
-                       text-slate-400">
-
-                <span
-                    class="w-1.5 h-1.5
-                           rounded-full
-                           bg-green-400
-                           pulse">
-                </span>
-
-                Software developer · C# & .NET
-
-            </div>
-
-
-
-            <!-- Title -->
-
-            <h1
-                class="text-5xl md:text-7xl
-                       font-black
-                       tracking-tight
-                       leading-[1.05]">
-
-                Software I
-
-                <span
-                    class="text-transparent
-                           bg-clip-text
-                           bg-gradient-to-r
-                           from-[#38bdf8]
-                           via-[#6366f1]
-                           to-[#9b4dca]">
-
-                    built.
-
-                </span>
-
-            </h1>
-
-
-
-            <!-- Description -->
-
-            <p
-                class="mt-7
-                       text-lg md:text-xl
-                       text-slate-400
-                       max-w-2xl
-                       leading-relaxed">
-
-                Projetos, aplicativos e ferramentas desenvolvidos
-                com foco em performance, simplicidade e utilidade.
-
-                <span class="text-slate-600">
-                    Algumas ideias são úteis.
-                    Outras... eu só queria ver funcionando.
-                </span>
-
-            </p>
-
-
-
-            <!-- Hero buttons -->
-
-            <div class="flex flex-wrap gap-3 mt-8">
-
-
-                <!-- GitHub -->
-
-                <a
-                    href="https://github.com/suiciniv-dev"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="px-5 py-2.5
-                           rounded-lg
-                           border border-slate-700
-                           bg-slate-900/70
-                           hover:bg-slate-800
-                           transition
-                           text-sm
-                           font-semibold">
-
-                    GitHub pessoal ↗
-
-                </a>
-
-
-
-                <!-- Company GitHub -->
-
-                <a
-                    href="https://github.com/simix-viniciussilva"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="px-5 py-2.5
-                           rounded-lg
-                           border border-[#512bd4]/40
-                           bg-[#512bd4]/10
-                           text-[#c4b5fd]
-                           hover:bg-[#512bd4]/20
-                           hover:border-[#512bd4]/70
-                           transition
-                           text-sm
-                           font-semibold">
-
-                    GitHub Empresa ↗
-
-                </a>
-
-                <!-- Instagram -->
-                <a
-                    href="https://www.instagram.com/vini1piress/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="px-5 py-2.5
-                           rounded-lg
-                           border border-pink-500/20
-                           bg-pink-500/5
-                           text-pink-300
-                           hover:bg-pink-500/10
-                           hover:border-pink-500/40
-                           transition
-                           text-sm font-semibold">
-    
-                    Instagram ↗
-    
-                </a>
-    
-    
-                <!-- LinkedIn -->
-                <a
-                    href="https://www.linkedin.com/in/vin%C3%ADcius-pires-da-silva-094066204/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="px-5 py-2.5
-                           rounded-lg
-                           border border-blue-500/20
-                           bg-blue-500/5
-                           text-blue-300
-                           hover:bg-blue-500/10
-                           hover:border-blue-500/40
-                           transition
-                           text-sm font-semibold">
-    
-                    LinkedIn ↗
-    
-                </a>
-
-                <!-- Projects -->
-
-                <a
-                    href="#projects"
-                    class="px-5 py-2.5
-                           rounded-lg
-                           bg-white
-                           text-black
-                           hover:bg-slate-200
-                           transition
-                           text-sm
-                           font-semibold">
-
-                    Ver projetos ↓
-
-                </a>
-
-                <!-- Download CV -->
-
-                <a
-                    href="assets/Currículo - Vinícius Pires da Silva.pdf"
-                    download="Curriculo_Vinicius_Pires_da_Silva.pdf"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="px-5 py-2.5
-                           rounded-lg
-                           bg-gradient-to-r from-[#512bd4] to-[#6366f1]
-                           text-white
-                           hover:brightness-110
-                           transition
-                           text-sm
-                           font-semibold
-                           shadow-purple">
-
-                    Baixar CV ↓
-
-                </a>
-
-            </div>
-
-        </section>
-
-        <!-- ========================================================= -->
-        <!-- BACKGROUND / SOBRE MIM -->
-        <!-- ========================================================= -->
-
-        <section class="max-w-4xl mb-32 reveal">
-            
-            <p class="text-xs uppercase tracking-[.2em] text-slate-500 font-semibold mb-4">Background</p>
-            
-            <h2 class="text-3xl font-bold mb-6">Sobre mim</h2>
-            
-            <div class="text-slate-400 leading-relaxed text-sm md:text-base space-y-4 max-w-3xl">
-                <p>
-                    Desenvolvedor de Software Especialista no ecossistema C# .NET com quase 7 anos de vivência em tecnologia. Atualmente atuo no desenvolvimento de soluções backend e fullstack para sistemas de gestão de ponto, com forte experiência em arquiteturas multitenancy utilizando ABP Framework e PostgreSQL.
-                </p>
-                <p>
-                    Possuo sólido domínio na criação de APIs RESTful, interfaces modernas com Blazor e aplicações multiplataforma com .NET MAUI. Integração contínua em nuvem utilizando Microsoft Azure.
-                </p>
-                <p>
-                    Perfil autodidata com capacidade comprovada na resolução de problemas complexos e modernização de sistemas legados.
-                </p>
-            </div>
-            
-        </section>
-
-        <!-- ========================================================= -->
-        <!-- PROJECTS -->
-        <!-- ========================================================= -->
-
-        <section id="projects">
-
-
-            <!-- Section header -->
-
-            <div
-                class="flex items-end
-                       justify-between
-                       mb-6 reveal">
-
-
                 <div>
-
-                    <p
-                        class="text-xs
-                               uppercase
-                               tracking-[.2em]
-                               text-slate-500
-                               font-semibold">
-
-                        Projects & Apps
-
-                    </p>
-
-
-                    <h2
-                        class="text-3xl
-                               font-bold
-                               mt-2">
-
-                        Projetos
-
-                    </h2>
-
+                  <h3 style="font:700 clamp(21px,2.3vw,26px)/1.15 'Space Grotesk',sans-serif;letter-spacing:-.02em">ControlSensors HUD</h3>
+                  <p style="margin-top:6px;font:500 12px/1 'JetBrains Mono',monospace;color:#5d6773">Windows Desktop Application</p>
                 </div>
-
-
-                <span
-                    class="text-xs
-                           text-slate-600
-                           font-mono">
-
-                    02 projects
-
-                </span>
-
+              </div>
+              <span style="display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);font:500 11px/1 'JetBrains Mono',monospace;color:#86efac;flex:none">
+                <span style="width:5px;height:5px;border-radius:50%;background:#4ade80"></span>Open Source
+              </span>
             </div>
 
-
-
-            <!-- ===================================================== -->
-            <!-- CONTROLSENSORS -->
-            <!-- ===================================================== -->
-
-            <article
-                class="project-card reveal
-                       bg-surface/80
-                       border border-line
-                       rounded-3xl
-                       overflow-hidden
-                       csharp-glow
-                       mb-8">
-
-
-                <div
-                    class="grid
-                           lg:grid-cols-[1.2fr_.8fr]">
-
-
-                    <!-- LEFT -->
-
-                    <div class="p-7 md:p-10">
-
-
-                        <!-- Header -->
-
-                        <div
-                            class="flex items-start
-                                   justify-between
-                                   gap-4">
-
-
-                            <div
-                                class="flex items-center
-                                       gap-4">
-
-
-                                <!-- Monitor icon -->
-
-                                <div
-                                    class="w-14 h-14
-                                           rounded-2xl
-                                           bg-gradient-to-br
-                                           from-[#512bd4]
-                                           to-[#9b4dca]
-                                           flex items-center
-                                           justify-center
-                                           text-white
-                                           shadow-purple">
-
-                                    <svg
-                                        class="w-8 h-8"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="1.8"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round">
-
-                                        <rect
-                                            x="3"
-                                            y="4"
-                                            width="18"
-                                            height="13"
-                                            rx="2">
-                                        </rect>
-
-                                        <path
-                                            d="M8 21h8">
-                                        </path>
-
-                                        <path
-                                            d="M12 17v4">
-                                        </path>
-
-                                    </svg>
-
-                                </div>
-
-
-                                <div>
-
-                                    <h3
-                                        class="text-2xl
-                                               font-bold">
-
-                                        ControlSensors HUD
-
-                                    </h3>
-
-
-                                    <p
-                                        class="text-sm
-                                               text-slate-500
-                                               mt-1">
-
-                                        Windows Desktop Application
-
-                                    </p>
-
-                                </div>
-
-                            </div>
-
-
-                            <!-- Open source -->
-
-                            <span
-                                class="hidden sm:inline-flex
-                                       items-center gap-2
-                                       px-3 py-1.5
-                                       rounded-full
-                                       bg-green-500/5
-                                       border border-green-500/20
-                                       text-xs
-                                       text-green-400">
-
-                                <span
-                                    class="w-1.5 h-1.5
-                                           rounded-full
-                                           bg-green-400">
-                                </span>
-
-                                Open Source
-
-                            </span>
-
-                        </div>
-
-
-
-                        <!-- Description -->
-
-                        <p
-                            class="mt-8
-                                   text-slate-400
-                                   leading-relaxed
-                                   max-w-xl">
-
-                            HUD de monitoramento em tempo real para
-                            gabinetes e telas secundárias.
-
-                            Monitore CPU, GPU, RAM, armazenamento,
-                            clima e áudio diretamente do Windows.
-
-                        </p>
-
-
-
-                        <!-- Technologies -->
-
-                        <div
-                            class="flex flex-wrap
-                                   gap-2
-                                   mt-7">
-
-                            <span class="tech">C#</span>
-
-                            <span class="tech">WPF</span>
-
-                            <span class="tech">.NET</span>
-
-                            <span class="tech">Windows</span>
-
-                            <span class="tech">Open Source</span>
-
-                        </div>
-
-
-
-                        <!-- Release -->
-
-                        <div
-                            class="flex items-center
-                                   gap-2
-                                   mt-7">
-
-                            <span
-                                class="w-1.5 h-1.5
-                                       rounded-full
-                                       bg-green-400">
-                            </span>
-
-
-                            <span
-                                class="text-xs
-                                       text-slate-500
-                                       font-mono">
-
-                                Latest release
-
-                            </span>
-
-                        </div>
-
-
-
-                        <!-- Buttons -->
-
-                        <div
-                            class="flex flex-wrap
-                                   gap-3
-                                   mt-5">
-
-
-                            <!-- Download -->
-
-                            <a
-                                href="https://github.com/suiciniv-dev/ControlSensors/releases/latest"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="inline-flex
-                                       items-center
-                                       gap-2
-                                       px-5 py-3
-                                       rounded-xl
-                                       bg-gradient-to-r
-                                       from-[#512bd4]
-                                       to-[#6366f1]
-                                       text-white
-                                       hover:brightness-110
-                                       transition
-                                       text-sm
-                                       font-semibold
-                                       shadow-purple">
-                            
-                                <span>↓</span>
-                            
-                                Download
-                            
-                            </a>
-
-
-
-                            <!-- Source -->
-
-                            <a
-                                href="https://github.com/suiciniv-dev/ControlSensors"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="inline-flex
-                                       items-center
-                                       gap-2
-                                       px-5 py-3
-                                       rounded-xl
-                                       border border-slate-700
-                                       bg-slate-900
-                                       hover:bg-slate-800
-                                       transition
-                                       text-sm
-                                       font-semibold">
-
-                                View source ↗
-
-                            </a>
-
-                        </div>
-
-
-
-                        <p
-                            class="mt-3
-                                   text-[11px]
-                                   text-slate-600">
-
-                            Windows 10/11 · Free & Open Source
-
-                        </p>
-
-                    </div>
-
-
-
-                    <!-- TERMINAL -->
-
-                    <div
-                        class="relative
-                               border-t
-                               lg:border-t-0
-                               lg:border-l
-                               border-line
-                               bg-[#090c11]
-                               p-6 md:p-8
-                               flex items-center">
-
-
-                        <div
-                            class="w-full
-                                   rounded-2xl
-                                   border border-slate-800
-                                   bg-[#06080b]
-                                   overflow-hidden
-                                   shadow-2xl">
-
-
-                            <!-- Terminal bar -->
-
-                            <div
-                                class="h-10
-                                       px-4
-                                       border-b border-slate-800
-                                       flex items-center
-                                       gap-2">
-
-                                <span
-                                    class="w-2.5 h-2.5
-                                           rounded-full
-                                           bg-red-500/70">
-                                </span>
-
-                                <span
-                                    class="w-2.5 h-2.5
-                                           rounded-full
-                                           bg-yellow-500/70">
-                                </span>
-
-                                <span
-                                    class="w-2.5 h-2.5
-                                           rounded-full
-                                           bg-green-500/70">
-                                </span>
-
-
-                                <span
-                                    class="ml-3
-                                           text-[10px]
-                                           text-slate-600
-                                           font-mono">
-
-                                    ControlSensors.exe
-
-                                </span>
-
-                            </div>
-
-
-
-                            <!-- Terminal content -->
-
-                            <div
-                                class="p-5
-                                       font-mono
-                                       text-xs
-                                       leading-7
-                                       text-slate-500">
-
-                                <div class="terminal-line">
-                                    ControlSensors starting...
-                                </div>
-
-                                <div
-                                    class="terminal-line
-                                           text-slate-400">
-
-                                    Loading hardware sensors
-
-                                </div>
-
-                                <div
-                                    class="terminal-line
-                                           text-slate-400">
-
-                                    CPU ............ OK
-
-                                </div>
-
-                                <div
-                                    class="terminal-line
-                                           text-slate-400">
-
-                                    GPU ............ OK
-
-                                </div>
-
-                                <div
-                                    class="terminal-line
-                                           text-slate-400">
-
-                                    Memory ......... OK
-
-                                </div>
-
-                                <div
-                                    class="terminal-line
-                                           text-slate-400">
-
-                                    Audio .......... OK
-
-                                </div>
-
-                                <div
-                                    class="terminal-line
-                                           text-green-400">
-
-                                    Dashboard ready.
-
-                                </div>
-
-                                <div
-                                    class="mt-3
-                                           text-slate-700">
-
-                                    ─────────────────────
-
-                                </div>
-
-                                <div class="text-cyan-400">
-
-                                    ● SYSTEM ONLINE
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-
-
-            <!-- ===================================================== -->
-            <!-- SIMIX PONTO -->
-            <!-- ===================================================== -->
-
-            <article
-                class="project-card reveal
-                       bg-surface/80
-                       border border-line
-                       rounded-3xl
-                       overflow-hidden
-                       blue-glow">
-
-
-                <div
-                    class="grid
-                           lg:grid-cols-[1.2fr_.8fr]">
-
-
-                    <!-- LEFT -->
-
-                    <div class="p-7 md:p-10">
-
-
-                        <!-- Header -->
-
-                        <div
-                            class="flex items-start
-                                   justify-between
-                                   gap-4">
-
-
-                            <div
-                                class="flex items-center
-                                       gap-4">
-
-                                <!-- App icon -->
-                                
-                                <div
-                                    class="w-14 h-14
-                                           rounded-2xl
-                                           overflow-hidden
-                                           flex items-center
-                                           justify-center
-                                           shadow-lg
-                                           transition-transform duration-300
-                                           hover:scale-105">
-                                
-                                    <img
-                                        src="assets/simix-ponto.png"
-                                        alt="Ícone Símix Ponto"
-                                        class="w-full h-full object-cover">
-                                
-                                </div>
-                                                                                       
-                                
-                                <div>
-                                
-                                    <h3
-                                        class="text-2xl
-                                               font-bold">
-                                
-                                        Símix Ponto
-                                
-                                    </h3>
-                                
-                                
-                                    <p
-                                        class="text-sm
-                                               text-slate-500
-                                               mt-1">
-                                
-                                        Mobile Application · Android & iOS
-                                
-                                    </p>
-                                
-                                </div>
-                            </div>
-
-                            <!-- Professional badge -->
-
-                            <span
-                                class="hidden sm:inline-flex
-                                       professional-badge">
-
-                                <span>◆</span>
-
-                                Projeto profissional
-
-                            </span>
-
-                        </div>
-
-
-
-                        <!-- Description -->
-
-                        <p class="mt-8
-                                  text-slate-400
-                                  leading-relaxed
-                                  max-w-xl">
-                            
-                            Aplicativo de registro de ponto integrado ao ecossistema
-                            Símix Ponto.
-                        
-                            <br><br>
-                            Possui registros em tempo real, com suporte online e offline,
-                            verificação facial utilizando Azure AI, geolocalização através
-                            de recursos nativos do .NET MAUI e módulos de segurança para
-                            prevenção de localização falsificada (Fake GPS).
-                        
-                            <br><br>
-                            Também conta com módulo específico para registro de ponto de
-                            motoristas e comunicação com sistemas legados, como o PcPonto,
-                            além da integração com a atual plataforma SaaS multitenant
-                            Símix Ponto.
-                        
-                        </p>
-
-
-
-                        <!-- Technologies -->
-
-                        <div class="flex flex-wrap gap-2 mt-7">
-
-                            <span class="tech">C#</span>
-                            <span class="tech">.NET MAUI</span>
-                            <span class="tech">Azure AI</span>
-                            <span class="tech">Geolocation</span>
-                            <span class="tech">Offline First</span>
-                            <span class="tech">SaaS</span>
-                            <span class="tech">Multitenant</span>
-                            <span class="tech">REST API</span>
-                        
-                        </div>
-
-
-
-                        <!-- Contribution -->
-
-                        <div
-                            class="mt-7
-                                   p-4
-                                   rounded-xl
-                                   bg-[#090c11]
-                                   border border-slate-800">
-
-
-                            <div
-                                class="flex items-center
-                                       gap-2
-                                       mb-2">
-
-                                <span
-                                    class="w-1.5 h-1.5
-                                           rounded-full
-                                           bg-indigo-400">
-                                </span>
-
-
-                    <span
-                        class="text-xs
-                               text-indigo-300
-                               font-semibold">
-                    
-                        Minha atuação
-                    
-                    </span>
-                    
-                    </div>
-                    
-                    
-                    <p
-                        class="text-xs
-                               text-slate-500
-                               leading-relaxed">
-                    
-                        Atuação no desenvolvimento, evolução e manutenção do
-                        aplicativo, com responsabilidade direta pela integração
-                        e testes da verificação facial.
-                    
-                        <br><br>
-                        Liderei a implementação da integração facial, incluindo
-                        sua validação e testes, além de participar ativamente do
-                        redesign do aplicativo, modernizando sua interface e
-                        experiência de uso.
-                    
-                        <br><br>
-                        Também fui o principal responsável pela adaptação e
-                        disponibilização do aplicativo para iOS, além das
-                        integrações com a plataforma Símix Ponto e seus serviços.
-                    
-                    </p>
-
-                        </div>
-
-
-
-                        <!-- Store buttons -->
-
-                        <div
-                            class="flex flex-wrap
-                                   gap-3
-                                   mt-7">
-
-
-                            <!-- Google Play -->
-
-                            <a
-                                href="https://play.google.com/store/apps/details?id=com.simix.ponto.app"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="store-button">
-
-                                <svg
-                                    class="store-icon"
-                                    viewBox="0 0 24 24"
-                                    fill="currentColor">
-
-                                    <path
-                                        d="M3.5 2.8c-.3.3-.5.8-.5 1.4v15.6c0 .6.2 1.1.5 1.4l.1.1L14.4 12v-.2L3.6 2.7l-.1.1z">
-                                    </path>
-
-                                    <path
-                                        d="M17.8 15.6 14.4 12v-.2l3.4-3.6.1.1 4.1 2.3c1.2.7 1.2 1.8 0 2.5l-4.1 2.3-.1.2z">
-                                    </path>
-
-                                    <path
-                                        d="M17.7 15.5 14.4 12 3.5 21.2c.4.4 1 .4 1.6.1l12.6-5.8z">
-                                    </path>
-
-                                    <path
-                                        d="M17.7 8.5 5.1 2.7c-.6-.3-1.2-.3-1.6.1L14.4 12l3.3-3.5z">
-                                    </path>
-
-                                </svg>
-
-
-                                Google Play ↗
-
-                            </a>
-
-
-
-                            <!-- App Store -->
-
-                            <a
-                                href="https://apps.apple.com/us/app/s%C3%ADmix-ponto/id6454298944"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="store-button">
-
-                                <svg
-                                    class="store-icon"
-                                    viewBox="0 0 24 24"
-                                    fill="currentColor">
-
-                                    <path
-                                        d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.39 1.8-3.13 1.87-2.39 5.98.48 7.13-.57 1.5-1.31 2.98-2.52 4.09zM12.03 7.25C11.88 5.02 13.69 3.18 15.78 3c.29 2.58-2.34 4.5-3.75 4.25z">
-                                    </path>
-
-                                </svg>
-
-
-                                App Store ↗
-
-                            </a>
-
-                        </div>
-
-
-
-                        <p
-                            class="mt-3
-                                   text-[11px]
-                                   text-slate-600">
-
-                            Android · iOS · Aplicativo em produção
-
-                        </p>
-
-                    </div>
-
-
-
-                    <!-- RIGHT -->
-
-                    <div
-                        class="relative
-                               border-t
-                               lg:border-t-0
-                               lg:border-l
-                               border-line
-                               bg-[#090c11]
-                               p-6 md:p-8
-                               flex items-center">
-
-
-                        <div class="w-full">
-
-
-                            <!-- Architecture visual -->
-
-                            <div
-                                class="rounded-2xl
-                                       border border-slate-800
-                                       bg-[#06080b]
-                                       overflow-hidden
-                                       shadow-2xl">
-
-
-                                <!-- Header -->
-
-                                <div
-                                    class="h-10
-                                           px-4
-                                           border-b border-slate-800
-                                           flex items-center
-                                           justify-between">
-
-                                    <span
-                                        class="text-[10px]
-                                               text-slate-600
-                                               font-mono">
-
-                                        simix-ponto.app
-
-                                    </span>
-
-
-                                    <span
-                                        class="text-[10px]
-                                               text-green-400
-                                               font-mono">
-
-                                        ● ONLINE
-
-                                    </span>
-
-                                </div>
-
-
-
-                                <!-- Architecture -->
-
-                                <div
-                                    class="p-6
-                                           space-y-4">
-
-
-                                    <!-- Mobile -->
-
-                                    <div
-                                        class="flex items-center
-                                               gap-3
-                                               p-3
-                                               rounded-xl
-                                               border border-slate-800
-                                               bg-slate-900/40">
-
-                                        <div
-                                            class="w-9 h-9
-                                                   rounded-lg
-                                                   bg-blue-500/10
-                                                   border border-blue-500/20
-                                                   flex items-center
-                                                   justify-center
-                                                   text-blue-400">
-
-                                            📱
-
-                                        </div>
-
-
-                                        <div>
-
-                                            <div
-                                                class="text-xs
-                                                       text-slate-300
-                                                       font-semibold">
-
-                                                Mobile App
-
-                                            </div>
-
-                                            <div
-                                                class="text-[10px]
-                                                       text-slate-600
-                                                       font-mono">
-
-                                                .NET MAUI
-
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-
-
-
-                                    <!-- Connection -->
-
-                                    <div
-                                        class="flex justify-center
-                                               text-slate-700
-                                               text-xs">
-
-                                        ↓
-
-                                    </div>
-
-
-
-                                    <!-- SaaS -->
-
-                                    <div
-                                        class="flex items-center
-                                               gap-3
-                                               p-3
-                                               rounded-xl
-                                               border border-indigo-500/20
-                                               bg-indigo-500/5">
-
-                                        <div
-                                            class="w-9 h-9
-                                                   rounded-lg
-                                                   bg-indigo-500/10
-                                                   border border-indigo-500/20
-                                                   flex items-center
-                                                   justify-center
-                                                   text-indigo-400">
-
-                                            ☁
-
-                                        </div>
-
-
-                                        <div>
-
-                                            <div
-                                                class="text-xs
-                                                       text-slate-300
-                                                       font-semibold">
-
-                                                Símix Ponto (SaaS)
-
-                                            </div>
-
-                                            <div
-                                                class="text-[10px]
-                                                       text-slate-600
-                                                       font-mono">
-
-                                                Multitenant
-
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-
-
-
-                                    <!-- Connection -->
-
-                                    <div
-                                        class="flex justify-center
-                                               text-slate-700
-                                               text-xs">
-
-                                        ↕
-                                    </div>
-
-
-
-                                    <!-- Azure -->
-
-                                    <div
-                                        class="flex items-center
-                                               gap-3
-                                               p-3
-                                               rounded-xl
-                                               border border-sky-500/20
-                                               bg-sky-500/5">
-
-                                        <div
-                                            class="w-9 h-9
-                                                   rounded-lg
-                                                   bg-sky-500/10
-                                                   border border-sky-500/20
-                                                   flex items-center
-                                                   justify-center
-                                                   text-sky-400">
-
-                                            ◇
-
-                                        </div>
-
-
-                                        <div>
-
-                                            <div
-                                                class="text-xs
-                                                       text-slate-300
-                                                       font-semibold">
-
-                                                Azure Services
-
-                                            </div>
-
-                                            <div
-                                                class="text-[10px]
-                                                       text-slate-600
-                                                       font-mono">
-
-                                                Face · Location · Cloud
-
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-
-
-
-                                    <!-- Legacy -->
-
-                                    <div
-                                        class="flex items-center
-                                               gap-3
-                                               p-3
-                                               rounded-xl
-                                               border border-slate-800
-                                               bg-slate-900/40">
-
-                                        <div
-                                            class="w-9 h-9
-                                                   rounded-lg
-                                                   bg-slate-800
-                                                   flex items-center
-                                                   justify-center
-                                                   text-slate-400">
-
-                                            ◈
-
-                                        </div>
-
-
-                                        <div>
-
-                                            <div
-                                                class="text-xs
-                                                       text-slate-300
-                                                       font-semibold">
-
-                                               PcPonto
-
-                                            </div>
-
-                                            <div
-                                                class="text-[10px]
-                                                       text-slate-600
-                                                       font-mono">
-
-                                                Integration
-
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-        </section>
-
-
-
-        <!-- ========================================================= -->
-        <!-- STACK -->
-        <!-- ========================================================= -->
-
-        <section class="mt-24 reveal">
-
-
-            <p
-                class="text-xs
-                       uppercase
-                       tracking-[.2em]
-                       text-slate-500
-                       font-semibold">
-
-                Stack
-
+            <p style="margin-top:26px;max-width:520px;font-size:15.5px;line-height:1.65;color:#98a2b1">
+              HUD de monitoramento em tempo real para gabinetes e telas secundárias. Monitore CPU, GPU, RAM, armazenamento, clima e áudio diretamente do Windows.
             </p>
 
-
-            <div
-                class="grid
-                       grid-cols-2
-                       md:grid-cols-4
-                       gap-3
-                       mt-5">
-
-
-                <div class="stack-card">
-
-                    <strong>C#</strong>
-
-                    <span>Language</span>
-
-                </div>
-
-
-                <div class="stack-card">
-
-                    <strong>.NET</strong>
-
-                    <span>Platform</span>
-
-                </div>
-
-
-                <div class="stack-card">
-
-                    <strong>Azure</strong>
-
-                    <span>Cloud</span>
-
-                </div>
-
-
-                <div class="stack-card">
-
-                    <strong>Blazor</strong>
-
-                    <span>Web UI</span>
-
-                </div>
-
-
-                <div class="stack-card">
-
-                    <strong>.NET MAUI</strong>
-
-                    <span>Mobile</span>
-
-                </div>
-
-
-                <div class="stack-card">
-
-                    <strong>SQL</strong>
-
-                    <span>Database</span>
-
-                </div>
-
-
-                <div class="stack-card">
-
-                    <strong>WPF</strong>
-
-                    <span>Desktop UI</span>
-
-                </div>
-
-
-                <div class="stack-card">
-
-                    <strong>Multitenancy</strong>
-
-                    <span>SaaS Architecture</span>
-
-                </div>
-
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:24px">
+              <span style="display:inline-flex;padding:6px 11px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);font:500 11px/1 'JetBrains Mono',monospace;color:#8b95a5">C#</span>
+              <span style="display:inline-flex;padding:6px 11px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);font:500 11px/1 'JetBrains Mono',monospace;color:#8b95a5">WPF</span>
+              <span style="display:inline-flex;padding:6px 11px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);font:500 11px/1 'JetBrains Mono',monospace;color:#8b95a5">.NET</span>
+              <span style="display:inline-flex;padding:6px 11px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);font:500 11px/1 'JetBrains Mono',monospace;color:#8b95a5">Windows</span>
+              <span style="display:inline-flex;padding:6px 11px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);font:500 11px/1 'JetBrains Mono',monospace;color:#8b95a5">Hardware Sensors</span>
             </div>
 
-        </section>
+            <div style="display:flex;flex-wrap:wrap;gap:11px;margin-top:30px">
+              <a href="https://github.com/suiciniv-dev/ControlSensors/releases/latest" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:9px;padding:13px 20px;border-radius:12px;background:linear-gradient(135deg,#6d3ff0,#512bd4);color:#fff;font:600 13.5px/1 'Instrument Sans',sans-serif;box-shadow:0 10px 30px rgba(81,43,212,.35);transition:all .2s" class="hv11">↓ Download</a>
+              <a href="https://github.com/suiciniv-dev/ControlSensors" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03);color:#d4dae3;font:600 13.5px/1 'Instrument Sans',sans-serif;transition:all .2s" class="hv12">View source ↗</a>
+            </div>
+            <p style="margin-top:14px;font:400 11.5px/1 'JetBrains Mono',monospace;color:#4a5461">Windows 10/11 · free &amp; open source</p>
+          </div>
 
+          <div style="border-left:1px solid rgba(255,255,255,.06);background:#07080b;padding:clamp(22px,2.6vw,32px);display:flex;align-items:center;min-width:0">
+            <div style="width:100%;border:1px solid rgba(255,255,255,.08);border-radius:16px;background:#050608;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.5)">
+              <div style="height:38px;padding:0 14px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:7px">
+                <span style="width:9px;height:9px;border-radius:50%;background:#ef4444;opacity:.75"></span>
+                <span style="width:9px;height:9px;border-radius:50%;background:#eab308;opacity:.75"></span>
+                <span style="width:9px;height:9px;border-radius:50%;background:#22c55e;opacity:.75"></span>
+                <span style="margin-left:10px;font:400 10.5px/1 'JetBrains Mono',monospace;color:#4a5461">ControlSensors.exe</span>
+              </div>
+              <div style="padding:18px 16px;font:400 11.5px/2 'JetBrains Mono',monospace;color:#5d6773">
+                <div data-tline style="animation:lineIn .45s ease both;animation-delay:.05s"><span style="color:#38bdf8">&gt;</span> ControlSensors starting…</div>
+                <div data-tline style="color:#8b95a5;animation:lineIn .45s ease both;animation-delay:.2s"><span style="color:#38bdf8">&gt;</span> Loading hardware sensors</div>
+                <div data-tline style="color:#8b95a5;animation:lineIn .45s ease both;animation-delay:.35s"><span style="color:#38bdf8">&gt;</span> CPU ············ <span style="color:#86efac">OK</span></div>
+                <div data-tline style="color:#8b95a5;animation:lineIn .45s ease both;animation-delay:.5s"><span style="color:#38bdf8">&gt;</span> GPU ············ <span style="color:#86efac">OK</span></div>
+                <div data-tline style="color:#8b95a5;animation:lineIn .45s ease both;animation-delay:.65s"><span style="color:#38bdf8">&gt;</span> Memory ········· <span style="color:#86efac">OK</span></div>
+                <div data-tline style="color:#8b95a5;animation:lineIn .45s ease both;animation-delay:.8s"><span style="color:#38bdf8">&gt;</span> Audio ·········· <span style="color:#86efac">OK</span></div>
+                <div data-tline style="color:#86efac;animation:lineIn .45s ease both;animation-delay:.95s"><span style="color:#38bdf8">&gt;</span> Dashboard ready.</div>
+                <div style="margin-top:14px;height:1px;background:rgba(255,255,255,.07)"></div>
+                <div style="margin-top:12px;display:flex;align-items:center;gap:8px;color:#38bdf8">
+                  <span style="width:6px;height:6px;border-radius:50%;background:#38bdf8;box-shadow:0 0 10px #38bdf8;animation:blink 1.6s infinite"></span>SYSTEM ONLINE
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
 
-        <!-- ========================================================= -->
-        <!-- CALL TO ACTION -->
-        <!-- ========================================================= -->
-        
-        <section class="mt-32 mb-10 text-center reveal">
-            <h2 class="text-3xl md:text-4xl font-bold mb-4">Bora conversar?</h2>
-            
-            <p class="text-slate-400 mb-8 max-w-md mx-auto text-sm md:text-base">
-                Estou sempre aberto a trocar ideias sobre tecnologia, arquitetura de software ou novas oportunidades.
+      <article data-reveal style="border:1px solid rgba(255,255,255,.075);border-radius:24px;overflow:hidden;background:linear-gradient(180deg,rgba(14,17,23,.9),rgba(10,12,16,.9));box-shadow:0 0 60px rgba(56,189,248,.07),0 24px 60px rgba(0,0,0,.4)">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))">
+          <div style="padding:clamp(26px,3.4vw,40px)">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
+              <div style="display:flex;align-items:center;gap:15px">
+                <div style="width:52px;height:52px;border-radius:15px;background-color:#0f1420;background-image:url('assets/simix-ponto.png');background-size:cover;background-position:center;border:1px solid rgba(255,255,255,.1);box-shadow:0 10px 30px rgba(56,189,248,.18);flex:none"></div>
+                <div>
+                  <h3 style="font:700 clamp(21px,2.3vw,26px)/1.15 'Space Grotesk',sans-serif;letter-spacing:-.02em">Símix Ponto</h3>
+                  <p style="margin-top:6px;font:500 12px/1 'JetBrains Mono',monospace;color:#5d6773">Mobile Application · Android &amp; iOS</p>
+                </div>
+              </div>
+              <span style="display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.26);font:500 11px/1 'JetBrains Mono',monospace;color:#a5b4fc;flex:none">◆ Profissional</span>
+            </div>
+
+            <p style="margin-top:26px;max-width:520px;font-size:15.5px;line-height:1.65;color:#98a2b1">
+              Aplicativo de registro de ponto integrado ao ecossistema Símix Ponto: registros em tempo real com suporte online e offline, verificação facial com Azure AI, geolocalização nativa em .NET MAUI e módulos de segurança contra localização falsificada (Fake GPS).
             </p>
-            
-            <a href="mailto:vinips00@gmail.com" 
-               class="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-[#512bd4] to-[#6366f1] text-white hover:brightness-110 transition font-semibold shadow-purple text-lg">
-                ✉ Entrar em contato
-            </a>
-        </section>
+            <p style="margin-top:14px;max-width:520px;font-size:15.5px;line-height:1.65;color:#7c8694">
+              Conta também com módulo de ponto para motoristas e comunicação com sistemas legados, como o PcPonto, além da integração com a plataforma SaaS multitenant Símix Ponto.
+            </p>
 
-        <!-- ========================================================= -->
-        <!-- FOOTER -->
-        <!-- ========================================================= -->
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:24px">
+              <span style="display:inline-flex;padding:6px 11px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);font:500 11px/1 'JetBrains Mono',monospace;color:#8b95a5">C#</span>
+              <span style="display:inline-flex;padding:6px 11px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);font:500 11px/1 'JetBrains Mono',monospace;color:#8b95a5">.NET MAUI</span>
+              <span style="display:inline-flex;padding:6px 11px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);font:500 11px/1 'JetBrains Mono',monospace;color:#8b95a5">Azure AI</span>
+              <span style="display:inline-flex;padding:6px 11px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);font:500 11px/1 'JetBrains Mono',monospace;color:#8b95a5">Geolocation</span>
+              <span style="display:inline-flex;padding:6px 11px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);font:500 11px/1 'JetBrains Mono',monospace;color:#8b95a5">Offline First</span>
+              <span style="display:inline-flex;padding:6px 11px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);font:500 11px/1 'JetBrains Mono',monospace;color:#8b95a5">Multitenant</span>
+              <span style="display:inline-flex;padding:6px 11px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);font:500 11px/1 'JetBrains Mono',monospace;color:#8b95a5">REST API</span>
+            </div>
 
-        <footer
-            class="mt-24
-                   pt-8
-                   border-t border-slate-900
-                   flex flex-col
-                   md:flex-row
-                   justify-between
-                   gap-4
-                   text-xs
-                   text-slate-600">
+            <div style="margin-top:26px;padding:18px 20px;border-radius:16px;background:#07080b;border:1px solid rgba(255,255,255,.07)">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="width:5px;height:5px;border-radius:50%;background:#818cf8"></span>
+                <span style="font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#a5b4fc">Minha atuação</span>
+              </div>
+              <div style="margin-top:14px;display:flex;flex-direction:column;gap:11px;font-size:13.5px;line-height:1.6;color:#8b95a5">
+                <div style="display:flex;gap:10px"><span style="color:#6d5cf0;flex:none">—</span><span>Liderança da integração de verificação facial, incluindo validação e testes.</span></div>
+                <div style="display:flex;gap:10px"><span style="color:#6d5cf0;flex:none">—</span><span>Participação ativa no redesign do app, modernizando interface e experiência de uso.</span></div>
+                <div style="display:flex;gap:10px"><span style="color:#6d5cf0;flex:none">—</span><span>Principal responsável pela adaptação e publicação da versão iOS.</span></div>
+                <div style="display:flex;gap:10px"><span style="color:#6d5cf0;flex:none">—</span><span>Integrações com a plataforma Símix Ponto e seus serviços.</span></div>
+              </div>
+            </div>
 
+            <div style="display:flex;flex-wrap:wrap;gap:11px;margin-top:26px">
+              <a href="https://play.google.com/store/apps/details?id=com.simix.ponto.app" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:9px;padding:12px 18px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03);color:#d4dae3;font:600 13px/1 'Instrument Sans',sans-serif;transition:all .2s" class="hv13">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="flex:none"><path d="M3.5 2.8c-.3.3-.5.8-.5 1.4v15.6c0 .6.2 1.1.5 1.4l.1.1L14.4 12v-.2L3.6 2.7l-.1.1z"/><path d="M17.8 15.6 14.4 12v-.2l3.4-3.6.1.1 4.1 2.3c1.2.7 1.2 1.8 0 2.5l-4.1 2.3-.1.2z"/><path d="M17.7 15.5 14.4 12 3.5 21.2c.4.4 1 .4 1.6.1l12.6-5.8z"/><path d="M17.7 8.5 5.1 2.7c-.6-.3-1.2-.3-1.6.1L14.4 12l3.3-3.5z"/></svg>
+                Google Play ↗
+              </a>
+              <a href="https://apps.apple.com/us/app/s%C3%ADmix-ponto/id6454298944" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:9px;padding:12px 18px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03);color:#d4dae3;font:600 13px/1 'Instrument Sans',sans-serif;transition:all .2s" class="hv14">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="flex:none"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.39 1.8-3.13 1.87-2.39 5.98.48 7.13-.57 1.5-1.31 2.98-2.52 4.09zM12.03 7.25C11.88 5.02 13.69 3.18 15.78 3c.29 2.58-2.34 4.5-3.75 4.25z"/></svg>
+                App Store ↗
+              </a>
+            </div>
+            <p style="margin-top:14px;font:400 11.5px/1 'JetBrains Mono',monospace;color:#4a5461">android · ios · em produção</p>
+          </div>
 
-            <span>
+          <div style="border-left:1px solid rgba(255,255,255,.06);background:#07080b;padding:clamp(22px,2.6vw,32px);display:flex;align-items:center;min-width:0">
+            <div style="width:100%;border:1px solid rgba(255,255,255,.08);border-radius:16px;background:#050608;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.5)">
+              <div style="height:38px;padding:0 14px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between">
+                <span style="font:400 10.5px/1 'JetBrains Mono',monospace;color:#4a5461">architecture.map</span>
+                <span style="display:inline-flex;align-items:center;gap:6px;font:400 10.5px/1 'JetBrains Mono',monospace;color:#86efac"><span style="width:5px;height:5px;border-radius:50%;background:#4ade80"></span>ONLINE</span>
+              </div>
+              <div style="padding:22px 18px;display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;align-items:center;gap:13px;padding:13px;border-radius:14px;border:1px solid rgba(56,189,248,.2);background:rgba(56,189,248,.05)">
+                  <span style="width:34px;height:34px;border-radius:10px;background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.22);display:flex;align-items:center;justify-content:center;font:700 11px/1 'JetBrains Mono',monospace;color:#7dd3fc;flex:none">MB</span>
+                  <div><div style="font:600 12.5px/1 'Instrument Sans',sans-serif;color:#d4dae3">Mobile App</div><div style="margin-top:5px;font:400 10.5px/1 'JetBrains Mono',monospace;color:#4a5461">.NET MAUI · offline-first</div></div>
+                </div>
+                <div style="display:flex;justify-content:center;color:#39424e;font:400 12px/1 'JetBrains Mono',monospace">↓</div>
+                <div style="display:flex;align-items:center;gap:13px;padding:13px;border-radius:14px;border:1px solid rgba(99,102,241,.24);background:rgba(99,102,241,.06)">
+                  <span style="width:34px;height:34px;border-radius:10px;background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.26);display:flex;align-items:center;justify-content:center;font:700 11px/1 'JetBrains Mono',monospace;color:#a5b4fc;flex:none">API</span>
+                  <div><div style="font:600 12.5px/1 'Instrument Sans',sans-serif;color:#d4dae3">Símix Ponto (SaaS)</div><div style="margin-top:5px;font:400 10.5px/1 'JetBrains Mono',monospace;color:#4a5461">multitenant · ABP</div></div>
+                </div>
+                <div style="display:flex;justify-content:center;color:#39424e;font:400 12px/1 'JetBrains Mono',monospace">↕</div>
+                <div style="display:flex;align-items:center;gap:13px;padding:13px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.025)">
+                  <span style="width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font:700 11px/1 'JetBrains Mono',monospace;color:#8b95a5;flex:none">AZ</span>
+                  <div><div style="font:600 12.5px/1 'Instrument Sans',sans-serif;color:#d4dae3">Azure Services</div><div style="margin-top:5px;font:400 10.5px/1 'JetBrains Mono',monospace;color:#4a5461">face · location · cloud</div></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:13px;padding:13px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.025)">
+                  <span style="width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font:700 11px/1 'JetBrains Mono',monospace;color:#8b95a5;flex:none">PC</span>
+                  <div><div style="font:600 12.5px/1 'Instrument Sans',sans-serif;color:#d4dae3">PcPonto</div><div style="margin-top:5px;font:400 10.5px/1 'JetBrains Mono',monospace;color:#4a5461">legacy integration</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
 
-                Software developer · C# & .NET
+    <section id="atuacao" data-reveal style="padding:120px 0 0;scroll-margin-top:90px">
+      <p style="font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.22em;text-transform:uppercase;color:#5d6773">Expertise</p>
+      <h2 style="margin-top:14px;font:700 clamp(26px,3vw,36px)/1.1 'Space Grotesk',sans-serif;letter-spacing:-.025em">Áreas de atuação</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:28px">
+        <div style="padding:24px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:rgba(13,16,21,.7);transition:all .25s" class="hv15">
+          <span style="font:500 10.5px/1 'JetBrains Mono',monospace;color:#6d5cf0">01</span>
+          <h3 style="margin-top:14px;font:600 17px/1.25 'Space Grotesk',sans-serif">Backend &amp; APIs</h3>
+          <p style="margin-top:9px;font-size:13.5px;line-height:1.6;color:#7c8694">APIs RESTful em .NET, regras de negócio, modelagem e evolução de domínios complexos.</p>
+        </div>
+        <div style="padding:24px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:rgba(13,16,21,.7);transition:all .25s" class="hv16">
+          <span style="font:500 10.5px/1 'JetBrains Mono',monospace;color:#6d5cf0">02</span>
+          <h3 style="margin-top:14px;font:600 17px/1.25 'Space Grotesk',sans-serif">SaaS multitenant</h3>
+          <p style="margin-top:9px;font-size:13.5px;line-height:1.6;color:#7c8694">Arquiteturas multitenancy com ABP Framework e PostgreSQL, isolamento e escala por tenant.</p>
+        </div>
+        <div style="padding:24px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:rgba(13,16,21,.7);transition:all .25s" class="hv17">
+          <span style="font:500 10.5px/1 'JetBrains Mono',monospace;color:#6d5cf0">03</span>
+          <h3 style="margin-top:14px;font:600 17px/1.25 'Space Grotesk',sans-serif">Mobile multiplataforma</h3>
+          <p style="margin-top:9px;font-size:13.5px;line-height:1.6;color:#7c8694">Apps .NET MAUI para Android e iOS, recursos nativos, offline-first e publicação nas lojas.</p>
+        </div>
+        <div style="padding:24px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:rgba(13,16,21,.7);transition:all .25s" class="hv18">
+          <span style="font:500 10.5px/1 'JetBrains Mono',monospace;color:#6d5cf0">04</span>
+          <h3 style="margin-top:14px;font:600 17px/1.25 'Space Grotesk',sans-serif">Cloud &amp; legados</h3>
+          <p style="margin-top:9px;font-size:13.5px;line-height:1.6;color:#7c8694">Integração contínua no Azure e modernização de sistemas legados sem parar a operação.</p>
+        </div>
+      </div>
+    </section>
 
-            </span>
+    <section id="stack" data-reveal style="padding:120px 0 0;scroll-margin-top:90px">
+      <p style="font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.22em;text-transform:uppercase;color:#5d6773">Stack</p>
+      <h2 style="margin-top:14px;font:700 clamp(26px,3vw,36px)/1.1 'Space Grotesk',sans-serif;letter-spacing:-.025em">Ferramentas do dia a dia</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:28px">
+        <div style="padding:22px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:rgba(10,12,16,.6)">
+          <p style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#4a5461">Core</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:16px">
+            <span style="padding:7px 12px;border-radius:9px;background:rgba(81,43,212,.12);border:1px solid rgba(109,92,240,.3);font:500 12px/1 'JetBrains Mono',monospace;color:#c4b5fd">C#</span>
+            <span style="padding:7px 12px;border-radius:9px;background:rgba(81,43,212,.12);border:1px solid rgba(109,92,240,.3);font:500 12px/1 'JetBrains Mono',monospace;color:#c4b5fd">.NET</span>
+            <span style="padding:7px 12px;border-radius:9px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);font:500 12px/1 'JetBrains Mono',monospace;color:#8b95a5">ABP Framework</span>
+          </div>
+        </div>
+        <div style="padding:22px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:rgba(10,12,16,.6)">
+          <p style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#4a5461">Interfaces</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:16px">
+            <span style="padding:7px 12px;border-radius:9px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);font:500 12px/1 'JetBrains Mono',monospace;color:#8b95a5">Blazor</span>
+            <span style="padding:7px 12px;border-radius:9px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);font:500 12px/1 'JetBrains Mono',monospace;color:#8b95a5">.NET MAUI</span>
+            <span style="padding:7px 12px;border-radius:9px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);font:500 12px/1 'JetBrains Mono',monospace;color:#8b95a5">WPF</span>
+          </div>
+        </div>
+        <div style="padding:22px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:rgba(10,12,16,.6)">
+          <p style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#4a5461">Dados &amp; Cloud</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:16px">
+            <span style="padding:7px 12px;border-radius:9px;background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.26);font:500 12px/1 'JetBrains Mono',monospace;color:#7dd3fc">Azure</span>
+            <span style="padding:7px 12px;border-radius:9px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);font:500 12px/1 'JetBrains Mono',monospace;color:#8b95a5">PostgreSQL</span>
+            <span style="padding:7px 12px;border-radius:9px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);font:500 12px/1 'JetBrains Mono',monospace;color:#8b95a5">SQL Server</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <section id="contato" data-reveal style="padding:130px 0 0;scroll-margin-top:90px">
+      <div style="position:relative;overflow:hidden;border-radius:26px;border:1px solid rgba(109,92,240,.25);background:linear-gradient(140deg,rgba(81,43,212,.18),rgba(12,15,20,.9) 55%);padding:clamp(34px,5vw,60px);text-align:center">
+        <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(420px 260px at 50% 0%,rgba(129,140,248,.22),transparent 70%)"></div>
+        <div style="position:relative">
+          <p style="font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.22em;text-transform:uppercase;color:#a5b4fc">Contato</p>
+          <h2 style="margin-top:16px;font:700 clamp(28px,4.2vw,44px)/1.08 'Space Grotesk',sans-serif;letter-spacing:-.03em">Bora conversar?</h2>
+          <p style="margin:18px auto 0;max-width:460px;font-size:15.5px;line-height:1.6;color:#98a2b1">Estou sempre aberto a trocar ideias sobre tecnologia, arquitetura de software ou novas oportunidades.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:11px;justify-content:center;margin-top:32px">
+            <a href="mailto:vinips00@gmail.com" style="display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:13px;background:#e8ebf0;color:#0a0c10;font:600 14.5px/1 'Instrument Sans',sans-serif;transition:all .2s" class="hv19">Entrar em contato</a>
+            <button type="button" onclick="copiarEmail(this)" style="display:inline-flex;align-items:center;gap:9px;padding:15px 22px;border-radius:13px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:#d4dae3;font:600 14.5px/1 'Instrument Sans',sans-serif;cursor:pointer;font-family:'Instrument Sans',sans-serif;transition:all .2s" class="hv20">Copiar e-mail</button>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:22px;justify-content:center;margin-top:30px;font:500 12.5px/1 'JetBrains Mono',monospace">
+            <a href="https://github.com/suiciniv-dev" target="_blank" rel="noopener noreferrer" style="color:#8b95a5" class="hv21">github pessoal ↗</a>
+            <a href="https://github.com/simix-viniciussilva" target="_blank" rel="noopener noreferrer" style="color:#8b95a5" class="hv22">github empresa ↗</a>
+            <a href="https://www.linkedin.com/in/vin%C3%ADcius-pires-da-silva-094066204/" target="_blank" rel="noopener noreferrer" style="color:#8b95a5" class="hv23">linkedin ↗</a>
+            <a href="https://www.instagram.com/vini1piress/" target="_blank" rel="noopener noreferrer" style="color:#8b95a5" class="hv24">instagram ↗</a>
+          </div>
+        </div>
+      </div>
+    </section>
 
-            <span>
+    <footer style="margin-top:90px;padding:26px 0 40px;border-top:1px solid rgba(255,255,255,.06);display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:center;font:400 11.5px/1.6 'JetBrains Mono',monospace;color:#4a5461">
+      <span>Vinícius Pires da Silva · software developer · C# &amp; .NET</span>
+      <div style="display:flex;gap:20px;align-items:center">
+        <a href="#top" style="color:#4a5461" class="hv25">voltar ao topo ↑</a>
+        <span>© 2026 suiciniv.dev</span>
+      </div>
+    </footer>
 
-                © 2026 suiciniv.dev
+  </main>
+</div>
+<script>
+/* ------------------------------------------------------------------ o orb
+   Mesma geometria do assistente: esfera de Fibonacci, malha de aneis e
+   meridianos deformada por ondas, e o tracado — a volta que da nome ao
+   projeto. La roda em NumPy sobre uma janela do Windows; aqui, em canvas.
 
-            </span>
+   Clicar num comando roda o mesmo roteiro de estados que aconteceria de
+   verdade: ouvindo -> pensando -> falando -> repouso. */
+(function () {
+  var cv = document.getElementById('orb');
+  if (!cv) return;
+  var ctx = cv.getContext('2d');
+  var S = cv.width;
+  var rotulo = document.getElementById('orb-estado');
+  var fala = document.getElementById('orb-fala');
+  var lento = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        </footer>
+  var ESTADOS = {
+    idle:       { vivo: [47,191,99],  corpo: [10,46,24],  brilho: .75, amp: .80, giro: .22, resp: .95, nucleo: 1.05, dens: 1,  rodopio: 0,  nome: 'Em repouso' },
+    listening:  { vivo: [57,255,20],  corpo: [15,90,26],  brilho: .95, amp: 1.35, giro: .26, resp: .85, nucleo: 1.15, dens: 1,  rodopio: .15, nome: 'Ouvindo' },
+    processing: { vivo: [255,176,32], corpo: [90,58,5],   brilho: .85, amp: .95, giro: .62, resp: .70, nucleo: 1,    dens: 1,  rodopio: 1,   nome: 'Pensando' },
+    speaking:   { vivo: [56,189,248], corpo: [11,58,90],  brilho: .95, amp: 1.15, giro: .20, resp: 1,   nucleo: 1.25, dens: 1,  rodopio: .1,  nome: 'Falando' },
+    muted:      { vivo: [177,74,232], corpo: [46,11,69],  brilho: .80, amp: .45, giro: .05, resp: 1.25, nucleo: .75, dens: .7, rodopio: 0,   nome: 'Mudo' }
+  };
+  var NUM = ['brilho','amp','giro','resp','nucleo','dens','rodopio'];
 
-    </main>
+  var de = 'idle', para = 'idle', trocouEm = -10, nivel = 0, nivelSuave = 0;
+  var pensandoDesde = -99, giroAcc = 0, voltaAcc = 0, ultT = null;
+  var roteiro = null, passo = 0, proximo = 0;
 
-    <!-- Scroll Reveal Script -->
-    <script>
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
-            });
-        }, { threshold: 0.1 });
+  /* os bipes que o assistente emite enquanto pensa caem nestes instantes;
+     cada luz de largada acende junto com um deles */
+  var BLIPS = [0, .19, .83, 1.02, 1.66];
 
-        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-    </script>
+  function misturar(A, B, k) {
+    if (k <= 0) return A;
+    if (k >= 1) return B;
+    var o = { vivo: [], corpo: [] };
+    for (var i = 0; i < 3; i++) {
+      o.vivo[i]  = A.vivo[i]  + (B.vivo[i]  - A.vivo[i])  * k;
+      o.corpo[i] = A.corpo[i] + (B.corpo[i] - A.corpo[i]) * k;
+    }
+    for (var j = 0; j < NUM.length; j++) {
+      var n = NUM[j]; o[n] = A[n] + (B[n] - A[n]) * k;
+    }
+    return o;
+  }
+  function suave(t) { return t * t * (3 - 2 * t); }
+  function rgba(c, a) { return 'rgba(' + (c[0]|0) + ',' + (c[1]|0) + ',' + (c[2]|0) + ',' + a + ')'; }
+  function mix(a, b, t) { return [a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t, a[2]+(b[2]-a[2])*t]; }
+  function onda(x, y, z, t, amp) {
+    return 1 + (0.055*Math.sin(3*z + t*1.17 + y*2.3) + 0.042*Math.sin(4.7*x - t*0.83 + z*1.7)
+              + 0.030*Math.sin(6.1*y + t*1.61)) * amp;
+  }
+  function rotY(p, a) { var c=Math.cos(a), s=Math.sin(a); return [p[0]*c+p[2]*s, p[1], -p[0]*s+p[2]*c]; }
+  function rotX(p, a) { var c=Math.cos(a), s=Math.sin(a); return [p[0], p[1]*c-p[2]*s, p[1]*s+p[2]*c]; }
 
+  var PTS = [], N = 110, ga = Math.PI * (3 - Math.sqrt(5));
+  for (var i0 = 0; i0 < N; i0++) {
+    var y0 = 1 - (i0/(N-1))*2, r0 = Math.sqrt(Math.max(0, 1-y0*y0)), a0 = ga*i0;
+    PTS.push([Math.cos(a0)*r0, y0, Math.sin(a0)*r0]);
+  }
+
+  function irPara(est) {
+    if (est === para) return;
+    var k = Math.min(1, Math.max(0, (agoraSeg() - trocouEm) / .3));
+    de = (k < 1) ? misturar(tema(de), tema(para), suave(k)) : para;
+    para = est;
+    trocouEm = agoraSeg();
+    if (est === 'processing') pensandoDesde = trocouEm;
+    if (rotulo) rotulo.textContent = ESTADOS[est].nome;
+  }
+  function tema(x) { return (typeof x === 'string') ? ESTADOS[x] : x; }
+
+  var t0 = performance.now();
+  function agoraSeg() { return (performance.now() - t0) / 1000; }
+
+  function quadro(t) {
+    var dt = (ultT === null) ? 0 : Math.min(.1, t - ultT);
+    ultT = t;
+
+    if (roteiro && t >= proximo) {
+      if (passo < roteiro.length) {
+        irPara(roteiro[passo][0]);
+        proximo = t + roteiro[passo][1];
+        if (roteiro[passo][2] && fala) { fala.textContent = roteiro[passo][2]; fala.style.opacity = 1; }
+        passo++;
+      } else {
+        roteiro = null;
+        irPara('idle');
+        if (fala) fala.style.opacity = 0;
+      }
+    }
+
+    var k = Math.min(1, Math.max(0, (t - trocouEm) / .3));
+    var P = misturar(tema(de), tema(para), suave(k));
+
+    /* enquanto fala, o nivel oscila como a voz faria */
+    nivel = (para === 'speaking') ? (.35 + .33*Math.sin(t*5.1) + .2*Math.sin(t*11.3+1))
+          : (para === 'listening') ? (.22 + .2*Math.sin(t*3.7+.6)) : 0;
+    nivel = Math.max(0, Math.min(1, nivel));
+    nivelSuave += (nivel - nivelSuave) * (1 - Math.exp(-dt * 11));
+
+    giroAcc  += dt * P.giro * 6.2832 * .25;
+    voltaAcc = (voltaAcc + dt * (.16 + P.giro*.55 + nivelSuave*.35)) % 1;
+
+    ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,S,S);
+    ctx.setTransform(S,0,0,S,0,0); ctx.lineCap='round'; ctx.lineJoin='round';
+
+    var resp = .5 + .5*Math.sin(t*.62*P.resp)*.7 + .3*Math.sin(t*.271*P.resp+1.1);
+    resp = Math.max(0, Math.min(1, resp));
+    var R = .285 * (.88 + .06*resp + nivelSuave*.13), cx = .5, cy = .5;
+    var incl = .30*Math.sin(t*.13) + .22;
+    var energia = Math.min(1.6, .35 + nivelSuave*.8 + resp*.25);
+    var vivo = P.vivo;
+
+    var g = ctx.createRadialGradient(cx,cy,R*.55,cx,cy,R*1.5);
+    var ga2 = P.brilho * (.42 + nivelSuave*.45 + resp*.14);
+    g.addColorStop(0, rgba(vivo, ga2*.6)); g.addColorStop(.4, rgba(vivo, ga2*.24));
+    g.addColorStop(1, rgba(vivo, 0));
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,R*1.5,0,6.2832); ctx.fill();
+
+    var bg = ctx.createRadialGradient(cx-R*.34, cy-R*.38, R*.05, cx, cy, R*1.04);
+    bg.addColorStop(0, rgba(mix(P.corpo, vivo, .28+nivelSuave*.18), .94));
+    bg.addColorStop(.45, rgba(mix(P.corpo, vivo, .08), .86));
+    bg.addColorStop(1, rgba(P.corpo, .25));
+    ctx.fillStyle=bg; ctx.beginPath(); ctx.arc(cx,cy,R,0,6.2832); ctx.fill();
+
+    ctx.globalCompositeOperation = 'lighter';
+
+    function curva(f, n, larg, alfa) {
+      var ant = null;
+      for (var q = 0; q <= n; q++) {
+        var p = rotX(rotY(f(q/n), giroAcc), incl);
+        var d = onda(p[0],p[1],p[2],t,P.amp);
+        var X = cx + p[0]*R*d, Y = cy - p[1]*R*d, prof = (p[2]+1)*.5;
+        if (ant) {
+          var fz = (ant.z + prof) * .5;
+          ctx.strokeStyle = rgba(mix(vivo,[255,255,255], fz*.35), (.06 + fz*fz*.78)*alfa*P.dens);
+          ctx.lineWidth = larg * (.6 + fz*.9);
+          ctx.beginPath(); ctx.moveTo(ant.X, ant.Y); ctx.lineTo(X, Y); ctx.stroke();
+        }
+        ant = { X:X, Y:Y, z:prof };
+      }
+    }
+    for (var i = 0; i < 5; i++) {
+      (function (phi) {
+        curva(function (u) { var a = u*6.2832 + t*P.rodopio*.6;
+          return [Math.cos(phi)*Math.cos(a), Math.sin(phi), Math.cos(phi)*Math.sin(a)]; },
+          54, .0026, .5+energia*.6);
+      })((-.62 + (i/4)*1.24) + .12*Math.sin(t*.23 + i));
+    }
+    for (var j = 0; j < 5; j++) {
+      (function (th) {
+        curva(function (u) { var a = -1.4 + u*2.8;
+          return [Math.cos(a)*Math.cos(th), Math.sin(a), Math.cos(a)*Math.sin(th)]; },
+          34, .0026, .5+energia*.6);
+      })((j/5)*Math.PI + t*.031);
+    }
+
+    /* o tracado */
+    var pts = [], inc = .62;
+    for (var k2 = 0; k2 <= 84; k2++) {
+      var a2 = (k2/84)*6.2832;
+      var p2 = rotX(rotY([Math.cos(a2), Math.sin(a2)*Math.sin(inc), Math.sin(a2)*Math.cos(inc)], giroAcc), incl);
+      var d2 = Math.min(onda(p2[0],p2[1],p2[2],t,P.amp), 1) * .995;
+      pts.push({ X: cx+p2[0]*R*d2, Y: cy-p2[1]*R*d2, z: (p2[2]+1)*.5 });
+    }
+    for (var k3 = 1; k3 < pts.length; k3++) {
+      var A = pts[k3-1], B = pts[k3], fz2 = (A.z+B.z)*.5;
+      ctx.strokeStyle = rgba(mix(vivo,[255,255,255], .12+fz2*.26), (.10+fz2*fz2*.85)*.8*P.dens);
+      ctx.lineWidth = .0026*(1.1+fz2*2);
+      ctx.beginPath(); ctx.moveTo(A.X,A.Y); ctx.lineTo(B.X,B.Y); ctx.stroke();
+    }
+    var ic = Math.floor(voltaAcc*83), carro = pts[ic];
+    if (carro && carro.z > .32) {
+      for (var q2 = 0; q2 < 7; q2++) {
+        var tp = pts[(ic-q2+84)%84], fade = (1-q2/7)*carro.z;
+        ctx.fillStyle = rgba(mix(vivo,[255,255,255],.85), (q2 ? .4*fade*fade : .95)*carro.z);
+        ctx.beginPath(); ctx.arc(tp.X, tp.Y, R*(q2 ? .02*(1-q2/9) : .042), 0, 6.2832); ctx.fill();
+      }
+    }
+
+    /* particulas */
+    for (var n2 = 0; n2 < PTS.length; n2++) {
+      var p3 = rotX(rotY(PTS[n2], giroAcc*(1+(n2%3)*.06)), incl);
+      var d3 = onda(p3[0],p3[1],p3[2],t,P.amp);
+      if (P.rodopio > .02) d3 *= 1 - P.rodopio*.2*(.5+.5*Math.sin(t*1.9 - n2*.4));
+      var f2 = (p3[2]+1)*.5;
+      var tw = .55 + .45*Math.sin(t*(1.3+(n2%5)*.29) + n2*1.7);
+      var al = (.07 + Math.pow(f2,2.2)*.8) * tw * (.5+energia*.55) * P.dens;
+      if (al < .02) continue;
+      var X2 = cx+p3[0]*R*d3, Y2 = cy-p3[1]*R*d3, rad = R*(.012+.016*f2)*(.8+nivelSuave*.7);
+      ctx.fillStyle = rgba(vivo, al*.3);
+      ctx.beginPath(); ctx.arc(X2,Y2,rad*2.1,0,6.2832); ctx.fill();
+      ctx.fillStyle = rgba(mix(vivo,[255,255,255],.45), al);
+      ctx.beginPath(); ctx.arc(X2,Y2,rad*.8,0,6.2832); ctx.fill();
+    }
+
+    /* nucleo */
+    var cr = R*(.30+.05*resp+nivelSuave*.2)*P.nucleo;
+    var cg = ctx.createRadialGradient(cx,cy-R*.03,0,cx,cy,cr*2.1);
+    var ca = (.42+nivelSuave*.5+resp*.16)*P.nucleo;
+    cg.addColorStop(0, rgba(mix(vivo,[255,255,255],.62), Math.min(.95, ca)));
+    cg.addColorStop(.35, rgba(vivo, ca*.55)); cg.addColorStop(1, rgba(vivo,0));
+    ctx.fillStyle=cg; ctx.beginPath(); ctx.arc(cx,cy,cr*2.1,0,6.2832); ctx.fill();
+
+    /* as cinco luzes de largada, so enquanto pensa */
+    if (para === 'processing') {
+      var passou = t - pensandoDesde, acesas = 0;
+      while (acesas < 5 && passou >= BLIPS[acesas]) acesas++;
+      for (var L = 0; L < acesas; L++) {
+        var ang = -Math.PI*.5 + (L-2)*.185;
+        var lx = cx + Math.cos(ang)*R*1.36, ly = cy + Math.sin(ang)*R*1.36;
+        var forca = 1 + .55*Math.exp(-(passou - BLIPS[L])*7);
+        var lg = ctx.createRadialGradient(lx,ly,0,lx,ly,R*.19);
+        lg.addColorStop(0, 'rgba(255,61,46,' + Math.min(.6, .34*forca) + ')');
+        lg.addColorStop(1, 'rgba(255,61,46,0)');
+        ctx.fillStyle = lg; ctx.beginPath(); ctx.arc(lx,ly,R*.19,0,6.2832); ctx.fill();
+        ctx.fillStyle = 'rgba(255,61,46,' + Math.min(1, .9*forca) + ')';
+        ctx.beginPath(); ctx.arc(lx,ly,R*.055,0,6.2832); ctx.fill();
+      }
+    }
+
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  /* ------------------------------------------------------- os comandos */
+  window.sennaRoteiro = function (btn) {
+    if (lento) return;
+    var r = JSON.parse(btn.getAttribute('data-roteiro'));
+    for (var i = 0; i < r.length; i++) {
+      if (r[i][2] === '@hora@') {
+        var d = new Date(), h = d.getHours(), m = d.getMinutes();
+        r[i][2] = m === 0 ? 'São ' + h + ' horas em ponto.'
+                          : 'São ' + h + ' horas e ' + m + ' minutos.';
+      }
+    }
+    roteiro = r; passo = 0; proximo = agoraSeg();
+    var todos = document.querySelectorAll('[data-roteiro]');
+    for (var j = 0; j < todos.length; j++) todos[j].removeAttribute('data-ativo');
+    btn.setAttribute('data-ativo', '1');
+    cv.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  };
+
+  /* clicar numa cor da legenda mostra aquele estado */
+  window.sennaEstado = function (est) {
+    if (lento) return;
+    roteiro = [[est, 2.6, null], ['idle', 0, null]]; passo = 0; proximo = agoraSeg();
+    if (fala) fala.style.opacity = 0;
+  };
+
+  if (lento) { irPara('idle'); quadro(2.2); return; }
+  var visivel = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) { visivel = es[0].isIntersecting; },
+      { threshold: .05 }).observe(cv);
+  }
+  (function laco() {
+    if (visivel && !document.hidden) quadro(agoraSeg());
+    requestAnimationFrame(laco);
+  })();
+})();
+
+/* barra de progresso da rolagem */
+(function () {
+  var barra = document.getElementById('barra');
+  if (!barra) return;
+  function atualiza() {
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    barra.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0).toFixed(1) + '%';
+  }
+  addEventListener('scroll', atualiza, { passive: true });
+  addEventListener('resize', atualiza);
+  atualiza();
+})();
+
+/* menu do topo so em tela larga */
+(function () {
+  var nav = document.querySelector('[data-nav]');
+  if (!nav) return;
+  var mq = matchMedia('(min-width: 820px)');
+  function aplica() { nav.style.display = mq.matches ? 'flex' : 'none'; }
+  mq.addEventListener ? mq.addEventListener('change', aplica) : mq.addListener(aplica);
+  aplica();
+})();
+
+/* copiar o e-mail, com o rotulo confirmando */
+function copiarEmail(botao) {
+  var email = 'vinips00@gmail.com';
+  var original = botao.getAttribute('data-original') || botao.textContent.trim();
+  botao.setAttribute('data-original', original);
+  function pronto() {
+    botao.textContent = 'e-mail copiado ✓';
+    clearTimeout(botao._t);
+    botao._t = setTimeout(function () { botao.textContent = original; }, 2200);
+  }
+  function falhou() {
+    botao.textContent = email;          /* sem permissao: mostra para copiar na mao */
+    clearTimeout(botao._t);
+    botao._t = setTimeout(function () { botao.textContent = original; }, 4000);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(email).then(pronto, falhou);
+  } else { falhou(); }
+}
+
+/* reveal: o CSS usa animation-timeline, que so o Chrome tem. Nos outros
+   navegadores a animacao roda no load e o conteudo aparece igual. */
+</script>
 </body>
-
 </html>
