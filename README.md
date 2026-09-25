@@ -8,7 +8,7 @@ Portfólio de Vinícius Pires da Silva, desenvolvedor C# e .NET: projetos pessoa
 
 ## Projetos na página
 
-- **Clawdboard**: painel de uso do Claude para um celular Android parado na mesa, com os modelos como Clawds em pixel art ([código](https://github.com/suiciniv-dev/clawdboard)).
+- **Banditboard**: painel de uso do Claude para um celular Android parado na mesa, com cada modelo como o Racco, um guaxinim em pixel art ([código](https://github.com/suiciniv-dev/banditboard)).
 - **Senna**: assistente de voz para o Windows.
 - **ControlSensors HUD**: HUD de sensores de hardware para o Windows ([código](https://github.com/suiciniv-dev/ControlSensors)).
 - **Símix Ponto** e **Símix Ponto Cloud**: o app e a plataforma de gestão de ponto em que trabalho na Símix.
