@@ -2,7 +2,7 @@
 
 Portfólio de Vinícius Pires da Silva, desenvolvedor C# e .NET: projetos pessoais e profissionais numa página só.
 
-**No ar:** https://suiciniv-dev-apps.pages.dev/
+**No ar:** https://suiciniv-dev-apps.pages.dev/ (português) e https://suiciniv-dev-apps.pages.dev/en/ (inglês)
 
 ![Prévia do portfólio](assets/preview.jpg)
 
@@ -15,4 +15,4 @@ Portfólio de Vinícius Pires da Silva, desenvolvedor C# e .NET: projetos pessoa
 
 ## Como editar
 
-É uma página estática, sem build: tudo fica no `index.html` e na pasta `assets/`. Cada push na `main` é publicado pelo Cloudflare Pages.
+É um site estático, sem build: a página em português fica no `index.html`, a em inglês no `en/index.html`, e os currículos em PDF (português e inglês) na pasta `assets/`. Quem mexer numa página precisa levar a mesma mudança para a outra. Cada push na `main` é publicado pelo Cloudflare Pages.
