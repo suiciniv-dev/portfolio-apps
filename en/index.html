@@ -3,1123 +3,484 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>suiciniv.dev — Software I built.</title>
-<meta name="description" content="Vinícius Pires da Silva, mid-level C# .NET software developer, backend and fullstack. Personal and professional projects: a .NET MAUI time-clock app, a multi-tenant SaaS platform, a Claude Code usage dashboard and a hardware HUD.">
-<meta name="theme-color" content="#110e0b">
+<title>Vinícius Pires da Silva · suiciniv.dev</title>
+<meta name="description" content="Vinícius Pires da Silva, C# and .NET developer at Símix. A pixel art desk with the projects I built: Banditboard, Senna, ControlSensors HUD and Símix Ponto.">
+<meta name="theme-color" content="#120f17">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://suiciniv-dev-apps.pages.dev/en/">
-<meta property="og:title" content="suiciniv.dev — Software I built.">
-<meta property="og:description" content="Mid-level C# .NET software developer: multi-tenant SaaS with ABP and Blazor, a .NET MAUI app on the stores and open-source side projects.">
+<meta property="og:title" content="Vinícius Pires da Silva · suiciniv.dev">
+<meta property="og:description" content="C# and .NET developer. Power on the setup and explore my pixel art desk: every device is a project.">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="pt_BR">
 <meta property="og:image" content="https://suiciniv-dev-apps.pages.dev/assets/preview.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Portfolio of Vinícius Pires da Silva, C# .NET developer">
+<meta property="og:image:alt" content="Vinícius's desk in pixel art: the phone with Racco, the Senna monitor, the HUD and the laptop with the Símix portal">
 <meta property="og:site_name" content="suiciniv.dev">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="suiciniv.dev — Projects & Apps">
+<meta name="twitter:title" content="Vinícius Pires da Silva · suiciniv.dev">
 <meta name="twitter:image" content="https://suiciniv-dev-apps.pages.dev/assets/preview.jpg">
 <link rel="canonical" href="https://suiciniv-dev-apps.pages.dev/en/">
 <link rel="alternate" hreflang="pt-BR" href="https://suiciniv-dev-apps.pages.dev/">
 <link rel="alternate" hreflang="en" href="https://suiciniv-dev-apps.pages.dev/en/">
 <link rel="alternate" hreflang="x-default" href="https://suiciniv-dev-apps.pages.dev/">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&family=Fredoka:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#110e0b; --bg2:#0d0b08; --card:#1a1510; --card2:#221c16; --well:#0f0c09;
-  --line:rgba(236,227,214,.075); --line2:rgba(236,227,214,.13); --line3:rgba(236,227,214,.22);
-  --text:#efe7da; --soft:#cdc2b1; --muted:#a89a86; --dim:#7d715f; --faint:#5e5447;
-  --coral:#d97757; --coral2:#eb9b78; --amber:#f0a83c; --sage:#8fb573; --lav:#b9a6f2; --sky:#7cc4e8; --bad:#e5604d;
-  --display:'Space Grotesk',system-ui,sans-serif; --sans:'Instrument Sans',system-ui,sans-serif;
-  --serif:'Instrument Serif',Georgia,serif; --mono:'JetBrains Mono',ui-monospace,monospace;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased}
-a{color:var(--coral2);text-decoration:none}
-a:hover{color:#f6c2a8}
-::selection{background:var(--coral);color:#160d08}
-h1,h2,h3{font-family:var(--display);margin:0}
-p{margin:0;text-wrap:pretty}
-:focus-visible{outline:2px solid var(--coral);outline-offset:3px;border-radius:6px}
-button{font:inherit}
-
-.page{position:relative;min-height:100vh;overflow-x:hidden}
-.glow{position:fixed;inset:0;pointer-events:none;z-index:0;background:
-  radial-gradient(760px 520px at 88% -6%, rgba(217,119,87,.20), transparent 62%),
-  radial-gradient(620px 460px at 2% 24%, rgba(240,168,60,.07), transparent 60%),
-  radial-gradient(900px 700px at 50% 108%, rgba(160,82,45,.12), transparent 60%)}
-.grid-lines{position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:linear-gradient(rgba(236,227,214,.026) 1px,transparent 1px),linear-gradient(90deg,rgba(236,227,214,.026) 1px,transparent 1px);
-  background-size:64px 64px;mask-image:radial-gradient(120% 80% at 50% 0%,#000 10%,transparent 78%)}
-#barra{position:fixed;top:0;left:0;height:2px;z-index:80;background:linear-gradient(90deg,var(--amber),var(--coral),#a0522d);box-shadow:0 0 12px rgba(217,119,87,.6);width:0%}
-.wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:0 24px}
-
-.top{position:sticky;top:0;z-index:60;backdrop-filter:blur(14px);background:rgba(17,14,11,.74);border-bottom:1px solid var(--line)}
-.top .wrap{padding-top:14px;padding-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:20px}
-.brand{display:flex;align-items:center;gap:11px;color:var(--text)}
-.brand:hover{color:var(--text)}
-.brand-mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(140deg,var(--coral),#8a4a2f);display:flex;align-items:center;justify-content:center;font:700 14px/1 var(--display);color:#1a0f0a;box-shadow:0 6px 24px rgba(217,119,87,.38)}
-.brand-name{font:600 15px/1 var(--display);letter-spacing:-.01em}
-.brand-name span{color:var(--faint)}
-.nav{display:none;gap:26px;align-items:center;font:500 13px/1 var(--sans)}
-.nav a{color:var(--muted)}
-.nav a:hover{color:var(--text)}
-@media (min-width:820px){.nav{display:flex}}
-.top-actions{display:flex;align-items:center;gap:10px}
-.lang-btn{height:34px;padding:0 11px;border-radius:9px;border:1px solid var(--line2);background:rgba(236,227,214,.03);display:flex;align-items:center;font:600 12px/1 var(--mono);color:var(--muted)}
-.lang-btn:hover{color:var(--text);border-color:var(--line3)}
-.icon-btn{width:34px;height:34px;border-radius:9px;border:1px solid var(--line2);background:rgba(236,227,214,.03);display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .2s}
-.icon-btn:hover{color:var(--text);border-color:var(--line3);background:rgba(236,227,214,.07)}
-.btn{display:inline-flex;align-items:center;gap:9px;padding:13px 21px;border-radius:12px;font:600 14px/1 var(--sans);cursor:pointer;transition:transform .2s,filter .2s,background .2s,border-color .2s,color .2s;border:1px solid transparent;white-space:nowrap}
-.btn:hover{transform:translateY(-2px)}
-.btn-sm{padding:9px 15px;font-size:12.5px;border-radius:10px}
-.btn-primary{background:linear-gradient(135deg,var(--coral2),var(--coral) 55%,#b95e3f);color:#1c0f09;box-shadow:0 10px 32px rgba(217,119,87,.32)}
-.btn-primary:hover{filter:brightness(1.07);color:#1c0f09}
-.btn-light{background:var(--text);color:#15100c}
-.btn-light:hover{background:#fff;color:#15100c}
-.btn-ghost{background:rgba(236,227,214,.035);border-color:var(--line2);color:var(--soft)}
-.btn-ghost:hover{background:rgba(236,227,214,.07);border-color:var(--line3);color:var(--text)}
-.btn-quiet{background:transparent;border-color:var(--line);color:var(--muted)}
-.btn-quiet:hover{border-color:var(--line2);color:var(--text)}
-.btn-whats{background:#25d366;color:#04310f}
-.btn-whats:hover{filter:brightness(1.08);color:#04310f}
-
-.eyebrow{font:500 11px/1 var(--mono);letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
-.title{margin-top:14px;font:700 clamp(26px,3vw,36px)/1.1 var(--display);letter-spacing:-.025em}
-section{scroll-margin-top:90px}
-
-.hero{padding:92px 0 0;max-width:920px}
-.pill-live{display:inline-flex;align-items:center;gap:9px;padding:6px 13px 6px 11px;border-radius:999px;border:1px solid rgba(143,181,115,.26);background:rgba(143,181,115,.07);font:500 11.5px/1 var(--mono);color:#b9d6a3;letter-spacing:.02em}
-.dot-live{width:6px;height:6px;border-radius:50%;background:var(--sage);box-shadow:0 0 10px var(--sage);animation:blink 2.2s infinite}
-.hero h1{margin-top:26px;font:700 clamp(44px,8.6vw,90px)/.98 var(--display);letter-spacing:-.035em}
-.hero h1 em{font:italic 400 1.08em/.9 var(--serif);letter-spacing:-.01em;padding-right:.06em;background:linear-gradient(96deg,var(--amber),var(--coral2) 45%,var(--coral));-webkit-background-clip:text;background-clip:text;color:transparent}
-.lead{margin-top:26px;max-width:620px;font-size:clamp(16px,1.6vw,19px);line-height:1.62;color:var(--muted)}
-.lead span{color:var(--faint)}
-.hero-actions{display:flex;flex-wrap:wrap;gap:11px;margin-top:34px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;margin-top:64px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
-.stat{padding:20px 22px;background:#15110d}
-.stat b{display:block;font:700 30px/1 var(--display);letter-spacing:-.03em;color:var(--text)}
-.stat span{display:block;margin-top:7px;font:500 10.5px/1.4 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
-
-.about{padding:120px 0 0}
-.about-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:48px;align-items:start}
-.facts{margin-top:22px;display:flex;flex-direction:column;gap:14px;font-size:15px;line-height:1.55;color:var(--muted)}
-.facts div{display:flex;gap:12px;align-items:baseline}
-.facts i{font:normal 500 11px/1.6 var(--mono);color:var(--coral)}
-.about-text{display:flex;flex-direction:column;gap:20px;font-size:15.5px;line-height:1.7;color:var(--muted)}
-.about-text strong{color:var(--text);font-weight:600}
-
-.projects{padding:120px 0 0}
-.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:26px}
-.counter{font:500 11px/1 var(--mono);color:var(--faint)}
-.group-label{display:flex;align-items:center;gap:12px;margin:46px 0 18px;font:500 11px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
-.group-label::after{content:"";flex:1;height:1px;background:var(--line)}
-
-.proj{border:1px solid var(--line);border-radius:24px;overflow:hidden;background:linear-gradient(180deg,rgba(30,24,18,.92),rgba(20,16,12,.92));box-shadow:0 24px 60px rgba(0,0,0,.38);margin-bottom:26px}
-.proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr))}
-.proj-body{padding:clamp(24px,3.4vw,40px)}
-.proj-visual{background:var(--well);border-left:1px solid var(--line);padding:clamp(22px,3vw,34px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;min-width:0}
-@media (max-width:720px){.proj-visual{border-left:0;border-top:1px solid var(--line)}}
-.proj-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.proj-id{display:flex;align-items:center;gap:15px}
-.proj-icon{width:52px;height:52px;border-radius:15px;display:flex;align-items:center;justify-content:center;flex:none}
-.proj-id h3{font:700 clamp(21px,2.3vw,25px)/1.15 var(--display);letter-spacing:-.02em}
-.proj-id p{margin-top:6px;font:500 12px/1.3 var(--mono);color:var(--dim)}
-.badge{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;font:500 11px/1 var(--mono);white-space:nowrap;border:1px solid}
-.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
-.badge-personal{color:#b9d6a3;border-color:rgba(143,181,115,.26);background:rgba(143,181,115,.07)}
-.badge-pro{color:#f2c08f;border-color:rgba(240,168,60,.28);background:rgba(240,168,60,.07)}
-.proj-text{margin-top:24px;max-width:52ch;font-size:15.5px;line-height:1.68;color:var(--muted)}
-.proj-text + .proj-text{margin-top:14px;color:#8d806e}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
-.chip{display:inline-flex;padding:6px 11px;border-radius:8px;background:rgba(236,227,214,.03);border:1px solid var(--line2);font:500 11px/1 var(--mono);color:var(--muted)}
-.proj-links{display:flex;flex-wrap:wrap;gap:11px;margin-top:28px}
-.fine{margin-top:14px;font:400 11.5px/1.5 var(--mono);color:var(--faint)}
-.hint{margin-top:26px;font:500 11px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
-.cmds{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-.cmd{display:inline-flex;align-items:center;padding:7px 12px;border-radius:9px;background:rgba(236,227,214,.03);border:1px solid var(--line2);font:400 12px/1 var(--mono);color:var(--muted);cursor:pointer;transition:border-color .2s,background .2s,color .2s,transform .2s}
-.cmd:hover{border-color:rgba(217,119,87,.5);background:rgba(217,119,87,.07);color:var(--text);transform:translateY(-1px)}
-.cmd[data-ativo]{border-color:rgba(217,119,87,.75);background:rgba(217,119,87,.13);color:#fff1e8}
-.cmd-seta{color:var(--coral);margin-right:7px}
-.cmd-senna:hover{border-color:rgba(47,191,99,.45);background:rgba(47,191,99,.07)}
-.cmd-senna[data-ativo]{border-color:rgba(47,191,99,.7);background:rgba(47,191,99,.12);color:#eafff2}
-.cmd-senna .cmd-seta{color:#2fbf63}
-.note{margin-top:28px;padding:16px 18px;border-radius:14px;background:rgba(236,227,214,.02);border:1px solid var(--line)}
-.note p{font:400 12.5px/1.7 var(--sans);color:var(--dim)}
-.note b{color:var(--muted);font-weight:600}
-.role{margin-top:26px;padding:18px 20px;border-radius:16px;background:var(--well);border:1px solid var(--line)}
-.role-title{display:flex;align-items:center;gap:8px;font:500 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:#f2c08f}
-.role-title::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--amber)}
-.role-list{margin-top:14px;display:flex;flex-direction:column;gap:11px;font-size:13.5px;line-height:1.6;color:var(--muted)}
-.role-list div{display:flex;gap:10px}
-.role-list div::before{content:"—";color:var(--coral);flex:none}
-
-.window{width:100%;border:1px solid var(--line2);border-radius:16px;background:#0a0806;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.5)}
-.window-bar{height:38px;padding:0 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:7px}
-.window-bar i{width:9px;height:9px;border-radius:50%;opacity:.75}
-.window-bar i:nth-child(1){background:#ef4444}.window-bar i:nth-child(2){background:#eab308}.window-bar i:nth-child(3){background:#22c55e}
-.window-name{margin-left:10px;font:400 10.5px/1 var(--mono);color:var(--faint)}
-.window-status{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font:400 10.5px/1 var(--mono);color:#b9d6a3}
-.window-status::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--sage)}
-.term{padding:18px 16px;font:400 11.5px/2 var(--mono);color:var(--dim)}
-.term div{animation:lineIn .45s ease both}
-.term .p{color:var(--sky)}
-.term .ok{color:#b9d6a3}
-.term-rule{margin-top:14px;height:1px;background:var(--line)}
-.term-online{margin-top:12px;display:flex;align-items:center;gap:8px;color:var(--sky)}
-.term-online::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--sky);box-shadow:0 0 10px var(--sky);animation:blink 1.6s infinite}
-.nodes{padding:22px 18px;display:flex;flex-direction:column;gap:10px}
-.node{display:flex;align-items:center;gap:13px;padding:13px;border-radius:14px;border:1px solid var(--line2);background:rgba(236,227,214,.025)}
-.node-tag{width:36px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font:700 11px/1 var(--mono);flex:none;background:rgba(236,227,214,.05);border:1px solid var(--line2);color:var(--muted)}
-.node b{display:block;font:600 12.5px/1 var(--sans);color:var(--soft)}
-.node small{display:block;margin-top:5px;font:400 10.5px/1.35 var(--mono);color:var(--faint)}
-.node-coral{border-color:rgba(217,119,87,.28);background:rgba(217,119,87,.06)}
-.node-coral .node-tag{background:rgba(217,119,87,.12);border-color:rgba(217,119,87,.3);color:var(--coral2)}
-.node-amber{border-color:rgba(240,168,60,.26);background:rgba(240,168,60,.05)}
-.node-amber .node-tag{background:rgba(240,168,60,.1);border-color:rgba(240,168,60,.28);color:#f2c08f}
-.arrow{display:flex;justify-content:center;color:var(--faint);font:400 12px/1 var(--mono)}
-.modules{padding:18px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-.modules .node{padding:11px}
-.modules .node b{font-size:12px;line-height:1.2}
-@media (max-width:520px){.modules{grid-template-columns:1fr}}
-.modules-foot{padding:0 18px 18px;font:400 10.5px/1.5 var(--mono);color:var(--faint)}
-
-.phone{container-type:inline-size;width:100%;max-width:560px;aspect-ratio:1.9/1;border-radius:clamp(18px,3.2vw,30px);background:#070605;border:1px solid var(--line2);padding:clamp(7px,1.3vw,11px);box-shadow:0 24px 60px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.02)}
-.screen{height:100%;border-radius:clamp(12px,2.2vw,21px);background:#16130f radial-gradient(ellipse at 50% 118%, rgba(217,119,87,.17), transparent 62%);padding:4cqw 4.8cqw 3cqw;display:flex;flex-direction:column;overflow:hidden}
-.cb-row{display:grid;grid-template-columns:12cqw 14cqw 1fr 13cqw;align-items:center;gap:2.2cqw}
-.cb-row + .cb-row{margin-top:1.4cqw}
-.cb-row b{font:600 3cqw/1 Fredoka,var(--display);color:#ece3d6}
-.cb-row .pct{font:700 5.6cqw/1 Fredoka,var(--display)}
-.cb-row .left{font:500 3.1cqw/1 Fredoka,var(--display);color:#ece3d6;text-align:right}
-.cb-bar{height:2.1cqw;border-radius:99px;background:#2b2419;overflow:hidden}
-.cb-bar i{display:block;height:100%;border-radius:99px;transition:width .6s}
-.cb-sep{height:1px;background:#383024;margin:2.2cqw 0 1.8cqw}
-.cb-mascots{flex:1;display:grid;grid-template-columns:repeat(4,1fr);align-items:end;gap:2cqw}
-.cb-m{text-align:center;min-width:0}
-.cb-m .mp{font:600 3cqw/1 Fredoka,var(--display)}
-.cb-m .mb{height:1.1cqw;width:58%;margin:1cqw auto 1.6cqw;border-radius:99px;background:#2b2419;overflow:hidden}
-.cb-m .mb i{display:block;height:100%;border-radius:99px}
-.cb-m svg{width:56%;height:auto;display:block;margin:0 auto}
-.cb-m .mn{margin-top:1cqw;font:500 2.8cqw/1 Fredoka,var(--display);color:#ece3d6}
-.cb-m .ms{font:400 2.1cqw/1.25 var(--sans);color:var(--bad);min-height:2.6cqw}
-.cb-caption{min-height:2.6em;text-align:center;font:400 13px/1.5 var(--sans);color:var(--muted);max-width:44ch}
-.cb-looks{display:flex;flex-wrap:wrap;justify-content:center;gap:7px}
-
-.cl .lid{opacity:0;animation:cblink 6s step-end infinite;animation-delay:var(--d)}
-.cl .eyes{animation:clook 11s step-end infinite;animation-delay:var(--d)}
-.cl .la{animation:clegA 9s step-end infinite;animation-delay:var(--d)}
-.cl .lb{animation:clegB 9s step-end infinite;animation-delay:var(--d)}
-.cl .arm{animation:cwave 13s step-end infinite;animation-delay:var(--d)}
-.cl .paw{animation:cwave2 13s step-end infinite;animation-delay:var(--d)}
-.cl .bod{animation:ccrouch 10s step-end infinite;animation-delay:var(--d)}
-.cl .drop{animation:cdrip 2.2s step-end infinite;animation-delay:var(--d)}
-.cl .z{animation:czz 2.9s step-end infinite;animation-delay:var(--d)}
-.cl .smoke{animation:cpuff 2.6s step-end infinite;animation-delay:var(--d)}
-.cl.hot{animation:cthrob .76s ease-in-out infinite}
-.cl.shake .all{animation:cshake 1.2s step-end infinite}
-.cl.nolook .eyes,.cl.sleepy .la,.cl.sleepy .lb,.cl.sleepy .arm,.cl.sleepy .paw,.cl.dead .bod,.cl.dead .la,.cl.dead .lb,.cl.dead .arm,.cl.dead .paw{animation:none}
-.cl.sleepy .bod{animation:cbreathe 2.9s step-end infinite;animation-delay:var(--d)}
-@keyframes cblink{0%{opacity:0}96%{opacity:1}98%{opacity:0}}
-@keyframes clook{0%{transform:none}70%{transform:translateX(var(--lx))}80%{transform:none}}
-@keyframes clegA{0%{transform:none}40%{transform:translateY(-1px)}42%{transform:none}44%{transform:translateY(-1px)}46%{transform:none}}
-@keyframes clegB{0%{transform:none}42%{transform:translateY(-1px)}44%{transform:none}46%{transform:translateY(-1px)}48%{transform:none}}
-@keyframes cwave{0%{transform:none}60%{transform:translateY(-1px)}62%{transform:none}64%{transform:translateY(-1px)}66%{transform:none}68%{transform:translateY(-1px)}70%{transform:none}}
-@keyframes cwave2{0%{transform:none}60%{transform:translateY(-2px)}62%{transform:none}64%{transform:translateY(-2px)}66%{transform:none}68%{transform:translateY(-2px)}70%{transform:none}}
-@keyframes ccrouch{0%{transform:none}20%{transform:translateY(1px)}21.5%{transform:none}23%{transform:translateY(1px)}24.5%{transform:none}}
-@keyframes cbreathe{0%{transform:none}45%{transform:translateY(1px)}70%{transform:none}}
-@keyframes czz{0%{opacity:1}70%{opacity:0}}
-@keyframes cdrip{0%{transform:none;opacity:1}15%{transform:translateY(1px)}30%{transform:translateY(2px)}45%{transform:translateY(3px)}60%{opacity:0}}
-@keyframes cpuff{0%{transform:none;opacity:.8}25%{transform:translateY(-1px)}50%{transform:translateY(-2px);opacity:.6}75%{transform:translateY(-3px);opacity:.4}90%{opacity:0}}
-@keyframes cthrob{50%{filter:brightness(1.22)}}
-@keyframes cshake{0%{transform:translateX(.5px)}6%{transform:translateX(-.5px)}12%{transform:translateX(.5px)}18%{transform:translateX(-.5px)}24%{transform:none}}
-
-.leg{display:flex;align-items:center;gap:11px;width:100%;padding:7px 8px;border:1px solid transparent;border-radius:9px;background:none;cursor:pointer;text-align:left;transition:background .2s,border-color .2s}
-.leg:hover{background:rgba(236,227,214,.04);border-color:var(--line2)}
-.leg-dot{width:11px;height:11px;border-radius:50%;flex:none}
-.leg-nome{font:600 12.5px/1 var(--sans);color:var(--soft);min-width:74px}
-.leg-desc{font:400 12px/1.4 var(--sans);color:var(--faint)}
-.orb-legend{width:100%;border-top:1px solid var(--line);padding-top:20px;display:flex;flex-direction:column;gap:6px}
-#orb{width:min(180px,46vw);height:min(180px,46vw);display:block}
-.orb-state{text-align:center;min-height:52px;display:flex;flex-direction:column;justify-content:center;gap:7px}
-#orb-estado{font:500 11px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
-#orb-fala{font:400 13px/1.5 var(--sans);color:var(--soft);opacity:0;transition:opacity .35s;max-width:30ch}
-
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:14px;margin-top:28px}
-.card{padding:24px;border-radius:18px;border:1px solid var(--line);background:rgba(28,22,17,.7);transition:all .25s}
-.card:hover{border-color:rgba(217,119,87,.4);background:rgba(34,27,20,.9);transform:translateY(-3px)}
-.card i{font:normal 500 10.5px/1 var(--mono);color:var(--coral)}
-.card h3{margin-top:14px;font:600 17px/1.25 var(--display)}
-.card p{margin-top:9px;font-size:13.5px;line-height:1.6;color:var(--muted)}
-.stack-card{padding:22px;border-radius:18px;border:1px solid var(--line);background:rgba(22,18,13,.6)}
-.stack-card .eyebrow{letter-spacing:.14em}
-.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
-.tag{padding:7px 12px;border-radius:9px;background:rgba(236,227,214,.03);border:1px solid var(--line2);font:500 12px/1 var(--mono);color:var(--muted)}
-.tag-coral{background:rgba(217,119,87,.1);border-color:rgba(217,119,87,.32);color:#f2b597}
-.tag-amber{background:rgba(240,168,60,.08);border-color:rgba(240,168,60,.3);color:#f2c08f}
-.tag-sage{background:rgba(143,181,115,.09);border-color:rgba(143,181,115,.3);color:#b9d6a3}
-.block{padding:120px 0 0}
-
-.contact{padding:130px 0 0}
-.contact-box{position:relative;overflow:hidden;border-radius:26px;border:1px solid rgba(217,119,87,.26);background:linear-gradient(140deg,rgba(217,119,87,.16),rgba(20,16,12,.92) 55%);padding:clamp(34px,5vw,60px);text-align:center}
-.contact-box::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(420px 260px at 50% 0%,rgba(240,168,60,.16),transparent 70%)}
-.contact-box > *{position:relative}
-.contact-box h2{margin-top:16px;font:700 clamp(28px,4.2vw,44px)/1.08 var(--display);letter-spacing:-.03em}
-.contact-box h2 em{font:italic 400 1.1em var(--serif);color:var(--coral2)}
-.contact-box > p.lead{margin:18px auto 0;max-width:460px;font-size:15.5px}
-.contact-actions{display:flex;flex-wrap:wrap;gap:11px;justify-content:center;margin-top:32px}
-.contact-links{display:flex;flex-wrap:wrap;gap:22px;justify-content:center;margin-top:30px;font:500 12.5px/1 var(--mono)}
-.contact-links a{color:var(--muted)}
-.contact-links a:hover{color:var(--text)}
-footer{margin-top:90px;padding:26px 0 40px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:center;font:400 11.5px/1.6 var(--mono);color:var(--faint)}
-footer a{color:var(--faint)}
-footer a:hover{color:var(--text)}
-footer div{display:flex;gap:20px;align-items:center}
-
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
-@keyframes lineIn{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
-@keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
-[data-reveal]{animation:rise .8s cubic-bezier(.2,.7,.2,1) both;animation-timeline:view();animation-range:entry 0% cover 26%}
-@media (prefers-reduced-motion:reduce){
-  [data-reveal],.term div,.cl,.cl *{animation:none!important;opacity:1;transform:none}
-  .cl .lid{opacity:0}
-  .btn,.cmd,.card,.leg{transition:none}
-  .btn:hover,.cmd:hover,.card:hover{transform:none}
-}
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Jersey+10&family=VT323&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Vinícius Pires da Silva","jobTitle":"Software Developer","worksFor":{"@type":"Organization","name":"Símix Sistemas"},"address":{"@type":"PostalAddress","addressLocality":"Canoas","addressRegion":"RS","addressCountry":"BR"},"url":"https://suiciniv-dev-apps.pages.dev/en/","sameAs":["https://github.com/suiciniv-dev","https://github.com/simix-viniciussilva","https://www.linkedin.com/in/viniciuspiresdasilva/"]}</script>
 </head>
 <body>
-<div class="page">
-  <div class="glow"></div>
-  <div class="grid-lines"></div>
-  <div id="barra"></div>
+<script>document.documentElement.classList.add('js')</script>
+
+<div class="intro" id="intro" hidden>
+  <div class="intro-box">
+    <button type="button" class="power" id="power" aria-label="Power on the setup"><canvas id="powerIco" width="13" height="13" aria-hidden="true"></canvas></button>
+    <p class="intro-hint" id="introHint">Press to power on the setup <span>or Enter</span></p>
+    <div class="boot" id="boot" aria-live="polite"></div>
+  </div>
+  <button type="button" class="intro-skip" id="introSkip">Skip <kbd>Esc</kbd></button>
+</div>
+
+<div class="page" id="topo">
+  <div id="barra" aria-hidden="true"></div>
 
   <header class="top">
-    <div class="wrap">
-      <a href="#top" class="brand"><span class="brand-mark">C#</span><span class="brand-name">suiciniv<span>.dev</span></span></a>
-      <nav class="nav">
-        <a href="#sobre">About</a>
+    <div class="wrap top-in">
+      <a class="brand" href="#topo" id="brand" aria-label="suiciniv.dev, back to top">
+        <canvas class="brand-racco" id="brandRacco" width="16" height="14" aria-hidden="true"></canvas>
+        <span class="brand-name" aria-hidden="true"><span id="brandNome">suiciniv</span><span class="brand-dev">.dev</span></span>
+      </a>
+      <nav class="nav" aria-label="Sections">
+        <a href="#mesa">Desk</a>
         <a href="#projetos">Projects</a>
-        <a href="#atuacao">Expertise</a>
-        <a href="#stack">Stack</a>
+        <a href="#player">Player 1</a>
+        <a href="#espelho">Career</a>
+        <a href="#contato">Contact</a>
       </nav>
       <div class="top-actions">
-        <a href="https://github.com/suiciniv-dev" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="icon-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.55v-2.1c-3.2.7-3.88-1.4-3.88-1.4-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.2 1.77 1.2 1.04 1.78 2.72 1.27 3.38.97.1-.75.4-1.27.73-1.56-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.12 3.05.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.4-5.26 5.69.42.36.79 1.07.79 2.15v3.19c0 .3.2.66.8.55A11.5 11.5 0 0 0 23.5 12A11.5 11.5 0 0 0 12 .5Z"/></svg>
-        </a>
-        <a href="https://www.linkedin.com/in/viniciuspiresdasilva/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="icon-btn">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
-        </a>
-        <a href="/" hreflang="pt-BR" lang="pt-BR" class="lang-btn" aria-label="Versão em português">PT</a>
-        <a href="/assets/Resume-Vinicius-Pires-da-Silva.pdf" download target="_blank" rel="noopener noreferrer" class="btn btn-light btn-sm">Download CV</a>
+        <button type="button" class="pill" id="btnSegredos" aria-haspopup="dialog"><span class="pill-star" aria-hidden="true">★</span><span id="contaSegredos">0/16</span><span class="sr"> secrets</span></button>
+        <button type="button" class="pill pill-sq" id="btnSom" aria-pressed="true" aria-label="Sound"><span aria-hidden="true" id="somIco">♪</span></button>
+        <a class="pill pill-sq" href="/" hreflang="pt-BR" lang="pt-BR" id="btnLang" aria-label="Versão em português">PT</a>
+        <a class="pill pill-cv" href="/assets/Resume-Vinicius-Pires-da-Silva.pdf" download>CV <span aria-hidden="true">↓</span></a>
       </div>
     </div>
   </header>
 
-  <main id="top" class="wrap">
-
-    <section class="hero">
-      <div class="pill-live"><span class="dot-live"></span>Software Developer · C# &amp; .NET</div>
-      <h1>Software I <em>built.</em></h1>
-      <p class="lead">
-        Projects, apps and tools built for performance, simplicity and usefulness.
-        <span>Some ideas are useful. Others… I just wanted to see them working.</span>
-      </p>
-      <div class="hero-actions">
-        <a href="#projetos" class="btn btn-primary">See projects <span aria-hidden="true">↓</span></a>
-        <button type="button" onclick="copiarEmail(this)" class="btn btn-ghost">Copy e-mail</button>
-        <a href="https://github.com/simix-viniciussilva" target="_blank" rel="noopener noreferrer" class="btn btn-quiet">Work GitHub ↗</a>
-      </div>
-      <div class="stats">
-        <div class="stat"><b>6+</b><span>years at Símix, from support to mid-level III</span></div>
-        <div class="stat"><b>790+</b><span>pull requests merged</span></div>
-        <div class="stat"><b>650+</b><span>code reviews</span></div>
-        <div class="stat"><b>2</b><span>stores · Google Play and App Store</span></div>
-      </div>
-    </section>
-
-    <section id="sobre" class="about" data-reveal>
-      <div class="about-grid">
-        <div>
-          <p class="eyebrow">Background</p>
-          <h2 class="title">About me</h2>
-          <div class="facts">
-            <div><i>01</i><span>Backend &amp; fullstack for time and attendance systems</span></div>
-            <div><i>02</i><span>Multi-tenant architectures with ABP Framework and PostgreSQL</span></div>
-            <div><i>03</i><span>RESTful APIs, Blazor and cross-platform .NET MAUI apps</span></div>
-            <div><i>04</i><span>Automated tests and continuous deployment to Azure with GitHub Actions</span></div>
+  <main>
+    <section class="hero" id="mesa">
+      <div class="wrap stage">
+        <div class="hero-top">
+          <div>
+            <p class="kicker"><span class="dot" aria-hidden="true"></span>suiciniv.dev · Canoas, RS</p>
+            <h1>Vinícius Pires da Silva</h1>
+            <p class="role">C# &amp; .NET developer · Mid-level III at Símix</p>
           </div>
         </div>
-        <div class="about-text">
-          <p>I'm a mid-level <strong>C# .NET</strong> developer at Símix Sistemas, a Brazilian time and attendance software company. I joined in 2020 as a support intern and got here self-taught, straight from the documentation and hands-on work.</p>
-          <p>I work from the database to the UI on <strong>Símix Ponto Cloud</strong>, a multi-tenant SaaS platform built with ABP Framework, Blazor, PostgreSQL and Azure, and on the <strong>Símix Ponto app</strong> in .NET MAUI, published on Google Play and the App Store. I led the front-end migration to Blazor WebAssembly, automated the app's store releases and took part in moving the legacy VB6 system to .NET.</p>
-          <p style="color:var(--dim)">Outside work, I like building the tools I use myself. Some of them are right below.</p>
+
+        <div class="scene-frame">
+          <div class="scene" id="scene">
+            <canvas id="mesaCanvas" width="320" height="180" role="img" aria-label="My desk in pixel art: an old phone with Racco on screen, the monitor with Senna, a second monitor with the sensor HUD, a laptop with the Símix portal, a corkboard, a shelf with a grass block, a potion, a Mercedes miniature and a wizard hat, and me in the chair, seen from behind."></canvas>
+            <div class="hots" id="hots"></div>
+            <div class="scene-tip" id="sceneTip" hidden></div>
+            <div class="scene-balao" id="sceneBalao" hidden></div>
+          </div>
         </div>
+        <div class="hero-bar">
+          <p class="scene-hint"><span class="so-mouse">Hover and click things on the desk.</span><span class="so-toque">Swipe sideways and tap things on the desk.</span> Every device is a project; everything else is a secret.</p>
+          <div class="hero-cta">
+            <a class="btn btn-main" href="#projetos">See projects <span aria-hidden="true">↓</span></a>
+            <button type="button" class="btn btn-ghost" data-copiar>Copy email</button>
+          </div>
+        </div>
+
+        <div class="legend" id="legend" aria-label="Desk objects">
+          <button type="button" data-obj="banditboard">Banditboard</button>
+          <button type="button" data-obj="senna">Senna</button>
+          <button type="button" data-obj="hud">ControlSensors HUD</button>
+          <button type="button" data-obj="app">Símix Ponto</button>
+          <button type="button" data-obj="cloud">Símix Ponto Cloud</button>
+        </div>
+
+        <dl class="stats">
+          <div><dt>6 years</dt><dd>at Símix, from support to mid-level III</dd></div>
+          <div><dt>790+</dt><dd>pull requests merged</dd></div>
+          <div><dt>650+</dt><dd>code reviews</dd></div>
+          <div><dt>1,800+</dt><dd>commits in production</dd></div>
+          <div><dt>2 stores</dt><dd>Google Play and App Store</dd></div>
+        </dl>
       </div>
     </section>
 
-    <section id="projetos" class="projects">
-      <div class="section-head" data-reveal>
-        <div>
-          <p class="eyebrow">Projects &amp; Apps</p>
-          <h2 class="title">Projects</h2>
-        </div>
-        <span class="counter">05 / selected work</span>
-      </div>
+    <section class="sec" id="projetos">
+      <div class="wrap">
+        <header class="sec-head">
+          <span class="sec-num">01</span>
+          <div>
+            <h2>On the desk</h2>
+            <p>Five things I built and use. Three were born in my free time; two are from Símix, where I work.</p>
+          </div>
+        </header>
 
-      <div class="group-label">Personal</div>
-
-      <article class="proj" data-reveal>
-        <div class="proj-grid">
-          <div class="proj-body">
-            <div class="proj-head">
-              <div class="proj-id">
-                <div class="proj-icon" style="background:linear-gradient(140deg,#2a221a,#16130f);border:1px solid rgba(217,119,87,.35);box-shadow:0 8px 26px rgba(217,119,87,.22)">
-                  <svg width="34" height="30" viewBox="0 0 16 14" fill="#a39b90" shape-rendering="crispEdges" aria-hidden="true"><rect x="2" y="3" width="2" height="1"/><rect x="12" y="3" width="2" height="1"/><rect x="2" y="4" width="12" height="1"/><rect x="2" y="5" width="12" height="1"/><rect x="1" y="6" width="5" height="1" fill="#4a413b"/><rect x="6" y="6" width="4" height="1"/><rect x="10" y="6" width="5" height="1" fill="#4a413b"/><rect x="1" y="7" width="5" height="1" fill="#4a413b"/><rect x="6" y="7" width="4" height="1"/><rect x="10" y="7" width="5" height="1" fill="#4a413b"/><rect x="0" y="8" width="6" height="1"/><rect x="6" y="8" width="1" height="1" fill="#eee7db"/><rect x="7" y="8" width="2" height="1" fill="#0c0a08"/><rect x="9" y="8" width="1" height="1" fill="#eee7db"/><rect x="10" y="8" width="6" height="1"/><rect x="0" y="9" width="6" height="1"/><rect x="6" y="9" width="4" height="1" fill="#eee7db"/><rect x="10" y="9" width="6" height="1"/><rect x="2" y="10" width="12" height="1"/><rect x="2" y="11" width="12" height="1"/><rect x="3" y="12" width="1" height="1"/><rect x="5" y="12" width="1" height="1"/><rect x="10" y="12" width="1" height="1"/><rect x="12" y="12" width="1" height="1"/><rect x="3" y="13" width="1" height="1"/><rect x="5" y="13" width="1" height="1"/><rect x="10" y="13" width="1" height="1"/><rect x="12" y="13" width="1" height="1"/><rect x="4" y="6" width="1" height="2" fill="#f3efea"/><rect x="11" y="6" width="1" height="2" fill="#f3efea"/><rect x="5" y="0" width="6" height="2" fill="#3b3446"/><rect x="5" y="0" width="1" height="2" fill="#5a4f6b"/><rect x="5" y="2" width="6" height="1" fill="#f5d66a"/><rect x="4" y="3" width="8" height="1" fill="#3b3446"/></svg>
-                </div>
-                <div>
-                  <h3>Banditboard</h3>
-                  <p>Claude Code usage dashboard · Android and Windows</p>
-                </div>
+        <article class="quest" id="banditboard">
+          <div class="quest-body">
+            <div class="quest-head">
+              <canvas class="quest-ico" data-ico="banditboard" aria-hidden="true"></canvas>
+              <div>
+                <h3>Banditboard</h3>
+                <p class="sub">Claude Code and Antigravity limits · Android, iPhone, Watch, Windows and Mac</p>
               </div>
-              <span class="badge badge-personal">Personal project</span>
+              <span class="tag tag-me">Side project</span>
             </div>
-
-            <p class="proj-text">
-              A spare Android phone on the desk, even an old one, becomes an always-on dashboard for
-              my Claude Code usage: how much of the 5-hour session and the week is gone, when it resets,
-              whether any model is unstable, and the latest Anthropic news. No spare phone? It becomes a
-              widget on Windows. Each model is Racco, a pixel-art raccoon who sleeps, sweats, waves and
-              bursts as the limit gets close.
-            </p>
-            <p class="proj-text">
-              Kotlin with Jetpack Compose on Android and Compose Desktop on Windows. The usage comes from
-              Claude Code itself on the PC, through a hook that runs /usage, with no token on the phone; the
-              pairing key is encrypted with AES-256-GCM and the Android Keystore. Limit alerts, a PIN-protected
-              web dashboard on the local network, music mode, skins and accessibility zoom.
-            </p>
-
-            <p class="hint">Click to see the Raccos react</p>
-            <div class="cmds" id="cbCenas">
-              <button type="button" class="cmd" data-cena="normal" data-ativo="1"><span class="cmd-seta">&rsaquo;</span>normal day</button>
-              <button type="button" class="cmd" data-cena="dormindo"><span class="cmd-seta">&rsaquo;</span>empty session</button>
-              <button type="button" class="cmd" data-cena="suando"><span class="cmd-seta">&rsaquo;</span>week at 88%</button>
-              <button type="button" class="cmd" data-cena="vermelho"><span class="cmd-seta">&rsaquo;</span>week at 97%</button>
-              <button type="button" class="cmd" data-cena="esgotado"><span class="cmd-seta">&rsaquo;</span>limit at 100%</button>
-              <button type="button" class="cmd" data-cena="fable"><span class="cmd-seta">&rsaquo;</span>only Fable maxed out</button>
+            <p>It started on an Android phone forgotten in a drawer, which became an always-on panel on the desk: how much of the 5-hour session and the week is used, when it resets and whether any model is unstable. Today it also runs on iPhone and Apple Watch, and becomes a widget on Windows and Mac. Each model is Racco, a pixel art raccoon that sleeps, sweats and bursts as the limit gets close.</p>
+            <p>Kotlin with Jetpack Compose on Android and Compose Desktop on Windows. Usage comes from Claude Code itself on the PC, through a hook that runs <code>/usage</code>, with no token on the phone; the pairing key is encrypted with AES-256-GCM and the Android Keystore. Open source, with a website and docs in Portuguese and English.</p>
+            <ul class="chips"><li>Kotlin</li><li>Jetpack Compose</li><li>Compose Desktop</li><li>Swift</li><li>AES-GCM · Keystore</li><li>Pixel art</li></ul>
+            <div class="links">
+              <a class="btn btn-main" href="https://banditboard.pages.dev/" target="_blank" rel="noopener noreferrer">Learn more and download <span aria-hidden="true">↗</span></a>
+              <a class="btn btn-ghost" href="https://github.com/suiciniv-dev/banditboard" target="_blank" rel="noopener noreferrer">View code <span aria-hidden="true">↗</span></a>
             </div>
-
-            <div class="chips">
-              <span class="chip">Kotlin</span><span class="chip">Jetpack Compose</span><span class="chip">Compose Desktop</span>
-              <span class="chip">Android</span><span class="chip">Windows</span><span class="chip">AES-GCM · Keystore</span><span class="chip">Pixel art</span>
-            </div>
-            <div class="proj-links">
-              <a href="https://banditboard.pages.dev/en/" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Learn more and download ↗</a>
-              <a href="https://github.com/suiciniv-dev/banditboard" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">View code ↗</a>
-            </div>
-            <p class="fine">Android 8+ · Windows 10+ · free · personal project, not affiliated with Anthropic</p>
+            <p class="fine">free and open source (MIT) · side project, not affiliated with Anthropic</p>
           </div>
-
-          <div class="proj-visual">
-            <div class="phone" role="img" aria-label="Banditboard mascots screen: session and week on top and the four Raccos with each model's bar">
+          <div class="quest-demo">
+            <div class="phone" role="img" aria-label="Banditboard screen: session and week on top and the four Raccos with each model's bar">
               <div class="screen">
                 <div id="cbRows"></div>
                 <div class="cb-sep"></div>
                 <div class="cb-mascots" id="cbMascots"></div>
               </div>
             </div>
-            <p class="cb-caption" id="cbFala">&nbsp;</p>
-            <div class="cb-looks" id="cbLooks">
-              <button type="button" class="cmd" data-look="modelos" data-ativo="1">per model</button>
-              <button type="button" class="cmd" data-look="arcoiris">rainbow</button>
-              <button type="button" class="cmd" data-look="coroas">crowns</button>
-              <button type="button" class="cmd" data-look="natal">christmas</button>
+            <p class="demo-cap" id="cbFala">&nbsp;</p>
+            <div class="cmds" id="cbCenas">
+              <button type="button" class="cmd" data-cena="normal" data-ativo="1">normal day</button>
+              <button type="button" class="cmd" data-cena="dormindo">session at zero</button>
+              <button type="button" class="cmd" data-cena="suando">week at 88%</button>
+              <button type="button" class="cmd" data-cena="vermelho">week at 97%</button>
+              <button type="button" class="cmd" data-cena="esgotado">limit at 100%</button>
+              <button type="button" class="cmd" data-cena="fable">only Fable at the limit</button>
             </div>
           </div>
-        </div>
-      </article>
+        </article>
 
-      <article class="proj" data-reveal>
-        <div class="proj-grid">
-          <div class="proj-body">
-            <div class="proj-head">
-              <div class="proj-id">
-                <div class="proj-icon" style="background:linear-gradient(140deg,#2fbf63,#0a2e18);box-shadow:0 6px 24px rgba(47,191,99,.3)">
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#eafff2" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M12 3v10"/><path d="M8.5 6.5v3"/><path d="M15.5 6.5v3"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M12 17v4"/></svg>
+        <article class="quest" id="senna">
+          <div class="quest-body">
+            <div class="quest-head">
+              <canvas class="quest-ico" data-ico="senna" aria-hidden="true"></canvas>
+              <div>
+                <h3>Senna</h3>
+                <p class="sub">My Windows assistant · v1 in Python, v2 in C#</p>
+              </div>
+              <span class="tag tag-me">Side project</span>
+            </div>
+            <p><b>v1 talked.</b> I called it by name, asked in Portuguese and it got things done: speech recognition, LLM answers (Gemini, Claude and Ollama), synthesized voice and Spotify and Microsoft integrations over OAuth 2.0. About 8,000 lines of Python, and it was heavy: 682 MB of memory, with the animated orb eating 57% of the CPU.</p>
+            <p><b>v2 works quietly.</b> In September 2026 I rewrote it in C# with WinUI 3 and dropped what I didn't use. What stayed is a daily panel and Windows notifications for PRs to review, new issues, merges, meetings, reminders, rain and Claude limits. And the memory stayed: Claude Code saves decisions, reasons and where it stopped, and reads it all back in the next session.</p>
+            <ul class="chips"><li>C#</li><li>.NET 10</li><li>WinUI 3</li><li>SQLite</li><li>Local API</li><li>Python (v1)</li><li>LLMs (v1)</li></ul>
+            <p class="note"><b>No download.</b> It was made for a single machine: mine. It's here as a build, not as a product.</p>
+          </div>
+          <div class="quest-demo">
+            <div class="tabs" role="tablist" aria-label="Senna versions">
+              <button type="button" role="tab" id="tabV1" aria-selected="false" aria-controls="sennaV1" tabindex="-1">v1 · talked</button>
+              <button type="button" role="tab" id="tabV2" aria-selected="true" aria-controls="sennaV2">v2 · works quietly</button>
+            </div>
+            <div class="senna-v2" id="sennaV2" role="tabpanel" aria-labelledby="tabV2">
+              <div class="desk-win">
+                <div class="sn-panel" aria-hidden="true">
+                  <div class="sn-h"><i>S</i>Senna <span>· today</span></div>
+                  <ul>
+                    <li><b>09:00</b>team daily</li>
+                    <li><b>2</b>PRs to review</li>
+                    <li><b id="snTemp">16°</b>Canoas now</li>
+                    <li><b>64%</b>Claude this week</li>
+                  </ul>
+                  <div class="sn-mem">memory · 3 decisions, 1 handoff</div>
                 </div>
-                <div>
-                  <h3>Senna</h3>
-                  <p>Voice assistant · Windows</p>
-                </div>
+                <div class="toasts-demo" id="sennaToasts" aria-live="polite"></div>
+                <div class="taskbar"><i></i><i></i><i></i><span id="sennaRelogio">08:55</span></div>
               </div>
-              <span class="badge badge-personal">Personal project</span>
+              <p class="demo-cap">A regular day, in 20 seconds.</p>
             </div>
-
-            <p class="proj-text">
-              A voice assistant that lives on my desktop. I call it by name, ask in
-              Portuguese and it takes care of it: opens what I need to start working,
-              answers about the weather, controls the music.
-            </p>
-
-            <p class="hint">Click to see the orb react (commands translated from Portuguese)</p>
-            <div class="cmds"><button type="button" class="cmd cmd-senna" data-roteiro="[[&quot;listening&quot;, 1.3, null], [&quot;processing&quot;, 2.0, null], [&quot;speaking&quot;, 2.8, &quot;Found 3 PRs waiting for your review. Opening them.&quot;]]" onclick="sennaRoteiro(this)"><span class="cmd-seta">&rsaquo;</span>hey senna, my PRs</button><button type="button" class="cmd cmd-senna" data-roteiro="[[&quot;listening&quot;, 1.1, null], [&quot;processing&quot;, 1.6, null], [&quot;speaking&quot;, 2.8, &quot;Opening the project tabs.&quot;]]" onclick="sennaRoteiro(this)"><span class="cmd-seta">&rsaquo;</span>time to work</button><button type="button" class="cmd cmd-senna" data-roteiro="[[&quot;listening&quot;, 1.3, null], [&quot;processing&quot;, 2.4, null], [&quot;speaking&quot;, 3.0, &quot;Rain tomorrow from 3 PM.&quot;]]" onclick="sennaRoteiro(this)"><span class="cmd-seta">&rsaquo;</span>will it rain tomorrow?</button><button type="button" class="cmd cmd-senna" data-roteiro="[[&quot;listening&quot;, 1.2, null], [&quot;processing&quot;, 1.4, null], [&quot;speaking&quot;, 2.2, &quot;Playing.&quot;]]" onclick="sennaRoteiro(this)"><span class="cmd-seta">&rsaquo;</span>play the playlist</button><button type="button" class="cmd cmd-senna" data-roteiro="[[&quot;listening&quot;, 1.1, null], [&quot;processing&quot;, 0.9, null], [&quot;speaking&quot;, 1.8, &quot;Next one.&quot;]]" onclick="sennaRoteiro(this)"><span class="cmd-seta">&rsaquo;</span>next song</button><button type="button" class="cmd cmd-senna" data-roteiro="[[&quot;listening&quot;, 1.1, null], [&quot;processing&quot;, 1.7, null], [&quot;speaking&quot;, 2.4, &quot;Waking up the phone.&quot;]]" onclick="sennaRoteiro(this)"><span class="cmd-seta">&rsaquo;</span>wake up the phone</button><button type="button" class="cmd cmd-senna" data-roteiro="[[&quot;listening&quot;, 1.0, null], [&quot;processing&quot;, 0.7, null], [&quot;speaking&quot;, 2.4, &quot;@hora@&quot;]]" onclick="sennaRoteiro(this)"><span class="cmd-seta">&rsaquo;</span>what time is it</button><button type="button" class="cmd cmd-senna" data-roteiro="[[&quot;listening&quot;, 1.0, null], [&quot;processing&quot;, 0.7, null], [&quot;speaking&quot;, 1.8, &quot;Paused.&quot;]]" onclick="sennaRoteiro(this)"><span class="cmd-seta">&rsaquo;</span>pause the music</button></div>
-
-            <div class="note"><p><b>No download.</b> It was built for a single machine — mine. It is here as a build, not a product.</p></div>
-          </div>
-
-          <div class="proj-visual" style="background:#06070a">
-            <canvas id="orb" width="320" height="320" aria-label="Senna's animated orb"></canvas>
-            <div class="orb-state">
-              <span id="orb-estado">Idle</span>
-              <span id="orb-fala">&nbsp;</span>
-            </div>
-            <div class="orb-legend"><button type="button" class="leg" onclick="sennaEstado('idle')"><span class="leg-dot" style="background:#2fbf63;box-shadow:0 0 10px #2fbf6399"></span><span class="leg-nome">Idle</span><span class="leg-desc">waiting for you to call</span></button><button type="button" class="leg" onclick="sennaEstado('listening')"><span class="leg-dot" style="background:#39ff14;box-shadow:0 0 10px #39ff1499"></span><span class="leg-nome">Listening</span><span class="leg-desc">recording what you asked</span></button><button type="button" class="leg" onclick="sennaEstado('processing')"><span class="leg-dot" style="background:#ffb020;box-shadow:0 0 10px #ffb02099"></span><span class="leg-nome">Thinking</span><span class="leg-desc">looking for the answer</span></button><button type="button" class="leg" onclick="sennaEstado('speaking')"><span class="leg-dot" style="background:#38bdf8;box-shadow:0 0 10px #38bdf899"></span><span class="leg-nome">Speaking</span><span class="leg-desc">answering</span></button><button type="button" class="leg" onclick="sennaEstado('muted')"><span class="leg-dot" style="background:#b14ae8;box-shadow:0 0 10px #b14ae899"></span><span class="leg-nome">Muted</span><span class="leg-desc">silenced, for meetings</span></button></div>
-          </div>
-        </div>
-      </article>
-
-      <article class="proj" data-reveal>
-        <div class="proj-grid">
-          <div class="proj-body">
-            <div class="proj-head">
-              <div class="proj-id">
-                <div class="proj-icon" style="background:linear-gradient(140deg,#e8946f,#8a4a2f);color:#1c0f09;box-shadow:0 10px 30px rgba(217,119,87,.3)">
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path></svg>
-                </div>
-                <div>
-                  <h3>ControlSensors HUD</h3>
-                  <p>Desktop app · Windows</p>
-                </div>
+            <div class="senna-v1" id="sennaV1" role="tabpanel" aria-labelledby="tabV1" hidden>
+              <div class="orb-box">
+                <canvas id="orb" width="40" height="40" aria-hidden="true"></canvas>
+                <p class="orb-state" id="orbEstado">Idle</p>
+                <p class="orb-fala" id="orbFala" aria-live="polite">&nbsp;</p>
               </div>
-              <span class="badge badge-personal">Open source</span>
-            </div>
-
-            <p class="proj-text">
-              Real-time monitoring HUD for PC cases and secondary screens. Keep an eye on CPU, GPU, RAM, storage, weather and audio right from Windows.
-            </p>
-
-            <div class="chips">
-              <span class="chip">C#</span><span class="chip">WPF</span><span class="chip">.NET</span><span class="chip">Windows</span><span class="chip">Hardware Sensors</span>
-            </div>
-            <div class="proj-links">
-              <a href="https://github.com/suiciniv-dev/ControlSensors/releases/latest" target="_blank" rel="noopener noreferrer" class="btn btn-primary">↓ Download</a>
-              <a href="https://github.com/suiciniv-dev/ControlSensors" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">View code ↗</a>
-            </div>
-            <p class="fine">Windows 10/11 · free and open source</p>
-          </div>
-
-          <div class="proj-visual">
-            <div class="window">
-              <div class="window-bar"><i></i><i></i><i></i><span class="window-name">ControlSensors.exe</span></div>
-              <div class="term">
-                <div style="animation-delay:.05s"><span class="p">&gt;</span> ControlSensors starting…</div>
-                <div style="animation-delay:.2s;color:var(--muted)"><span class="p">&gt;</span> Loading hardware sensors</div>
-                <div style="animation-delay:.35s;color:var(--muted)"><span class="p">&gt;</span> CPU ············ <span class="ok">OK</span></div>
-                <div style="animation-delay:.5s;color:var(--muted)"><span class="p">&gt;</span> GPU ············ <span class="ok">OK</span></div>
-                <div style="animation-delay:.65s;color:var(--muted)"><span class="p">&gt;</span> Memory ········· <span class="ok">OK</span></div>
-                <div style="animation-delay:.8s;color:var(--muted)"><span class="p">&gt;</span> Audio ·········· <span class="ok">OK</span></div>
-                <div style="animation-delay:.95s" class="ok"><span class="p">&gt;</span> Dashboard ready.</div>
-                <div class="term-rule"></div>
-                <div class="term-online">SYSTEM ONLINE</div>
+              <div class="cmds" id="orbCmds">
+                <button type="button" class="cmd" data-fala="Tem 3 PRs esperando o seu review. Abrindo.">hey senna, my PRs</button>
+                <button type="button" class="cmd" data-fala="Amanhã tem chuva a partir das 15 horas.">will it rain tomorrow?</button>
+                <button type="button" class="cmd" data-fala="Tocando a sua playlist.">play my playlist</button>
+                <button type="button" class="cmd" data-fala="@hora">what time is it?</button>
               </div>
             </div>
           </div>
-        </div>
-      </article>
+        </article>
 
-      <div class="group-label">Professional · Símix</div>
-
-      <article class="proj" data-reveal>
-        <div class="proj-grid">
-          <div class="proj-body">
-            <div class="proj-head">
-              <div class="proj-id">
-                <div class="proj-icon" style="background-color:#15110d;background-image:url('/assets/simix-ponto.png');background-size:cover;background-position:center;border:1px solid var(--line2)"></div>
-                <div>
-                  <h3>Símix Ponto</h3>
-                  <p>Mobile Application · Android &amp; iOS</p>
-                </div>
+        <article class="quest" id="hud">
+          <div class="quest-body">
+            <div class="quest-head">
+              <canvas class="quest-ico" data-ico="hud" aria-hidden="true"></canvas>
+              <div>
+                <h3>ControlSensors HUD</h3>
+                <p class="sub">Sensor HUD · Windows</p>
               </div>
-              <span class="badge badge-pro">Professional</span>
+              <span class="tag tag-me">Open source</span>
             </div>
-
-            <p class="proj-text">
-              Time-clock app that is part of the Símix Ponto ecosystem: real-time clock-ins online and offline, face verification with Azure AI, native geolocation in .NET MAUI and security checks against spoofed location (fake GPS).
-            </p>
-            <p class="proj-text">
-              It also has a clock-in module for truck drivers and talks to legacy systems such as PcPonto, besides the multi-tenant Símix Ponto SaaS platform.
-            </p>
-
-            <div class="chips">
-              <span class="chip">C#</span><span class="chip">.NET MAUI</span><span class="chip">Azure AI</span><span class="chip">Geolocation</span><span class="chip">Offline First</span><span class="chip">Multitenant</span><span class="chip">REST API</span>
+            <p>A real-time monitoring HUD for secondary screens and PC cases: CPU, GPU, memory, storage, weather and audio, straight from Windows. It's what sits on the side monitor while I work.</p>
+            <ul class="chips"><li>C#</li><li>WPF</li><li>.NET</li><li>Windows</li><li>Hardware sensors</li></ul>
+            <div class="links">
+              <a class="btn btn-main" href="https://github.com/suiciniv-dev/ControlSensors/releases/latest" target="_blank" rel="noopener noreferrer">Download <span aria-hidden="true">↓</span></a>
+              <a class="btn btn-ghost" href="https://github.com/suiciniv-dev/ControlSensors" target="_blank" rel="noopener noreferrer">View code <span aria-hidden="true">↗</span></a>
             </div>
-
-            <div class="role">
-              <div class="role-title">My role</div>
-              <div class="role-list">
-                <div>Led the face verification integration, including validation and testing.</div>
-                <div>Main owner of the iOS version and its App Store release.</div>
-                <div>Automated releases to Google Play, TestFlight and the Microsoft Store through GitHub Actions, with automatic versioning.</div>
-                <div>Online and offline clock-in with sync, geofencing and the API client the app uses.</div>
-                <div>Took an active part in the app redesign, modernizing the interface and the experience.</div>
-              </div>
-            </div>
-
-            <div class="proj-links">
-              <a href="https://play.google.com/store/apps/details?id=com.simix.ponto.app" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.5 2.8c-.3.3-.5.8-.5 1.4v15.6c0 .6.2 1.1.5 1.4l.1.1L14.4 12v-.2L3.6 2.7l-.1.1z"/><path d="M17.8 15.6 14.4 12v-.2l3.4-3.6.1.1 4.1 2.3c1.2.7 1.2 1.8 0 2.5l-4.1 2.3-.1.2z"/><path d="M17.7 15.5 14.4 12 3.5 21.2c.4.4 1 .4 1.6.1l12.6-5.8z"/><path d="M17.7 8.5 5.1 2.7c-.6-.3-1.2-.3-1.6.1L14.4 12l3.3-3.5z"/></svg>
-                Google Play ↗
-              </a>
-              <a href="https://apps.apple.com/us/app/s%C3%ADmix-ponto/id6454298944" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.39 1.8-3.130 1.87-2.39 5.98.48 7.13-.57 1.5-1.31 2.98-2.52 4.09zM12.03 7.25C11.88 5.02 13.69 3.18 15.78 3c.29 2.58-2.34 4.5-3.75 4.25z"/></svg>
-                App Store ↗
-              </a>
-            </div>
-            <p class="fine">android · ios · in production</p>
+            <p class="fine">Windows 10 and 11 · free and open source</p>
           </div>
+          <div class="quest-demo">
+            <div class="hud-box" role="img" aria-label="ControlSensors panel with CPU, GPU, memory, disk, weather and audio">
+              <div class="hud-bar"><span>ControlSensors.exe</span><span id="hudStatus">boot</span></div>
+              <div class="hud-term" id="hudTerm"></div>
+              <div class="hud-grid" id="hudGrid" hidden></div>
+            </div>
+            <div class="cmds"><button type="button" class="cmd" id="hudReboot">restart</button></div>
+          </div>
+        </article>
 
-          <div class="proj-visual">
-            <div class="window">
-              <div class="window-bar"><span class="window-name" style="margin-left:0">architecture.map</span><span class="window-status">ONLINE</span></div>
-              <div class="nodes">
-                <div class="node node-coral"><span class="node-tag">MB</span><div><b>Mobile App</b><small>.NET MAUI · offline-first</small></div></div>
-                <div class="arrow">↓</div>
-                <div class="node node-amber"><span class="node-tag">API</span><div><b>Símix Ponto (SaaS)</b><small>multitenant · ABP</small></div></div>
-                <div class="arrow">↕</div>
-                <div class="node"><span class="node-tag">AZ</span><div><b>Azure Services</b><small>face · location · cloud</small></div></div>
-                <div class="node"><span class="node-tag">PC</span><div><b>PcPonto</b><small>legacy integration</small></div></div>
+        <article class="quest quest-work" id="app">
+          <div class="quest-body">
+            <div class="quest-head">
+              <canvas class="quest-ico" data-ico="app" aria-hidden="true"></canvas>
+              <div>
+                <h3>Símix Ponto</h3>
+                <p class="sub">Time clock app · Android, iOS and Windows</p>
               </div>
+              <span class="tag tag-work">Símix · work</span>
+            </div>
+            <p>The time clock app of the Símix Ponto ecosystem: online and offline with sync, GPS and geofencing, face recognition with Azure Face, biometrics, kiosk mode and protection against fake locations. It has a module for drivers and talks to legacy systems such as PcPonto.</p>
+            <h4>My part</h4>
+            <ul class="feats">
+              <li>Owner of the iOS version and the App Store release.</li>
+              <li>Automated releases to Google Play, TestFlight and the Microsoft Store with GitHub Actions, with automatic versioning.</li>
+              <li>Led the face verification integration, including validation and tests.</li>
+              <li>Wrote most of the API client used by the app (Refit, Polly), published as a NuGet package.</li>
+            </ul>
+            <ul class="chips"><li>C#</li><li>.NET MAUI</li><li>SQLite</li><li>Azure Face</li><li>Offline first</li><li>GitHub Actions</li></ul>
+            <div class="links">
+              <a class="btn btn-main" href="https://play.google.com/store/apps/details?id=com.simix.ponto.app" target="_blank" rel="noopener noreferrer">Google Play <span aria-hidden="true">↗</span></a>
+              <a class="btn btn-ghost" href="https://apps.apple.com/us/app/s%C3%ADmix-ponto/id6454298944" target="_blank" rel="noopener noreferrer">App Store <span aria-hidden="true">↗</span></a>
             </div>
           </div>
-        </div>
-      </article>
-
-      <article class="proj" data-reveal>
-        <div class="proj-grid">
-          <div class="proj-body">
-            <div class="proj-head">
-              <div class="proj-id">
-                <div class="proj-icon" style="background:linear-gradient(140deg,#f0a83c,#9a5a1c);color:#1f1206;box-shadow:0 10px 30px rgba(240,168,60,.25)">
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 9.5a4 4 0 0 1-.5 7.97"/><path d="M12 13v5"/><path d="m9.5 15.5 2.5 2.5 2.5-2.5"/></svg>
-                </div>
-                <div>
-                  <h3>Símix Ponto Cloud</h3>
-                  <p>Web platform · multi-tenant SaaS</p>
-                </div>
-              </div>
-              <span class="badge badge-pro">Professional</span>
-            </div>
-
-            <p class="proj-text">
-              The cloud platform behind the app: time and attendance for companies of many kinds,
-              from supermarkets to trucking. It automates working-hours tracking, shift and day-off
-              scheduling and the hour bank, with a manager portal and an employee portal.
-            </p>
-            <p class="proj-text">
-              It integrates with certified time clocks, with the mobile app online and offline and with
-              the main payroll software, including working-hours control for truck drivers.
-            </p>
-
-            <div class="chips">
-              <span class="chip">.NET</span><span class="chip">ABP Framework</span><span class="chip">Blazor</span><span class="chip">PostgreSQL</span><span class="chip">Multitenant</span><span class="chip">Azure</span>
-            </div>
-
-            <div class="role">
-              <div class="role-title">My role</div>
-              <div class="role-list">
-                <div>Part of the team that builds the platform, from the backend to the web UI.</div>
-                <div>Led the front-end migration from Blazor Server to WebAssembly: the bundle went from 39 MB to 16 MB.</div>
-                <div>Timesheets with PDF and e-signature, payroll export, batch approvals and offline clock-in with a PWA.</div>
-                <div>Automated tests with xUnit and Playwright that run on every deploy.</div>
+          <div class="quest-demo">
+            <div class="mini-phone">
+              <div class="mp-screen">
+                <div class="mp-top"><span>Clock in</span><button type="button" class="mp-net" id="mpNet" aria-pressed="true">online</button></div>
+                <div class="mp-clock" id="mpClock">--:--:--</div>
+                <div class="mp-cam" id="mpCam"><canvas id="mpFace" width="24" height="24" aria-hidden="true"></canvas><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i><span class="mp-scan"></span></div>
+                <p class="mp-msg" id="mpMsg" aria-live="polite">Position your face</p>
+                <button type="button" class="mp-btn" id="mpBtn">Clock in</button>
+                <ol class="mp-list" id="mpList"><li><span>08:01</span><b>sent</b></li><li><span>12:00</span><b>sent</b></li><li><span>13:02</span><b>sent</b></li></ol>
               </div>
             </div>
-
-            <div class="proj-links">
-              <a href="https://simix.com.br/sistema/" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">See the product (Portuguese) ↗</a>
-            </div>
-            <p class="fine">web · multi-tenant · in production</p>
+            <p class="demo-cap">A simulation. Turn off the internet and clock in: the punch stays on the device and uploads when the network is back.</p>
           </div>
+        </article>
 
-          <div class="proj-visual">
-            <div class="window">
-              <div class="window-bar"><i></i><i></i><i></i><span class="window-name">Símix Ponto · modules</span></div>
-              <div class="modules">
-                <div class="node node-amber"><span class="node-tag">PG</span><div><b>Manager portal</b><small>reports · approvals</small></div></div>
-                <div class="node node-amber"><span class="node-tag">PC</span><div><b>Employee portal</b><small>schedules · requests</small></div></div>
-                <div class="node"><span class="node-tag">BH</span><div><b>Hour bank</b><small>balances and time off</small></div></div>
-                <div class="node"><span class="node-tag">ES</span><div><b>Schedules</b><small>automated management</small></div></div>
-                <div class="node"><span class="node-tag">MT</span><div><b>Drivers</b><small>working-hours control</small></div></div>
-                <div class="node"><span class="node-tag">FP</span><div><b>Payroll</b><small>integration</small></div></div>
-                <div class="node"><span class="node-tag">RE</span><div><b>Time clocks</b><small>certified</small></div></div>
-                <div class="node node-coral"><span class="node-tag">AP</span><div><b>Mobile app</b><small>online and offline</small></div></div>
+        <article class="quest quest-work" id="ponto-cloud">
+          <div class="quest-body">
+            <div class="quest-head">
+              <canvas class="quest-ico" data-ico="cloud" aria-hidden="true"></canvas>
+              <div>
+                <h3>Símix Ponto Cloud</h3>
+                <p class="sub">Web platform · multitenant SaaS</p>
               </div>
-              <div class="modules-foot">one codebase, many companies · every tenant isolated</div>
+              <span class="tag tag-work">Símix · work</span>
+            </div>
+            <p>The cloud platform behind the app and the time clocks: workforce time management for companies in many industries, from supermarkets to trucking. It automates time tracking, schedules and days off and the hour bank, with a manager portal and an employee portal, and integrates with certified time clocks and the main payroll systems.</p>
+            <h4>My part</h4>
+            <ul class="feats">
+              <li>I'm part of the team that builds the platform, from backend to UI.</li>
+              <li>Led the front-end migration from Blazor Server to WebAssembly: the bundle went from 39 MB to 16 MB.</li>
+              <li>Timesheets with PDF and electronic signature, payroll export, bulk approvals and offline clock-in with a PWA.</li>
+              <li>Automated tests with xUnit and Playwright that run on every deploy.</li>
+            </ul>
+            <ul class="chips"><li>.NET</li><li>ABP Framework</li><li>Blazor</li><li>PostgreSQL</li><li>Multitenant</li><li>Azure</li></ul>
+            <div class="links">
+              <a class="btn btn-main" href="https://simix.com.br/sistema/" target="_blank" rel="noopener noreferrer">See the product <span aria-hidden="true">↗</span></a>
             </div>
           </div>
-        </div>
-      </article>
-    </section>
-
-    <section id="atuacao" class="block" data-reveal>
-      <p class="eyebrow">Expertise</p>
-      <h2 class="title">What I do</h2>
-      <div class="cards">
-        <div class="card"><i>01</i><h3>Backend &amp; APIs</h3><p>RESTful APIs in .NET, business rules, modeling and evolving complex domains.</p></div>
-        <div class="card"><i>02</i><h3>Multi-tenant SaaS</h3><p>Multi-tenant architectures with ABP Framework and PostgreSQL, with isolation and scale per tenant.</p></div>
-        <div class="card"><i>03</i><h3>Cross-platform mobile</h3><p>.NET MAUI apps for Android and iOS, native features, offline-first and store releases.</p></div>
-        <div class="card"><i>04</i><h3>Quality &amp; legacy</h3><p>Automated tests, continuous deployment to Azure and moving legacy VB6 systems to .NET without stopping the business.</p></div>
+          <div class="quest-demo">
+            <div class="tenants">
+              <div class="tn-pick" role="group" aria-label="Pick a company">
+                <button type="button" data-tn="mercado" aria-pressed="true">Supermarket</button>
+                <button type="button" data-tn="transp" aria-pressed="false">Trucking</button>
+                <button type="button" data-tn="fabrica" aria-pressed="false">Factory</button>
+              </div>
+              <canvas class="tn-city" id="tnCity" width="160" height="56" aria-hidden="true"></canvas>
+              <div class="tn-mods" id="tnMods"></div>
+              <p class="demo-cap" id="tnCap">&nbsp;</p>
+            </div>
+          </div>
+        </article>
       </div>
     </section>
 
-    <section id="stack" class="block" data-reveal>
-      <p class="eyebrow">Stack</p>
-      <h2 class="title">Everyday tools</h2>
-      <div class="cards" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr))">
-        <div class="stack-card"><p class="eyebrow">Core</p><div class="tags"><span class="tag tag-coral">C#</span><span class="tag tag-coral">.NET</span><span class="tag">ABP Framework</span><span class="tag">EF Core</span><span class="tag">VB.NET</span></div></div>
-        <div class="stack-card"><p class="eyebrow">Interfaces</p><div class="tags"><span class="tag">Blazor</span><span class="tag">.NET MAUI</span><span class="tag">WPF</span><span class="tag">Jetpack Compose</span></div></div>
-        <div class="stack-card"><p class="eyebrow">Data &amp; Cloud</p><div class="tags"><span class="tag tag-amber">Azure</span><span class="tag">PostgreSQL</span><span class="tag">SQL Server</span><span class="tag">Redis</span></div></div>
-        <div class="stack-card"><p class="eyebrow">Quality &amp; DevOps</p><div class="tags"><span class="tag tag-sage">GitHub Actions</span><span class="tag">xUnit</span><span class="tag">Playwright</span><span class="tag">Hangfire</span><span class="tag">SignalR</span></div></div>
-        <div class="stack-card"><p class="eyebrow">Automation &amp; Integrations</p><div class="tags"><span class="tag tag-sage">Python</span><span class="tag">Kotlin</span><span class="tag">REST APIs</span><span class="tag">OAuth 2.0</span><span class="tag">Automation</span></div></div>
-      </div>
-    </section>
+    <section class="sec" id="player">
+      <div class="wrap">
+        <header class="sec-head">
+          <span class="sec-num">02</span>
+          <div>
+            <h2>Player 1</h2>
+            <p>Who's in the chair.</p>
+          </div>
+        </header>
 
-    <section id="contato" class="contact" data-reveal>
-      <div class="contact-box">
-        <p class="eyebrow" style="color:#f2c08f">Contact</p>
-        <h2>Let's <em>talk?</em></h2>
-        <p class="lead">I'm always happy to talk about technology, software architecture or new opportunities.</p>
-        <div class="contact-actions">
-          <a href="https://wa.me/5551982515375?text=Hi%20Vin%C3%ADcius%21%20I%20saw%20your%20portfolio%20and%20wanted%20to%20get%20in%20touch." target="_blank" rel="noopener noreferrer" class="btn btn-whats"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.95 1.16-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.48-1.75-1.65-2.05-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.38-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.69.25-1.28.17-1.41-.07-.13-.27-.2-.57-.35z"/><path d="M12.04 2C6.6 2 2.18 6.42 2.18 11.86c0 1.74.46 3.44 1.32 4.94L2 22l5.33-1.4a9.82 9.82 0 0 0 4.7 1.2h.01c5.44 0 9.86-4.42 9.86-9.86 0-2.64-1.03-5.12-2.9-6.98A9.8 9.8 0 0 0 12.05 2zm0 18.06h-.01a8.2 8.2 0 0 1-4.17-1.14l-.3-.18-3.1.81.83-3.02-.2-.31a8.15 8.15 0 0 1-1.25-4.36c0-4.52 3.68-8.2 8.2-8.2 2.2 0 4.26.86 5.8 2.4a8.15 8.15 0 0 1 2.4 5.8c0 4.53-3.68 8.2-8.2 8.2z"/></svg>Message on WhatsApp</a>
-          <a href="mailto:vinips00@gmail.com" class="btn btn-light">Send an e-mail</a>
-          <button type="button" onclick="copiarEmail(this)" class="btn btn-ghost">Copy e-mail</button>
+        <div class="player">
+          <div class="char">
+            <div class="char-pic"><canvas id="retrato" width="32" height="34" role="img" aria-label="Me in pixel art: dark hair, round glasses, beard and a coral t-shirt"></canvas></div>
+            <p class="char-name">Vinícius</p>
+            <dl class="char-meta">
+              <div><dt>Class</dt><dd>C# and .NET wizard</dd></div>
+              <div><dt>Level</dt><dd>Mid-level III</dd></div>
+              <div><dt>Guild</dt><dd>Símix Sistemas</dd></div>
+              <div><dt>Origin</dt><dd>Canoas, Brazil</dd></div>
+            </dl>
+            <div class="xp">
+              <span>XP</span>
+              <div class="xp-bar"><i></i></div>
+              <span>2020 → now</span>
+            </div>
+          </div>
+
+          <div class="about">
+            <p class="lead">I'm a C# and .NET developer at Símix Sistemas. I joined in 2020 as a support intern, setting up time clocks, and got here self-taught, straight from the docs and practice.</p>
+            <p>I work from the database to the UI on Símix Ponto Cloud, a multitenant SaaS platform built with ABP Framework, Blazor, PostgreSQL and Azure, and on the Símix Ponto app in .NET MAUI, published on Google Play and the App Store. I led the front-end migration to Blazor WebAssembly, automated the app's store releases and took part in migrating the legacy VB6 system to .NET.</p>
+            <p>I like performance, automated tests and automating whatever repeats. In my free time, I build the tools I use myself.</p>
+            <div class="perks">
+              <div class="perk"><span class="perk-k">Special move</span><p>Some ideas are useful. Others… I just wanted to see them working.</p></div>
+              <div class="perk"><span class="perk-k">Passive · Self-taught</span><p>Learned from the official docs and practice, focused on Clean Code, SOLID and Design Patterns.</p></div>
+            </div>
+          </div>
         </div>
-        <div class="contact-links">
-          <a href="https://github.com/suiciniv-dev" target="_blank" rel="noopener noreferrer">personal github ↗</a>
-          <a href="https://github.com/simix-viniciussilva" target="_blank" rel="noopener noreferrer">work github ↗</a>
-          <a href="https://www.linkedin.com/in/viniciuspiresdasilva/" target="_blank" rel="noopener noreferrer">linkedin ↗</a>
-          <a href="https://www.instagram.com/vini1piress/" target="_blank" rel="noopener noreferrer">instagram ↗</a>
-          <a href="/assets/Resume-Vinicius-Pires-da-Silva.pdf" download target="_blank" rel="noopener noreferrer">résumé in PDF ↓</a>
-          <a href="/assets/Curriculo-Vinicius-Pires-da-Silva.pdf" download target="_blank" rel="noopener noreferrer" hreflang="pt-BR" lang="pt-BR">currículo em português ↓</a>
+
+        <div class="inv-wrap">
+          <div class="inv-head">
+            <h3>Inventory</h3>
+            <p>Hover or tap an item.</p>
+          </div>
+          <div class="inv" id="inv"></div>
+          <div class="item-tip" id="itemTip" role="tooltip" hidden></div>
         </div>
       </div>
     </section>
 
-    <footer>
-      <span>Vinícius Pires da Silva · software developer · C# &amp; .NET</span>
-      <div>
-        <a href="#top">back to top ↑</a>
-        <span>© 2026 suiciniv.dev</span>
-      </div>
-    </footer>
+    <section class="sec" id="espelho">
+      <div class="wrap">
+        <header class="sec-head">
+          <span class="sec-num">03</span>
+          <div>
+            <h2>Timesheet</h2>
+            <p>Six years clocking in at the same company, from support to mid-level III. Coral rows are from my free time.</p>
+          </div>
+        </header>
 
+        <div class="paper">
+          <div class="paper-head">
+            <div><span>Timesheet</span><b>Vinícius Pires da Silva</b></div>
+            <div><span>Company</span><b>Símix Sistemas · Canoas, Brazil</b></div>
+            <div><span>Period</span><b>01/2020 to now</b></div>
+          </div>
+          <table class="ponto">
+            <thead><tr><th scope="col">Date</th><th scope="col">Punch</th><th scope="col">Event</th><th scope="col">Notes</th></tr></thead>
+            <tbody>
+              <tr><td>01/2020</td><td>08:00 <i>IN</i></td><td>Tier 1 support intern</td><td>Customer support, networking and setting up biometric time clocks. This is where I clocked in for the first time.</td></tr>
+              <tr><td>02/2021</td><td>08:00 <i>IN</i></td><td>QA and deployment</td><td>Release validation, testing before delivery and SQL Server-heavy deployments.</td></tr>
+              <tr><td>2023</td><td>08:00 <i>IN</i></td><td>Junior developer</td><td>Reports, the calculation engine and the VB6-to-.NET legacy migration. In October, the .NET MAUI app.</td></tr>
+              <tr><td>2024</td><td>08:00 <i>IN</i></td><td>Mid-level I</td><td>In November, the Símix Ponto Cloud platform, backend to UI.</td></tr>
+              <tr><td>2025</td><td>08:00 <i>IN</i></td><td>Mid-level II</td><td>More code review, more tests and store releases on autopilot.</td></tr>
+              <tr class="hoje"><td>08/2026</td><td>08:00 <i>IN</i></td><td>Mid-level III</td><td>Today.</td></tr>
+              <tr class="he"><td>08/2026</td><td>22:40 <i>free</i></td><td>ControlSensors HUD</td><td>Free time: an open source sensor HUD.</td></tr>
+              <tr class="he"><td>09/2026</td><td>23:15 <i>free</i></td><td>Banditboard</td><td>Free time: the phone in the drawer became a panel. It even has iPhone and Apple Watch now.</td></tr>
+              <tr class="he"><td>09/2026</td><td>00:30 <i>free</i></td><td>Senna v2</td><td>Free time: from Python to C#, and from 682 MB to lightweight.</td></tr>
+            </tbody>
+          </table>
+          <div class="paper-foot">
+            <div class="banco"><span>Hour bank</span><b>+6 years and counting</b></div>
+            <div class="assina">
+              <svg viewBox="0 0 220 60" aria-hidden="true"><path d="M8 42c10-18 18-30 22-28s-6 30-2 31 14-26 20-25-4 22 2 22 10-14 15-14 2 12 7 12 8-9 12-9 1 8 6 8c6 0 9-12 14-12s0 10 5 10 9-8 14-8c6 0 2 8 8 8 9 0 16-10 26-12 12-2 26 0 40 4"/></svg>
+              <span class="carimbo">Electronically signed</span>
+              <small>Electronic timesheet signing is one of the things I built at Símix.</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="contato">
+      <div class="wrap">
+        <header class="sec-head">
+          <span class="sec-num">04</span>
+          <div>
+            <h2>Let's talk?</h2>
+            <p>I'm always open to chat about technology, software architecture or new opportunities.</p>
+          </div>
+        </header>
+
+        <div class="contact">
+          <div class="contact-card">
+            <div class="contact-main">
+              <a class="btn btn-whats" href="https://wa.me/5551982515375?text=Hi%20Vin%C3%ADcius%2C%20I%20saw%20your%20portfolio%20and%20would%20like%20to%20talk." target="_blank" rel="noopener noreferrer">Message on WhatsApp</a>
+              <a class="btn btn-main" href="mailto:vinips00@gmail.com">Send an email</a>
+              <button type="button" class="btn btn-ghost" data-copiar>Copy email</button>
+            </div>
+            <ul class="contact-links">
+              <li><a href="https://www.linkedin.com/in/viniciuspiresdasilva/" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a></li>
+              <li><a href="https://github.com/suiciniv-dev" target="_blank" rel="noopener noreferrer">Personal GitHub <span aria-hidden="true">↗</span></a></li>
+              <li><a href="https://github.com/simix-viniciussilva" target="_blank" rel="noopener noreferrer">Símix GitHub <span aria-hidden="true">↗</span></a></li>
+              <li><a href="https://www.instagram.com/vini1piress/" target="_blank" rel="noopener noreferrer">Instagram <span aria-hidden="true">↗</span></a></li>
+              <li><a href="/assets/Resume-Vinicius-Pires-da-Silva.pdf" download>Résumé (PDF) <span aria-hidden="true">↓</span></a></li>
+              <li><a href="/assets/Curriculo-Vinicius-Pires-da-Silva.pdf" download hreflang="pt-BR" lang="pt-BR">Currículo em português <span aria-hidden="true">↓</span></a></li>
+            </ul>
+          </div>
+
+          <div class="term" id="term">
+            <div class="term-bar"><span>senna</span><span>terminal</span></div>
+            <div class="term-out" id="termOut" aria-live="polite"></div>
+            <form class="term-in" id="termForm" autocomplete="off">
+              <label for="termIn">senna ›</label>
+              <input id="termIn" type="text" spellcheck="false" autocapitalize="off" placeholder="type help">
+            </form>
+            <div class="term-quick" id="termQuick">
+              <button type="button" data-cmd="help">help</button>
+              <button type="button" data-cmd="projects">projects</button>
+              <button type="button" data-cmd="contact">contact</button>
+              <button type="button" data-cmd="secrets">secrets</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <footer class="foot">
+    <div class="wrap foot-in">
+      <span>Vinícius Pires da Silva · C# &amp; .NET · Canoas, RS</span>
+      <span>Built block by block, no framework. © 2026</span>
+      <a href="#topo">back to top <span aria-hidden="true">↑</span></a>
+    </div>
+  </footer>
 </div>
-<script>
-(function () {
-  var P = '#3f3a48', PS = '#7d7590', G = '#f5d66a', R = '#d6455d', W = '#f3efea', L = '#8fb573';
-  var ACC = {
-    TOP_HAT: [[5,0,6,2,'#3b3446'],[5,0,1,2,'#5a4f6b'],[5,2,6,1,G],[4,3,8,1,'#3b3446']],
-    GLASSES: [[3,5,3,1,G],[3,8,3,1,G],[3,6,1,2,G],[5,6,1,2,G],[10,5,3,1,G],[10,8,3,1,G],[10,6,1,2,G],[12,6,1,2,G],[6,6,4,1,G]],
-    HEADPHONES: [[3,2,10,1,P],[2,3,1,2,P],[13,3,1,2,P],[1,5,2,3,P],[13,5,2,3,P],[1,6,1,1,PS],[14,6,1,1,PS]],
-    SPROUT: [[7,1,1,3,'#5e8a4a'],[5,1,2,1,L],[6,2,1,1,L],[8,0,2,1,L],[8,1,1,1,L]],
-    CROWN: [[4,2,8,2,G],[4,1,1,1,G],[7,0,2,2,G],[11,1,1,1,G],[7,2,2,1,'#e5604d']],
-    SANTA: [[4,2,8,1,R],[6,1,5,1,R],[9,0,3,1,R],[12,0,2,2,W],[3,3,10,1,W]]
-  };
-  var SPRITE = [
-    '................',
-    '................',
-    '................',
-    '..BB........BB..',
-    '..BBBBBBBBBBBB..',
-    '..BBBBBBBBBBBB..',
-    '.MMMMMBBBBMMMMM.',
-    '.MMMMMBBBBMMMMM.',
-    'BBBBBBLNNLBBBBBB',
-    'BBBBBBLLLLBBBBBB',
-    '..BBBBBBBBBBBB..',
-    '..BBBBBBBBBBBB..',
-    '...B.B....B.B...',
-    '...B.B....B.B...'
-  ];
-  var MODELS = ['Haiku', 'Sonnet', 'Opus', 'Fable'];
-  var POR_MODELO = { Haiku: 'SPROUT', Sonnet: 'HEADPHONES', Opus: 'GLASSES', Fable: 'TOP_HAT' };
-  var LOOKS = {
-    modelos: { acc: POR_MODELO, body: {} },
-    arcoiris: { acc: POR_MODELO, body: { Haiku: '#7ccba2', Sonnet: '#b9a6f2', Fable: '#f59ac0' } },
-    coroas: { acc: { Haiku: 'CROWN', Sonnet: 'CROWN', Opus: 'CROWN', Fable: 'CROWN' }, body: { Haiku: '#b9a6f2', Sonnet: '#b9a6f2', Opus: '#b9a6f2', Fable: '#b9a6f2' } },
-    natal: { acc: { Haiku: 'SANTA', Sonnet: 'SANTA', Opus: 'SANTA', Fable: 'SANTA' }, body: {} }
-  };
-  var CENAS = {
-    normal:   { p5: 37, p7: 64, pf: 22, fala: 'Normal day: they blink, look around, move their paws and wave.' },
-    dormindo: { p5: 0, p7: 64, pf: 22, fala: 'Empty 5-hour session: everyone is asleep.' },
-    suando:   { p5: 40, p7: 88, pf: 30, fala: 'From 85% they sweat and get restless.' },
-    vermelho: { p5: 40, p7: 97, pf: 30, fala: 'Above 90% they turn red, and from 95% on they shake.' },
-    esgotado: { p5: 40, p7: 100, pf: 30, fala: 'Overall limit at 100%: they burst and end up scorched.' },
-    fable:    { p5: 40, p7: 60, pf: 100, fala: 'Fable has its own limit: at 100%, only Fable maxes out.' }
-  };
-  var cena = 'normal', look = 'modelos';
 
-  function level(p) { return p >= 85 ? '#e5604d' : p >= 60 ? '#f0a83c' : '#8fb573'; }
-  function mix(a, b, t) {
-    var x = [1, 3, 5].map(function (i) { return parseInt(a.slice(i, i + 2), 16); });
-    var y = [1, 3, 5].map(function (i) { return parseInt(b.slice(i, i + 2), 16); });
-    return '#' + x.map(function (v, i) { return Math.round(v + (y[i] - v) * t).toString(16).padStart(2, '0'); }).join('');
-  }
-  function feel(c, m) {
-    var own = m === 'Fable' ? c.pf : null;
-    var worst = Math.max(c.p5, c.p7, own == null ? 0 : own);
-    var heat = Math.min(1, Math.max(0, (worst - 90) / 10));
-    var mood = worst >= 99.5 ? 'out' : worst >= 85 ? 'sweaty' : c.p5 < 0.5 ? 'sleepy' : 'normal';
-    return { mood: mood, heat: heat, pct: own == null ? c.p7 : own, own: own != null };
-  }
-  function sprite(m, f, i) {
-    var lk = LOOKS[look];
-    var out = f.mood === 'out', sleepy = f.mood === 'sleepy', sweaty = f.mood === 'sweaty';
-    var heat = out ? 0 : f.heat;
-    var base = lk.body[m] || '#a39b90';
-    var body = out ? '#4e3530' : heat > 0 ? mix(base, '#ff3b2f', heat) : base;
-    var fur = out ? '#6e5a52' : heat > 0 ? mix('#eee7db', '#ffb0a3', heat) : '#eee7db';
-    var mask = out ? '#2a1f1c' : '#4a413b';
-    var paint = { B: body, L: fur, M: mask, N: '#0c0a08' };
-    function r(x, y, w, h, extra) { return '<rect x="' + x + '" y="' + y + '" width="' + (w + .04) + '" height="' + (h + .04) + '"' + (extra || '') + '/>'; }
-    var torso = '', armL = '', armR = '', legA = '', legB = '';
-    SPRITE.forEach(function (row, y) {
-      row.split('').forEach(function (ch, x) {
-        if (ch === '.') return;
-        var cell = r(x, y, 1, 1, ' fill="' + paint[ch] + '"');
-        if (y >= 12) { if (x === 3 || x === 10) legA += cell; else legB += cell; }
-        else if (y >= 8 && y <= 9 && x <= 1) armL += cell;
-        else if (y >= 8 && y <= 9 && x >= 14) armR += cell;
-        else torso += cell;
-      });
-    });
-    var arms = i % 2 ? armL + '<g class="arm">' + armR + '</g>' : '<g class="arm">' + armL + '</g>' + armR;
-    var eyes;
-    if (out) eyes = [4, 11].map(function (c) { return '<path d="M' + (c - .45) + ' 6.05L' + (c + 1.45) + ' 7.95M' + (c - .45) + ' 7.95L' + (c + 1.45) + ' 6.05" stroke="#d8cfc2" stroke-width=".45" fill="none" shape-rendering="geometricPrecision"/>'; }).join('');
-    else if (sleepy) eyes = [4, 11].map(function (c) { return r(c, 7.6, 1, .4, ' fill="#f3efea"'); }).join('');
-    else eyes = '<g class="eyes">' + [4, 11].map(function (c) { return r(c, 6, 1, 2, ' fill="#f3efea"') + '<g class="lid">' + r(c, 6, 1, 2, ' fill="' + mask + '"') + r(c, 7.6, 1, .4, ' fill="#f3efea"') + '</g>'; }).join('') + '</g>';
-    var acc = (ACC[lk.acc[m]] || []).map(function (a) { return r(a[0], a[1], a[2], a[3], ' fill="' + a[4] + '"'); }).join('');
-    var legs = '<g class="la">' + legA + '</g><g class="lb">' + legB + '</g>';
-    var extra = '';
-    if (sweaty) extra += r(15, 3, 1, 2, ' class="drop" fill="#8fd3f4"');
-    if (sleepy) extra += '<g class="z" fill="#a89a86">' + r(13, 0, 3, 1) + r(15, 1, 1, 1) + r(14, 2, 1, 1) + r(13, 3, 3, 1) + '</g>';
-    if (out) extra += '<g class="smoke" fill="#8a8078">' + r(7, 3, 1, 1) + r(8, 2, 1, 1, ' opacity=".6"') + '</g>';
-    var cls = ['cl', sleepy && 'sleepy', heat > 0 && 'hot', heat >= .5 && 'shake', lk.acc[m] === 'GLASSES' && 'nolook', out && 'dead'].filter(Boolean).join(' ');
-    var style = '--d:' + (-(i * 2.3 + .7)).toFixed(1) + 's;--lx:' + (i % 2 ? -1 : 1) + 'px';
-    return '<svg class="' + cls + '" style="' + style + '" viewBox="0 0 16 14" fill="' + body + '" shape-rendering="crispEdges" aria-hidden="true"><g class="all"><g class="bod">' + torso + arms + eyes + acc + '</g>' + legs + extra + '</g></svg>';
-  }
-  function row(nome, p, resta) {
-    return '<div class="cb-row"><b>' + nome + '</b><span class="pct" style="color:' + level(p) + '">' + Math.round(p) + '%</span>' +
-      '<div class="cb-bar"><i style="width:' + Math.min(100, p) + '%;background:' + level(p) + '"></i></div><span class="left">' + resta + '</span></div>';
-  }
-  function render() {
-    var c = CENAS[cena];
-    document.getElementById('cbRows').innerHTML = row('Session', c.p5, c.p5 < .5 ? '5h 00m' : '2h 12m') + row('Week', c.p7, '3d 4h');
-    document.getElementById('cbMascots').innerHTML = MODELS.map(function (m, i) {
-      var f = feel(c, m), out = f.mood === 'out';
-      var cor = f.own ? level(f.pct) : '#a89a86', barra = f.own ? level(f.pct) : 'rgba(168,154,134,.55)';
-      return '<div class="cb-m"><div class="mp" style="color:' + cor + '">' + Math.round(f.pct) + '%</div>' +
-        '<div class="mb"><i style="width:' + Math.min(100, f.pct) + '%;background:' + barra + '"></i></div>' + sprite(m, f, i) +
-        '<div class="mn" style="color:' + (out ? '#e5604d' : '#ece3d6') + '">' + m + '</div><div class="ms">' + (out ? 'maxed out' : '&nbsp;') + '</div></div>';
-    }).join('');
-    document.getElementById('cbFala').textContent = c.fala;
-  }
-  function liga(id, attr, fn) {
-    var box = document.getElementById(id);
-    box.addEventListener('click', function (e) {
-      var b = e.target.closest('[' + attr + ']');
-      if (!b) return;
-      box.querySelectorAll('[' + attr + ']').forEach(function (x) { x.removeAttribute('data-ativo'); });
-      b.setAttribute('data-ativo', '1');
-      fn(b.getAttribute(attr));
-      render();
-    });
-  }
-  liga('cbCenas', 'data-cena', function (v) { cena = v; });
-  liga('cbLooks', 'data-look', function (v) { look = v; });
-  render();
-})();
+<dialog class="conq" id="conquistas" aria-labelledby="conqTitulo">
+  <div class="conq-in">
+    <div class="conq-head">
+      <h2 id="conqTitulo">Secrets</h2>
+      <span id="conqConta">0/16</span>
+      <button type="button" class="conq-x" id="conqFechar" aria-label="Close">×</button>
+    </div>
+    <ul class="conq-list" id="conqList"></ul>
+    <button type="button" class="conq-reset" id="conqReset">reset progress</button>
+  </div>
+</dialog>
 
-(function () {
-  var cv = document.getElementById('orb');
-  if (!cv) return;
-  var ctx = cv.getContext('2d');
-  var S = cv.width;
-  var rotulo = document.getElementById('orb-estado');
-  var fala = document.getElementById('orb-fala');
-  var lento = matchMedia('(prefers-reduced-motion: reduce)').matches;
+<div class="toasts" id="toasts" aria-live="polite"></div>
 
-  var ESTADOS = {
-    idle:       { vivo: [47,191,99],  corpo: [10,46,24],  brilho: .75, amp: .80, giro: .22, resp: .95, nucleo: 1.05, dens: 1,  rodopio: 0,  nome: 'Idle' },
-    listening:  { vivo: [57,255,20],  corpo: [15,90,26],  brilho: .95, amp: 1.35, giro: .26, resp: .85, nucleo: 1.15, dens: 1,  rodopio: .15, nome: 'Listening' },
-    processing: { vivo: [255,176,32], corpo: [90,58,5],   brilho: .85, amp: .95, giro: .62, resp: .70, nucleo: 1,    dens: 1,  rodopio: 1,   nome: 'Thinking' },
-    speaking:   { vivo: [56,189,248], corpo: [11,58,90],  brilho: .95, amp: 1.15, giro: .20, resp: 1,   nucleo: 1.25, dens: 1,  rodopio: .1,  nome: 'Speaking' },
-    muted:      { vivo: [177,74,232], corpo: [46,11,69],  brilho: .80, amp: .45, giro: .05, resp: 1.25, nucleo: .75, dens: .7, rodopio: 0,   nome: 'Muted' }
-  };
-  var NUM = ['brilho','amp','giro','resp','nucleo','dens','rodopio'];
-
-  var de = 'idle', para = 'idle', trocouEm = -10, nivel = 0, nivelSuave = 0;
-  var pensandoDesde = -99, giroAcc = 0, voltaAcc = 0, ultT = null;
-  var roteiro = null, passo = 0, proximo = 0;
-  var BLIPS = [0, .19, .83, 1.02, 1.66];
-
-  function misturar(A, B, k) {
-    if (k <= 0) return A;
-    if (k >= 1) return B;
-    var o = { vivo: [], corpo: [] };
-    for (var i = 0; i < 3; i++) {
-      o.vivo[i]  = A.vivo[i]  + (B.vivo[i]  - A.vivo[i])  * k;
-      o.corpo[i] = A.corpo[i] + (B.corpo[i] - A.corpo[i]) * k;
-    }
-    for (var j = 0; j < NUM.length; j++) {
-      var n = NUM[j]; o[n] = A[n] + (B[n] - A[n]) * k;
-    }
-    return o;
-  }
-  function suave(t) { return t * t * (3 - 2 * t); }
-  function rgba(c, a) { return 'rgba(' + (c[0]|0) + ',' + (c[1]|0) + ',' + (c[2]|0) + ',' + a + ')'; }
-  function mix(a, b, t) { return [a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t, a[2]+(b[2]-a[2])*t]; }
-  function onda(x, y, z, t, amp) {
-    return 1 + (0.055*Math.sin(3*z + t*1.17 + y*2.3) + 0.042*Math.sin(4.7*x - t*0.83 + z*1.7)
-              + 0.030*Math.sin(6.1*y + t*1.61)) * amp;
-  }
-  function rotY(p, a) { var c=Math.cos(a), s=Math.sin(a); return [p[0]*c+p[2]*s, p[1], -p[0]*s+p[2]*c]; }
-  function rotX(p, a) { var c=Math.cos(a), s=Math.sin(a); return [p[0], p[1]*c-p[2]*s, p[1]*s+p[2]*c]; }
-
-  var PTS = [], N = 110, ga = Math.PI * (3 - Math.sqrt(5));
-  for (var i0 = 0; i0 < N; i0++) {
-    var y0 = 1 - (i0/(N-1))*2, r0 = Math.sqrt(Math.max(0, 1-y0*y0)), a0 = ga*i0;
-    PTS.push([Math.cos(a0)*r0, y0, Math.sin(a0)*r0]);
-  }
-
-  function irPara(est) {
-    if (est === para) return;
-    var k = Math.min(1, Math.max(0, (agoraSeg() - trocouEm) / .3));
-    de = (k < 1) ? misturar(tema(de), tema(para), suave(k)) : para;
-    para = est;
-    trocouEm = agoraSeg();
-    if (est === 'processing') pensandoDesde = trocouEm;
-    if (rotulo) rotulo.textContent = ESTADOS[est].nome;
-  }
-  function tema(x) { return (typeof x === 'string') ? ESTADOS[x] : x; }
-
-  var t0 = performance.now();
-  function agoraSeg() { return (performance.now() - t0) / 1000; }
-
-  function quadro(t) {
-    var dt = (ultT === null) ? 0 : Math.min(.1, t - ultT);
-    ultT = t;
-
-    if (roteiro && t >= proximo) {
-      if (passo < roteiro.length) {
-        irPara(roteiro[passo][0]);
-        proximo = t + roteiro[passo][1];
-        if (roteiro[passo][2] && fala) { fala.textContent = roteiro[passo][2]; fala.style.opacity = 1; }
-        passo++;
-      } else {
-        roteiro = null;
-        irPara('idle');
-        if (fala) fala.style.opacity = 0;
-      }
-    }
-
-    var k = Math.min(1, Math.max(0, (t - trocouEm) / .3));
-    var P = misturar(tema(de), tema(para), suave(k));
-
-    nivel = (para === 'speaking') ? (.35 + .33*Math.sin(t*5.1) + .2*Math.sin(t*11.3+1))
-          : (para === 'listening') ? (.22 + .2*Math.sin(t*3.7+.6)) : 0;
-    nivel = Math.max(0, Math.min(1, nivel));
-    nivelSuave += (nivel - nivelSuave) * (1 - Math.exp(-dt * 11));
-
-    giroAcc  += dt * P.giro * 6.2832 * .25;
-    voltaAcc = (voltaAcc + dt * (.16 + P.giro*.55 + nivelSuave*.35)) % 1;
-
-    ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,S,S);
-    ctx.setTransform(S,0,0,S,0,0); ctx.lineCap='round'; ctx.lineJoin='round';
-
-    var resp = .5 + .5*Math.sin(t*.62*P.resp)*.7 + .3*Math.sin(t*.271*P.resp+1.1);
-    resp = Math.max(0, Math.min(1, resp));
-    var R = .285 * (.88 + .06*resp + nivelSuave*.13), cx = .5, cy = .5;
-    var incl = .30*Math.sin(t*.13) + .22;
-    var energia = Math.min(1.6, .35 + nivelSuave*.8 + resp*.25);
-    var vivo = P.vivo;
-
-    var g = ctx.createRadialGradient(cx,cy,R*.55,cx,cy,R*1.5);
-    var ga2 = P.brilho * (.42 + nivelSuave*.45 + resp*.14);
-    g.addColorStop(0, rgba(vivo, ga2*.6)); g.addColorStop(.4, rgba(vivo, ga2*.24));
-    g.addColorStop(1, rgba(vivo, 0));
-    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,R*1.5,0,6.2832); ctx.fill();
-
-    var bg = ctx.createRadialGradient(cx-R*.34, cy-R*.38, R*.05, cx, cy, R*1.04);
-    bg.addColorStop(0, rgba(mix(P.corpo, vivo, .28+nivelSuave*.18), .94));
-    bg.addColorStop(.45, rgba(mix(P.corpo, vivo, .08), .86));
-    bg.addColorStop(1, rgba(P.corpo, .25));
-    ctx.fillStyle=bg; ctx.beginPath(); ctx.arc(cx,cy,R,0,6.2832); ctx.fill();
-
-    ctx.globalCompositeOperation = 'lighter';
-
-    function curva(f, n, larg, alfa) {
-      var ant = null;
-      for (var q = 0; q <= n; q++) {
-        var p = rotX(rotY(f(q/n), giroAcc), incl);
-        var d = onda(p[0],p[1],p[2],t,P.amp);
-        var X = cx + p[0]*R*d, Y = cy - p[1]*R*d, prof = (p[2]+1)*.5;
-        if (ant) {
-          var fz = (ant.z + prof) * .5;
-          ctx.strokeStyle = rgba(mix(vivo,[255,255,255], fz*.35), (.06 + fz*fz*.78)*alfa*P.dens);
-          ctx.lineWidth = larg * (.6 + fz*.9);
-          ctx.beginPath(); ctx.moveTo(ant.X, ant.Y); ctx.lineTo(X, Y); ctx.stroke();
-        }
-        ant = { X:X, Y:Y, z:prof };
-      }
-    }
-    for (var i = 0; i < 5; i++) {
-      (function (phi) {
-        curva(function (u) { var a = u*6.2832 + t*P.rodopio*.6;
-          return [Math.cos(phi)*Math.cos(a), Math.sin(phi), Math.cos(phi)*Math.sin(a)]; },
-          54, .0026, .5+energia*.6);
-      })((-.62 + (i/4)*1.24) + .12*Math.sin(t*.23 + i));
-    }
-    for (var j = 0; j < 5; j++) {
-      (function (th) {
-        curva(function (u) { var a = -1.4 + u*2.8;
-          return [Math.cos(a)*Math.cos(th), Math.sin(a), Math.cos(a)*Math.sin(th)]; },
-          34, .0026, .5+energia*.6);
-      })((j/5)*Math.PI + t*.031);
-    }
-
-    var pts = [], inc = .62;
-    for (var k2 = 0; k2 <= 84; k2++) {
-      var a2 = (k2/84)*6.2832;
-      var p2 = rotX(rotY([Math.cos(a2), Math.sin(a2)*Math.sin(inc), Math.sin(a2)*Math.cos(inc)], giroAcc), incl);
-      var d2 = Math.min(onda(p2[0],p2[1],p2[2],t,P.amp), 1) * .995;
-      pts.push({ X: cx+p2[0]*R*d2, Y: cy-p2[1]*R*d2, z: (p2[2]+1)*.5 });
-    }
-    for (var k3 = 1; k3 < pts.length; k3++) {
-      var A = pts[k3-1], B = pts[k3], fz2 = (A.z+B.z)*.5;
-      ctx.strokeStyle = rgba(mix(vivo,[255,255,255], .12+fz2*.26), (.10+fz2*fz2*.85)*.8*P.dens);
-      ctx.lineWidth = .0026*(1.1+fz2*2);
-      ctx.beginPath(); ctx.moveTo(A.X,A.Y); ctx.lineTo(B.X,B.Y); ctx.stroke();
-    }
-    var ic = Math.floor(voltaAcc*83), carro = pts[ic];
-    if (carro && carro.z > .32) {
-      for (var q2 = 0; q2 < 7; q2++) {
-        var tp = pts[(ic-q2+84)%84], fade = (1-q2/7)*carro.z;
-        ctx.fillStyle = rgba(mix(vivo,[255,255,255],.85), (q2 ? .4*fade*fade : .95)*carro.z);
-        ctx.beginPath(); ctx.arc(tp.X, tp.Y, R*(q2 ? .02*(1-q2/9) : .042), 0, 6.2832); ctx.fill();
-      }
-    }
-
-    for (var n2 = 0; n2 < PTS.length; n2++) {
-      var p3 = rotX(rotY(PTS[n2], giroAcc*(1+(n2%3)*.06)), incl);
-      var d3 = onda(p3[0],p3[1],p3[2],t,P.amp);
-      if (P.rodopio > .02) d3 *= 1 - P.rodopio*.2*(.5+.5*Math.sin(t*1.9 - n2*.4));
-      var f2 = (p3[2]+1)*.5;
-      var tw = .55 + .45*Math.sin(t*(1.3+(n2%5)*.29) + n2*1.7);
-      var al = (.07 + Math.pow(f2,2.2)*.8) * tw * (.5+energia*.55) * P.dens;
-      if (al < .02) continue;
-      var X2 = cx+p3[0]*R*d3, Y2 = cy-p3[1]*R*d3, rad = R*(.012+.016*f2)*(.8+nivelSuave*.7);
-      ctx.fillStyle = rgba(vivo, al*.3);
-      ctx.beginPath(); ctx.arc(X2,Y2,rad*2.1,0,6.2832); ctx.fill();
-      ctx.fillStyle = rgba(mix(vivo,[255,255,255],.45), al);
-      ctx.beginPath(); ctx.arc(X2,Y2,rad*.8,0,6.2832); ctx.fill();
-    }
-
-    var cr = R*(.30+.05*resp+nivelSuave*.2)*P.nucleo;
-    var cg = ctx.createRadialGradient(cx,cy-R*.03,0,cx,cy,cr*2.1);
-    var ca = (.42+nivelSuave*.5+resp*.16)*P.nucleo;
-    cg.addColorStop(0, rgba(mix(vivo,[255,255,255],.62), Math.min(.95, ca)));
-    cg.addColorStop(.35, rgba(vivo, ca*.55)); cg.addColorStop(1, rgba(vivo,0));
-    ctx.fillStyle=cg; ctx.beginPath(); ctx.arc(cx,cy,cr*2.1,0,6.2832); ctx.fill();
-
-    if (para === 'processing') {
-      var passou = t - pensandoDesde, acesas = 0;
-      while (acesas < 5 && passou >= BLIPS[acesas]) acesas++;
-      for (var L = 0; L < acesas; L++) {
-        var ang = -Math.PI*.5 + (L-2)*.185;
-        var lx = cx + Math.cos(ang)*R*1.36, ly = cy + Math.sin(ang)*R*1.36;
-        var forca = 1 + .55*Math.exp(-(passou - BLIPS[L])*7);
-        var lg = ctx.createRadialGradient(lx,ly,0,lx,ly,R*.19);
-        lg.addColorStop(0, 'rgba(255,61,46,' + Math.min(.6, .34*forca) + ')');
-        lg.addColorStop(1, 'rgba(255,61,46,0)');
-        ctx.fillStyle = lg; ctx.beginPath(); ctx.arc(lx,ly,R*.19,0,6.2832); ctx.fill();
-        ctx.fillStyle = 'rgba(255,61,46,' + Math.min(1, .9*forca) + ')';
-        ctx.beginPath(); ctx.arc(lx,ly,R*.055,0,6.2832); ctx.fill();
-      }
-    }
-
-    ctx.globalCompositeOperation = 'source-over';
-  }
-
-  window.sennaRoteiro = function (btn) {
-    if (lento) return;
-    var r = JSON.parse(btn.getAttribute('data-roteiro'));
-    for (var i = 0; i < r.length; i++) {
-      if (r[i][2] === '@hora@') {
-        var d = new Date(), h = d.getHours(), m = d.getMinutes();
-        r[i][2] = m === 0 ? 'It is ' + h + ' o\'clock.'
-                          : 'It is ' + h + ':' + String(m).padStart(2, '0') + '.';
-      }
-    }
-    roteiro = r; passo = 0; proximo = agoraSeg();
-    var todos = document.querySelectorAll('[data-roteiro]');
-    for (var j = 0; j < todos.length; j++) todos[j].removeAttribute('data-ativo');
-    btn.setAttribute('data-ativo', '1');
-    cv.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-  };
-
-  window.sennaEstado = function (est) {
-    if (lento) return;
-    roteiro = [[est, 2.6, null], ['idle', 0, null]]; passo = 0; proximo = agoraSeg();
-    if (fala) fala.style.opacity = 0;
-  };
-
-  if (lento) { irPara('idle'); quadro(2.2); return; }
-  var visivel = true;
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (es) { visivel = es[0].isIntersecting; },
-      { threshold: .05 }).observe(cv);
-  }
-  (function laco() {
-    if (visivel && !document.hidden) quadro(agoraSeg());
-    requestAnimationFrame(laco);
-  })();
-})();
-
-(function () {
-  var barra = document.getElementById('barra');
-  if (!barra) return;
-  function atualiza() {
-    var h = document.documentElement;
-    var max = h.scrollHeight - h.clientHeight;
-    barra.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0).toFixed(1) + '%';
-  }
-  addEventListener('scroll', atualiza, { passive: true });
-  addEventListener('resize', atualiza);
-  atualiza();
-})();
-
-function copiarEmail(botao) {
-  var email = 'vinips00@gmail.com';
-  var original = botao.getAttribute('data-original') || botao.textContent.trim();
-  botao.setAttribute('data-original', original);
-  function pronto() {
-    botao.textContent = 'e-mail copied ✓';
-    clearTimeout(botao._t);
-    botao._t = setTimeout(function () { botao.textContent = original; }, 2200);
-  }
-  function falhou() {
-    botao.textContent = email;
-    clearTimeout(botao._t);
-    botao._t = setTimeout(function () { botao.textContent = original; }, 4000);
-  }
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(email).then(pronto, falhou);
-  } else { falhou(); }
-}
-</script>
+<script src="/assets/site.js"></script>
 </body>
 </html>
