@@ -55,13 +55,13 @@
       <nav class="nav" aria-label="Seções">
         <a href="#mesa">Mesa</a>
         <a href="#projetos">Projetos</a>
-        <a href="#player">Player 1</a>
+        <a href="#andarilho">Andarilho</a>
         <a href="#espelho">Carreira</a>
         <a href="#contato">Contato</a>
       </nav>
       <div class="top-actions">
         <button type="button" class="pill" id="btnSegredos" aria-haspopup="dialog"><span class="pill-star" aria-hidden="true">★</span><span id="contaSegredos">0/16</span><span class="sr"> segredos</span></button>
-        <button type="button" class="pill pill-sq" id="btnSom" aria-pressed="true" aria-label="Som"><span aria-hidden="true" id="somIco">♪</span></button>
+        <button type="button" class="pill pill-sq" id="btnSom" aria-pressed="false" aria-label="Tocar uma música lo-fi"><span aria-hidden="true" id="somIco">♪</span></button>
         <a class="pill pill-sq" href="/en/" hreflang="en" lang="en" id="btnLang" aria-label="English version">EN</a>
         <a class="pill pill-cv" href="/assets/Curriculo-Vinicius-Pires-da-Silva.pdf" download>CV <span aria-hidden="true">↓</span></a>
       </div>
@@ -270,15 +270,38 @@
           <div class="quest-demo">
             <div class="mini-phone">
               <div class="mp-screen">
-                <div class="mp-top"><span>Registro de ponto</span><button type="button" class="mp-net" id="mpNet" aria-pressed="true">online</button></div>
-                <div class="mp-clock" id="mpClock">--:--:--</div>
-                <div class="mp-cam" id="mpCam"><canvas id="mpFace" width="24" height="24" aria-hidden="true"></canvas><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i><span class="mp-scan"></span></div>
-                <p class="mp-msg" id="mpMsg" aria-live="polite">Posicione o rosto</p>
-                <button type="button" class="mp-btn" id="mpBtn">Registrar ponto</button>
-                <ol class="mp-list" id="mpList"><li><span>08:01</span><b>enviado</b></li><li><span>12:00</span><b>enviado</b></li><li><span>13:02</span><b>enviado</b></li></ol>
+                <div class="mp-card">
+                  <div class="mp-row1">
+                    <span class="mp-ico"><svg viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-3.3 0-8 1.7-8 5v1h16v-1c0-3.3-4.7-5-8-5z"/></svg></span>
+                    <b>Visitante</b>
+                    <button type="button" class="mp-net" id="mpNet" aria-pressed="true">Online</button>
+                    <span class="mp-ico mp-sync" id="mpSync"><svg viewBox="0 0 24 24"><path d="M12 6V3L8 7l4 4V8a4 4 0 0 1 3.5 6l1.5 1.4A6 6 0 0 0 12 6zm-3.5 4L7 8.6A6 6 0 0 0 12 18v3l4-4-4-4v3a4 4 0 0 1-3.5-6z"/></svg></span>
+                  </div>
+                  <div class="mp-info"><span class="mp-ico"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm.5-13H11v6l5 3 .8-1.2-4.3-2.6z"/></svg></span><div><small>Horário atual</small><b id="mpClock">--:--:--</b></div></div>
+                  <div class="mp-info"><span class="mp-ico"><svg viewBox="0 0 24 24"><path d="M15 5 9 3 3 5v16l6-2 6 2 6-2V3l-6 2zm-1 13.7-4-1.4V5.3l4 1.4v12z"/></svg></span><div><small>Localização</small><span>Canoas, RS (~12m)</span></div></div>
+                </div>
+                <div class="mp-obs"><svg viewBox="0 0 24 24"><path d="M3 17.2V21h3.8L17.8 10 14 6.2 3 17.2zM20.7 7a1 1 0 0 0 0-1.4l-2.3-2.3a1 1 0 0 0-1.4 0l-1.8 1.8 3.8 3.8L20.7 7z"/></svg>Observação</div>
+                <button type="button" class="mp-b mp-red" data-tipo="RHO">Home Office</button>
+                <button type="button" class="mp-b mp-green" data-tipo="RSE">Serviço externo</button>
+                <div class="mp-hoje">
+                  <div class="mp-hh"><span class="mp-ico"><svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V9h14v11zM7 11h5v5H7z"/></svg></span><div><b>Registros de hoje <em id="mpQtd">3</em></b><small>Toque em um registro para visualizar</small></div></div>
+                  <div class="mp-tiles" id="mpList"><div class="mp-tile"><i></i><b>12:57</b><small>RHO</small></div><div class="mp-tile"><i></i><b>12:14</b><small>RHO</small></div><div class="mp-tile"><i></i><b>07:06</b><small>RHO</small></div></div>
+                </div>
+                <nav class="mp-nav" aria-hidden="true">
+                  <span><svg viewBox="0 0 24 24"><path d="M16 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-8 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 2c-2.3 0-7 1.2-7 3.5V19h14v-2.5C15 14.2 10.3 13 8 13zm8 0h-1c1.2.8 2 2 2 3.4V19h6v-2.5c0-2.3-4.7-3.5-7-3.5z"/></svg>Usuários</span>
+                  <span class="on"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-2 15-5-5 1.4-1.4 3.6 3.6 7.6-7.6L19 8l-9 9z"/></svg>Registro</span>
+                  <span><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>Painel</span>
+                  <span><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>Consulta</span>
+                  <span><svg viewBox="0 0 24 24"><path d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L15 3h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 0 0 1.7 1L11 21h4l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.5-2.1-1.6zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>Config</span>
+                </nav>
+                <div class="mp-toast" id="mpToast" aria-live="polite"></div>
+                <div class="mp-sheet" id="mpSheet">
+                  <div class="mp-cam" id="mpCam"><canvas id="mpFace" width="24" height="24" aria-hidden="true"></canvas><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i><span class="mp-scan"></span></div>
+                  <p class="mp-msg" id="mpMsg" aria-live="polite">Verificando o rosto…</p>
+                </div>
               </div>
             </div>
-            <p class="demo-cap">Uma simulação. Desligue a internet e registre: o ponto fica no aparelho e sobe quando a rede volta.</p>
+            <p class="demo-cap">Uma simulação do app. Toque em Home Office ou Serviço externo; toque em Online para ficar sem internet: o ponto fica no aparelho e sobe quando a rede volta.</p>
           </div>
         </article>
 
@@ -321,31 +344,26 @@
       </div>
     </section>
 
-    <section class="sec" id="player">
+    <section class="sec" id="andarilho">
       <div class="wrap">
         <header class="sec-head">
           <span class="sec-num">02</span>
           <div>
-            <h2>Player 1</h2>
-            <p>Quem está na cadeira.</p>
+            <h2>O Andarilho</h2>
+            <p>Do estágio no suporte ao Pleno III, um degrau por vez.</p>
           </div>
         </header>
 
         <div class="player">
           <div class="char">
-            <div class="char-pic"><canvas id="retrato" width="32" height="34" role="img" aria-label="Eu em pixel art: cabelo escuro, óculos redondos, barba e camiseta coral"></canvas></div>
+            <div class="char-pic"><canvas id="retrato" width="32" height="34" role="img" aria-label="Eu em pixel art: cabelo escuro, óculos redondos, barba e moletom cinza"></canvas></div>
             <p class="char-name">Vinícius</p>
             <dl class="char-meta">
-              <div><dt>Classe</dt><dd>Mago do C# e .NET</dd></div>
+              <div><dt>Classe</dt><dd>Arcanista III</dd></div>
               <div><dt>Nível</dt><dd>Pleno III</dd></div>
               <div><dt>Guilda</dt><dd>Símix Sistemas</dd></div>
               <div><dt>Origem</dt><dd>Canoas, RS</dd></div>
             </dl>
-            <div class="xp">
-              <span>XP</span>
-              <div class="xp-bar"><i></i></div>
-              <span>2020 → hoje</span>
-            </div>
           </div>
 
           <div class="about">
@@ -357,6 +375,25 @@
               <div class="perk"><span class="perk-k">Passiva · Autodidata</span><p>Aprendi pela documentação oficial e pela prática, com foco em Clean Code, SOLID e Design Patterns.</p></div>
             </div>
           </div>
+        </div>
+
+        <div class="trilha">
+          <div class="inv-head">
+            <h3>Trilha do mago</h3>
+            <p>Cada cargo, uma classe. Daqui para a frente está trancado.</p>
+          </div>
+          <ol class="tr">
+            <li class="ok"><i>1</i><b>Aprendiz</b><span>2020 · estágio no suporte</span></li>
+            <li class="ok"><i>2</i><b>Iniciado</b><span>2021 · qualidade</span></li>
+            <li class="ok"><i>3</i><b>Adepto</b><span>2021 · implantação</span></li>
+            <li class="ok"><i>4</i><b>Mago</b><span>2023 · desenvolvedor júnior</span></li>
+            <li class="atual"><i>5</i><b>Arcanista III</b><span>2024 → hoje · Pleno I, II e III</span></li>
+            <li class="tranc"><i>?</i><b>Arquimago</b><span>trancado</span></li>
+            <li class="tranc"><i>?</i><b>Mestre Arcano</b><span>trancado</span></li>
+            <li class="tranc"><i>?</i><b>Grão-Mago</b><span>trancado</span></li>
+            <li class="tranc"><i>?</i><b>Mago Supremo</b><span>trancado</span></li>
+            <li class="tranc"><i>?</i><b>Transcendente</b><span>trancado</span></li>
+          </ol>
         </div>
 
         <div class="inv-wrap">
