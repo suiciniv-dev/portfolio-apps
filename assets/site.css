@@ -117,8 +117,8 @@ h1{font-size:clamp(40px,5.6vw,66px);letter-spacing:-.01em;margin:8px 0 4px;text-
 .scene{position:relative;aspect-ratio:16/9;background:#1a1522}
 .scene canvas{display:block;width:100%;height:100%}
 .hots{position:absolute;inset:0}
-.hot{position:absolute;border:0;background:transparent;padding:0;margin:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.hot:focus-visible{outline:2px dashed var(--amber);outline-offset:0}
+.hots .hot{position:absolute;border:0;background:transparent;padding:0;margin:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.hots .hot:focus-visible{outline:2px dashed var(--amber);outline-offset:0}
 .hero-bar{display:flex;align-items:center;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;margin:20px 6px 0}
 .scene-hint{font:400 21px/1.25 var(--vt);color:var(--muted);max-width:60ch}
 .so-toque{display:none}
