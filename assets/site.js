@@ -963,25 +963,35 @@ var Cena = (function () {
       });
       if ((f >> 2) % 2) R(lx2, ly2 - 1, 1, 3, '#e6e6e6');
     }
-    var px = x + 62;
-    R(px, y + 5, 35, 33, '#0d1712');
-    R(px, y + 5, 35, 7, '#14251b');
-    txt(g, 'SENNA', px + 2, y + 6, '#5cf2a0');
-    R(px + 3, y + 15, 7, 3, '#cfd6e6'); R(px + 4, y + 14, 4, 1, '#cfd6e6');
-    if (chove()) { P(px + 4, y + 19, '#6cc6ff'); P(px + 7, y + 20, '#6cc6ff'); P(px + 9, y + 19, '#6cc6ff'); }
+    var px = x + 62, my = y + 20, cx = px + 17;
+    R(px, y + 5, 35, 33, '#14110f');
+    R(px, y + 5, 35, 7, '#1b1714'); R(px, y + 12, 35, 1, '#2f2722');
+    R(px + 2, y + 7, 3, 1, '#e8743b'); R(px + 2, y + 9, 3, 1, '#e8743b'); P(px + 2, y + 8, '#e8743b'); P(px + 4, y + 8, '#e8743b'); P(px + 3, y + 8, '#ffd9b0');
+    txt(g, 'SENNA', px + 8, y + 6, '#ece4d8');
+    R(cx - 5, my - 3, 11, 7, '#21170f'); R(cx - 3, my - 4, 7, 9, '#21170f');
+    var NOS = [[-11, -5, '#7aa7f0'], [11, -5, '#7aa7f0'], [-12, 4, '#7aa7f0'], [12, 4, '#cfc6b8'], [-4, 6, '#8cc47a'], [5, -6, '#7aa7f0']];
+    NOS.forEach(function (n) {
+      var tx = cx + n[0], ty = my + n[1], passos = Math.max(Math.abs(n[0]), Math.abs(n[1]));
+      for (var k = 2; k < passos; k++) P(Math.round(cx + n[0] * k / passos), Math.round(my + n[1] * k / passos), '#4a3526');
+    });
+    NOS.forEach(function (n) { R(cx + n[0], my + n[1], 2, 2, n[2]); });
+    [[-14, -7], [-13, -8], [-15, -5]].forEach(function (d, k) { if ((f + k * 7) % 40 > 3) P(cx + d[0], my + d[1], '#e0704f'); });
+    [[-15, 6], [-14, 8], [-12, 7]].forEach(function (d, k) { if ((f + k * 11) % 46 > 3) P(cx + d[0], my + d[1], '#e0704f'); });
+    P(cx + 14, my - 7, '#f2c94c'); P(cx - 9, my - 7, '#a99bf5'); P(cx + 8, my - 8, '#a99bf5');
+    if (st.toast > 0) { R(cx + 14, my - 2, 2, 2, '#f2c94c'); if ((f >> 2) % 2) { P(cx + 13, my - 3, '#fff1c9'); P(cx + 16, my - 3, '#fff1c9'); P(cx + 13, my, '#fff1c9'); P(cx + 16, my, '#fff1c9'); } }
+    R(cx - 1, my - 1, 3, 3, '#e8743b'); P(cx, my, '#ffd9b0');
     var tmp = clima ? clima.temp + '°' : '21°';
-    txt(g, tmp, px + 13, y + 14, '#eafff3');
-    R(px + 3, y + 23, 29, 1, '#1f3a2a'); R(px + 3, y + 23, 18, 1, '#5cf2a0');
-    R(px + 3, y + 26, 22, 1, '#2a3a32'); R(px + 3, y + 29, 26, 1, '#2a3a32'); R(px + 3, y + 32, 16, 1, '#2a3a32');
-    R(px + 3, y + 35, 29, 1, '#1f3a2a'); R(px + 3, y + 35, Math.round(29 * .64), 1, '#f0a83c');
+    txt(g, tmp, px + 3, y + 31, '#ece4d8');
+    R(px + 16, y + 32, 16, 1, '#2c2521'); R(px + 16, y + 32, 9, 1, '#e8743b');
+    R(px + 16, y + 34, 16, 1, '#2c2521'); R(px + 16, y + 34, Math.round(16 * .64), 1, '#f2c94c');
     if (st.toast > 0) {
       var tx = x + 60 + Math.max(0, st.toastX), ty = y + 40;
-      R(tx, ty, 37, 8, '#232733'); R(tx, ty, 37, 1, '#33384a');
-      R(tx + 2, ty + 2, 4, 4, '#5cf2a0');
-      R(tx + 8, ty + 2, 20, 1, '#e6e9f2'); R(tx + 8, ty + 4, 26, 1, '#8e96aa');
+      R(tx, ty, 37, 8, '#2b2b2b'); R(tx, ty, 37, 1, '#3c3c3c');
+      R(tx + 2, ty + 2, 4, 4, '#e8743b'); R(tx + 3, ty + 3, 2, 2, '#1b1714');
+      R(tx + 8, ty + 2, 20, 1, '#e6e6e6'); R(tx + 8, ty + 4, 26, 1, '#9a9a9a');
     }
     R(sx, sy + 45, sw, 4, '#0a0d16'); R(sx + 44, sy + 46, 2, 2, '#6cc6ff'); R(sx + 48, sy + 46, 2, 2, '#3a4560'); R(sx + 52, sy + 46, 2, 2, '#3a4560');
-    R(x, y + 53, 102, 3, '#0f0e13'); P(x + 98, y + 54, '#5cf2a0');
+    R(x, y + 53, 102, 3, '#0f0e13'); P(x + 98, y + 54, '#e8743b');
     R(x + 46, y + 56, 10, 6, '#25232c'); R(x + 34, y + 62, 34, 2, '#25232c'); R(x + 34, y + 62, 34, 1, '#34313d');
   }
 
