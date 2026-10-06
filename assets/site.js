@@ -1700,7 +1700,7 @@ var Cena = (function () {
         Som.play('au');
         st.fred = 12;
         conquista('fred');
-        balao('fred', T('Fred, o spitz alemão. Au! Au!', 'Fred, the German spitz. Woof! Woof!'));
+        balao('fred', T('Fred. Au! Au!', 'Fred. Woof! Woof!'));
         break;
       case 'f1':
         Som.play('f1');

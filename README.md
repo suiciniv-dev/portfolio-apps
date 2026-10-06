@@ -8,7 +8,7 @@ Portfólio de Vinícius Pires da Silva, desenvolvedor C# e .NET: a minha mesa em
 
 ## O que tem na página
 
-- **A mesa**: uma cena em pixel art desenhada num canvas de 320×180. O celular velho com o Racco é o Banditboard, o monitor é o Senna, o segundo monitor é o ControlSensors HUD, o celular com a câmera é o app Símix Ponto e o notebook é o Símix Ponto Cloud. Na estante de cima ficam a McLaren MP4/4 do Senna e os Funko Pop; a Mimi e o Lúcifer, os gatos, andam pela mesa e pela janela, e o Fred, o spitz, fica debaixo da mesa. A janela segue a hora e o tempo de Canoas, pela Open-Meteo.
+- **A mesa**: uma cena em pixel art desenhada num canvas de 320×180. O celular velho com o Racco é o Banditboard, o monitor é o Senna, o segundo monitor é o ControlSensors HUD, o celular com a câmera é o app Símix Ponto e o notebook é o Símix Ponto Cloud. Na estante de cima ficam a McLaren MP4/4 do Senna e os Funko Pop; a Mimi e o Lúcifer, os gatos, andam pela mesa e pela janela, e o Fred fica debaixo da mesa. A janela segue a hora e o tempo de Canoas, pela Open-Meteo.
 - **Ligar o setup**: a entrada na primeira visita de cada sessão do navegador.
 - **Projetos**: Banditboard ([código](https://github.com/suiciniv-dev/banditboard)), Senna, ControlSensors HUD ([código](https://github.com/suiciniv-dev/ControlSensors)), Símix Ponto e Símix Ponto Cloud, cada um com uma demo.
 - **O Arcanista**: o retrato em pixel art, o resumo, a trilha do mago e o inventário com a stack.
