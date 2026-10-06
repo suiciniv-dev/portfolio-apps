@@ -128,6 +128,10 @@ var Som = (function () {
     moeda: function () { tom(988, 0, .08, 'square', .04); tom(1319, .08, .32, 'square', .04); },
     oi: function () { tom(600, 0, .07, 'square', .03, 900); tom(900, .09, .08, 'square', .03, 700); },
     liga: function () { tom(180, 0, .3, 'square', .035, 720); tom(880, .3, .12, 'triangle', .04); tom(1320, .42, .2, 'triangle', .035); },
+    miau: function () { tom(620, 0, .12, 'triangle', .06, 900); tom(900, .12, .3, 'triangle', .06, 520); },
+    purr: function () { for (var i = 0; i < 14; i++) tom(48 + (i % 2) * 6, i * .07, .06, 'sawtooth', .03); },
+    au: function () { tom(480, 0, .09, 'square', .045, 300); tom(500, .18, .1, 'square', .045, 290); },
+    f1: function () { tom(160, 0, .5, 'sawtooth', .035, 1100); tom(900, .5, .25, 'sawtooth', .03, 600); tom(700, .75, .35, 'sawtooth', .03, 1300); },
     cheat: function () { [523, 659, 784, 1046, 1319].forEach(function (f, i) { tom(f, i * .07, .1, 'square', .03); }); tom(1568, .4, .4, 'triangle', .05); }
   };
 
@@ -217,6 +221,10 @@ var SEG = [
   ['hesoyam', 'HESOYAM', T('Digitou o código de San Andreas.', 'Typed the San Andreas code.'), T('Um código famoso de San Andreas. É só digitar.', 'A famous San Andreas code. Just type it.')],
   ['konami', '↑↑↓↓←→←→BA', T('Chamou todos os Raccos.', 'Called every Racco.'), T('↑ ↑ ↓ ↓ …', '↑ ↑ ↓ ↓ …')],
   ['sudo', T('Sem permissão', 'Permission denied'), T('Tentou sudo no Senna.', 'Tried sudo on Senna.'), T('O Senna tem um terminal lá embaixo.', 'Senna has a terminal down below.')],
+  ['mimi', 'Mimi', T('Fez carinho na Mimi.', 'Petted Mimi.'), T('Tem uma gata andando pela mesa.', 'A cat is walking on the desk.')],
+  ['lucifer', T('Lúcifer', 'Lucifer'), T('Achou o Lúcifer.', 'Found Lucifer.'), T('Olhe a janela: dois olhos amarelos.', 'Check the window: two yellow eyes.')],
+  ['fred', 'Fred', T('Brincou com o Fred.', 'Played with Fred.'), T('Tem alguém debaixo da mesa.', 'Someone is under the desk.')],
+  ['box', 'Box, box!', T('Ligou o motor da McLaren.', 'Fired up the McLaren.'), T('Na prateleira de cima tem um carro de corrida.', 'There is a race car on the top shelf.')],
   ['postit', 'Post-it', T('Leu um post-it da parede.', 'Read a sticky note on the wall.'), T('Tem recados na parede.', 'There are notes on the wall.')]
 ];
 var achados = store.get('segredos', {});
@@ -529,6 +537,7 @@ var Cena = (function () {
     r: { x: 120, dir: 1, alvo: 120, pausa: 30, look: 0, wave: 0 },
     hud: [42, 51, 63, 38], spark: [], code: [], linha: null, toast: 0, toastX: 40,
     appOk: 0, aviao: -1, novo: 0, postit: null, postitVolta: 0, recado: 0,
+    f1: 0, mimi: 0, lucifer: 0, fred: 0, coracoes: [],
     boot: $('#intro') && !$('#intro').hidden ? -1 : null
   };
   var ATRASO = { senna: 150, hud: 420, cel: 650, note: 820, lamp: 1000, pc: 1150, racco: 1500 };
@@ -633,7 +642,7 @@ var Cena = (function () {
     '..zHHHHHHHHHHz..',
     '...SSHHHHHHSS...',
     '...SSSSSSSSSS...'
-  ], { H: '#2b1a12', h: '#4d3123', E: '#e2ab8a', G: '#141216', z: '#c7987e', S: '#d9a183' });
+  ], { H: '#2b1a12', h: '#4d3123', E: '#e2ab8a', G: '#141216', z: '#5e3d2c', S: '#d9a183' });
   var CABECA_FRENTE = spr([
     '....HHHHHHH.....',
     '..HHHhHHHhHHH...',
@@ -648,11 +657,11 @@ var Cena = (function () {
     'ESGSSGSssSGSSGSE',
     '.SSGGSSssSSGGSS.',
     '.zSSSSSssSSSSSz.',
-    '.zzSSSNSSNSSSzz.',
-    '.zzZzzZzzZzzZzz.',
-    '..zzzzMMMMzzzz..',
-    '...zZzzZzzZzz...'
-  ], { H: '#2b1a12', h: '#4d3123', S: '#efc3a2', s: '#d49c7c', K: '#2b1a12', G: '#141216', W: '#f5efe8', P: '#2a1a13', E: '#e2ab8a', z: '#dcae92', Z: '#b88d76', M: '#c27a6e', N: '#b9806a' });
+    '.ZzSSSNSSNSSSzZ.',
+    '.ZZZZZYYYYZZZZZ.',
+    '..ZZYZMMMMZYZZ..',
+    '...ZZZZYZZZZZ...'
+  ], { H: '#2b1a12', h: '#4d3123', S: '#efc3a2', s: '#d49c7c', K: '#2b1a12', G: '#141216', W: '#f5efe8', P: '#2a1a13', E: '#e2ab8a', z: '#b98a70', Z: '#6e4a38', Y: '#8c624c', M: '#c27a6e', N: '#b9806a' });
 
   function fase(h) {
     if (h >= 8 && h < 17) return 'dia';
@@ -1051,6 +1060,241 @@ var Cena = (function () {
     P(x + 3, y + 3, liga('pc') ? '#5cf2a0' : '#3a2a20');
   }
 
+  var FUNKOS = [
+    { id: 'frodo', x: 153, faixa: '#2f4a2a', cabelo: '#5a3a22', roupa: '#4f6b3a', gola: '#8a6a3a' },
+    { id: 'fsenna', x: 165, faixa: '#1d3f8f', cabelo: '#2b1a12', roupa: '#d7261e', gola: '#f3f1ec' },
+    { id: 'bottas', x: 177, faixa: '#16161a', bone: '#f2f2f2', roupa: '#16161a', gola: '#00a19c' }
+  ];
+  function funko(k) {
+    var x = k.x, y = 16;
+    R(x, y, 10, 14, '#e9e6de'); R(x + 9, y, 1, 14, '#c9c5ba');
+    R(x, y, 10, 3, k.faixa); P(x + 1, y + 1, '#ffd23f'); P(x + 2, y + 1, '#ffd23f');
+    if (k.id === 'bottas') P(x + 7, y + 1, '#00a19c');
+    R(x + 1, y + 4, 8, 8, '#2b2a33');
+    var fx = x + 2, fy = y + 5;
+    R(fx, fy + 1, 6, 3, '#f1c9a5');
+    if (k.bone) { R(fx, fy, 6, 1, k.bone); R(fx - 1, fy + 1, 7, 1, k.bone); P(fx + 5, fy, '#00a19c'); }
+    else { R(fx, fy, 6, 1, k.cabelo); P(fx, fy + 1, k.cabelo); P(fx + 5, fy + 1, k.cabelo); if (k.id === 'frodo') { P(fx + 2, fy + 1, k.cabelo); P(fx + 4, fy + 1, k.cabelo); } }
+    P(fx + 1, fy + 2, '#141216'); P(fx + 4, fy + 2, '#141216');
+    R(fx + 1, fy + 4, 4, 2, k.roupa); R(fx + 2, fy + 4, 2, 1, k.gola);
+    P(x + 1, y + 4, 'rgba(255,255,255,.35)'); P(x + 2, y + 5, 'rgba(255,255,255,.2)');
+    R(x + 1, y + 12, 8, 1, '#d9d4c8');
+  }
+  function mclaren(f) {
+    var x = 193 + (st.f1 > 0 ? f % 2 : 0), y = 21;
+    var Wt = '#f3f1ec', Rd = '#d7261e', Pn = '#121216', Hb = '#8a8f98';
+    R(x + 24, y, 6, 1, Wt); R(x + 24, y + 1, 6, 1, Rd); R(x + 28, y, 2, 5, Rd);
+    R(x + 15, y + 2, 9, 1, Wt); R(x + 13, y + 3, 14, 1, Wt);
+    R(x + 5, y + 4, 23, 1, Wt); R(x + 3, y + 4, 2, 1, Wt);
+    R(x + 1, y + 5, 27, 1, Rd);
+    R(x + 9, y + 6, 18, 1, '#2a2a30');
+    R(x, y + 6, 7, 1, Wt); R(x, y + 5, 1, 2, Rd);
+    R(x + 12, y + 2, 2, 1, '#ffd23f'); P(x + 12, y + 3, '#ffd23f'); P(x + 13, y + 3, '#2e9e4f');
+    [[6, 6], [23, 6]].forEach(function (c) {
+      var cx = x + c[0], cy = y + c[1];
+      R(cx - 1, cy - 2, 3, 1, Pn); R(cx - 2, cy - 1, 5, 3, Pn); R(cx - 1, cy + 2, 3, 1, Pn); P(cx, cy, Hb);
+    });
+    if (st.f1 > 0) for (var i = 0; i < 3; i++) P(x + 30 + i + (f % 3), y + 4 - i, 'rgba(200,200,210,' + (.5 - i * .15) + ')');
+  }
+
+  function prateleiraAlta(f) {
+    R(150, 30, 78, 3, '#7a4f37'); R(150, 30, 78, 1, '#93623f'); R(150, 33, 78, 1, '#4a2f22');
+    R(156, 34, 2, 3, '#3a2a20'); R(220, 34, 2, 3, '#3a2a20');
+    FUNKOS.forEach(funko);
+    mclaren(f);
+  }
+
+  var CHAO = 125, PULO_X = 60;
+  var LADO = [
+    ['T..........e..e.',
+     'T..........HHHH.',
+     '.T........HHMEH.',
+     '.T........HHHHHN',
+     '..TBBBBBBBBHHHH.',
+     '..BBBBBBBBBBWW..',
+     '..BBBBBBBBBBW...',
+     '..BB.BB...BB.B..',
+     '..W..W.....W..W.'],
+    ['T..........e..e.',
+     'T..........HHHH.',
+     '.T........HHMEH.',
+     '.T........HHHHHN',
+     '..TBBBBBBBBHHHH.',
+     '..BBBBBBBBBBWW..',
+     '..BBBBBBBBBBW...',
+     '...BB.B..B.BB...',
+     '...W..W..W..W...']
+  ];
+  var PAL_MIMI = { H: '#efe6da', B: '#efe6da', M: '#b8957a', E: '#6f8fa8', N: '#d9a0a0', W: '#fbf6ee', T: '#9a948c', e: '#b8957a' };
+  var PAL_LUCI = { H: '#141218', B: '#141218', M: '#141218', E: '#f2d33b', N: '#2c2433', W: '#141218', T: '#141218', e: '#2c2433' };
+  var SPR_GATO = {
+    mimi: [spr(LADO[0], PAL_MIMI), spr(LADO[1], PAL_MIMI)],
+    lucifer: [spr(LADO[0], PAL_LUCI), spr(LADO[1], PAL_LUCI)]
+  };
+  var LUCI_SENTA = spr([
+    '.k.......k.',
+    '.kk.....kk.',
+    '.KKKKKKKKK.',
+    'KKKKKKKKKKK',
+    'KKYyKKKYyKK',
+    'KKKKKnKKKKK',
+    '.KKKKKKKKK.',
+    '..KKKKKKK..',
+    '.KKKKKKKKK.',
+    '.KKKKKKKKKt',
+    '.KKKKKKKKKt',
+    '.KKKKKKKKt.',
+    '..KK...KK..'
+  ], { k: '#2c2433', K: '#141218', Y: '#f2d33b', y: '#1a1405', n: '#3a2a30', t: '#141218' });
+  var GATOS = {
+    mimi: { x: 25, dir: 1, alvo: 25, pausa: 160, modo: 'senta', pts: [24, 40, 96, 120, 196, 226, 268, 292] },
+    lucifer: { x: 58, dir: 1, alvo: 58, pausa: 420, modo: 'janela', t: 0, pts: [60, 92, 124, 200, 228, 270, 296] }
+  };
+  function gatoUpdate(k) {
+    var c = GATOS[k];
+    if (lento) return;
+    if (c.modo === 'janela') { if (--c.pausa <= 0) { c.modo = 'desce'; c.t = 0; } return; }
+    if (c.modo === 'desce' || c.modo === 'sobe') {
+      if (++c.t >= 12) {
+        if (c.modo === 'desce') { c.modo = 'senta'; c.x = PULO_X; c.pausa = 60; }
+        else { c.modo = 'janela'; c.pausa = Math.floor(rnd(500, 1100)); }
+      }
+      return;
+    }
+    if (c.modo === 'senta') {
+      if (--c.pausa > 0) return;
+      c.volta = k === 'lucifer' && Math.random() < .3;
+      c.alvo = c.volta ? PULO_X : c.pts[Math.floor(Math.random() * c.pts.length)];
+      c.modo = 'anda';
+      return;
+    }
+    if (st.f % 2) return;
+    if (c.x === c.alvo) {
+      if (c.volta) { c.modo = 'sobe'; c.t = 0; }
+      else { c.modo = 'senta'; c.pausa = Math.floor(rnd(80, 260)); }
+      return;
+    }
+    c.dir = c.alvo > c.x ? 1 : -1;
+    c.x += c.dir;
+  }
+  function pulo(c) {
+    var p = c.t / 12; if (c.modo === 'sobe') p = 1 - p;
+    return [Math.round(52 + (PULO_X - 52) * p), Math.round(68 + (CHAO - 9 - 68) * p - Math.sin(Math.PI * p) * 10)];
+  }
+  function rectGato(k) {
+    var c = GATOS[k];
+    if (c.modo === 'janela') return [51, 68, 18, 9];
+    if (c.modo === 'desce' || c.modo === 'sobe') { var q = pulo(c); return [q[0], q[1], 16, 9]; }
+    if (c.modo === 'anda') return [c.x, CHAO - 10, 16, 11];
+    return k === 'mimi' ? [c.x - 1, CHAO - 16, 14, 17] : [c.x - 1, CHAO - 14, 13, 15];
+  }
+  function ladoGato(img, x, y, dir) {
+    if (dir >= 0) { g.drawImage(img, x, y); return; }
+    g.save(); g.translate(x + 16, y); g.scale(-1, 1); g.drawImage(img, 0, 0); g.restore();
+  }
+
+  function mimiSenta(x, y, f) {
+    var C = '#efe6da', c = '#d8cbb9', m = '#b8957a', W = '#fbf6ee', E = '#6f8fa8', p = '#1d2430';
+    var pisca = st.mimi > 0 || (f % 70) < 2;
+    R(x + 1, y, 1, 2, m); R(x + 9, y, 1, 2, m); P(x + 2, y + 1, m); P(x + 8, y + 1, m);
+    R(x + 1, y + 2, 9, 1, C); P(x + 2, y + 2, m); P(x + 8, y + 2, m);
+    R(x, y + 3, 11, 4, C); P(x + 4, y + 3, m); P(x + 6, y + 3, m); P(x + 5, y + 3, '#a0806a');
+    R(x + 3, y + 4, 2, 1, m); R(x + 6, y + 4, 2, 1, m);
+    if (pisca) { R(x + 2, y + 5, 2, 1, '#8a6a55'); R(x + 7, y + 5, 2, 1, '#8a6a55'); }
+    else { P(x + 2, y + 5, E); P(x + 3, y + 5, p); P(x + 7, y + 5, E); P(x + 8, y + 5, p); }
+    P(x + 5, y + 6, '#d9a0a0');
+    R(x + 1, y + 7, 9, 1, C);
+    R(x + 2, y + 8, 7, 1, W); R(x + 1, y + 9, 9, 3, W); R(x + 1, y + 9, 1, 3, C); R(x + 9, y + 9, 1, 3, C);
+    R(x + 1, y + 12, 9, 2, C); R(x + 1, y + 12, 1, 2, c); R(x + 9, y + 12, 1, 2, c);
+    R(x + 2, y + 14, 2, 1, W); R(x + 7, y + 14, 2, 1, W);
+    var sw = st.mimi > 0 ? (f >> 1) % 2 : ((f >> 3) % 4 === 0 ? 1 : 0), cauda = '#9a948c';
+    R(x + 10, y + 12, 1, 2, cauda); P(x + 11, y + 11, cauda); P(x + 11 + sw, y + 10, cauda); P(x + 11 + sw, y + 9, '#6f6a64'); P(x + 12 + sw, y + 8, '#6f6a64');
+  }
+
+  function lucifer(f) {
+    var x = 52, y = 69, K = '#141218', k = '#2c2433', o = '#3a3342';
+    P(x + 1, y, K); P(x + 6, y, K); R(x + 1, y + 1, 2, 1, K); R(x + 5, y + 1, 2, 1, K); P(x + 2, y + 1, k); P(x + 5, y + 1, k);
+    R(x + 1, y + 2, 7, 1, K); R(x, y + 3, 9, 2, K);
+    R(x + 1, y + 4, 12, 1, K); R(x + 1, y + 5, 13, 2, K); R(x + 9, y + 3, 3, 1, K);
+    P(x + 4, y + 4, '#3a2a30');
+    R(x, y + 7, 2, 1, K); R(x + 3, y + 7, 2, 1, K);
+    var t = (f >> 4) % 3;
+    R(x + 13, y + 7, 3, 1, K); P(x + 15 + (t === 1 ? 1 : 0), y + 6, K);
+    R(x + 9, y + 3, 3, 1, o);
+  }
+  function olhosLucifer(f) {
+    var c = GATOS.lucifer, Y = '#f2d33b', yy = '#1a1405', F = '#2c2433';
+    var pisca = st.lucifer > 0 ? (f % 6 < 2) : (f % 90) < 3;
+    if (c.modo === 'janela') {
+      if (pisca) { R(54, 72, 2, 1, F); R(57, 72, 2, 1, F); return; }
+      P(54, 72, Y); P(55, 72, yy); P(57, 72, Y); P(58, 72, yy);
+      return;
+    }
+    if (c.modo === 'senta') {
+      var x = c.x, y = CHAO - 13;
+      if (pisca) { R(x + 2, y + 4, 2, 1, F); R(x + 7, y + 4, 2, 1, F); return; }
+      P(x + 2, y + 4, Y); P(x + 3, y + 4, yy); P(x + 7, y + 4, Y); P(x + 8, y + 4, yy);
+      return;
+    }
+    var q = c.modo === 'anda' ? [c.x, CHAO - 9] : pulo(c);
+    var dir = c.modo === 'anda' ? c.dir : (c.modo === 'desce' ? 1 : -1);
+    if (!pisca) P(dir >= 0 ? q[0] + 13 : q[0] + 2, q[1] + 2, Y);
+  }
+
+  function desenhaGato(k, f) {
+    var c = GATOS[k];
+    if (c.modo === 'janela') return;
+    if (c.modo === 'desce' || c.modo === 'sobe') { var q = pulo(c); ladoGato(SPR_GATO[k][0], q[0], q[1], c.modo === 'desce' ? 1 : -1); }
+    else if (c.modo === 'anda') ladoGato(SPR_GATO[k][(f >> 1) % 2], c.x, CHAO - 9, c.dir);
+    else if (k === 'mimi') mimiSenta(c.x, CHAO - 15, f);
+    else g.drawImage(LUCI_SENTA, c.x, CHAO - 13);
+    if (k === 'lucifer') olhosLucifer(f);
+  }
+  function coracoes() {
+    st.coracoes.forEach(function (h) { var hx = Math.round(h[0]), hy = Math.round(h[1]); P(hx, hy, '#ff7a9a'); P(hx + 2, hy, '#ff7a9a'); R(hx, hy + 1, 3, 1, '#ff7a9a'); P(hx + 1, hy + 2, '#ff7a9a'); });
+  }
+
+  var FRED_PAL = { e: '#e3a86c', F: '#f0c896', W: '#fbf1e3', K: '#1c1410', L: '#f7e3c6', T: '#fbf1e3', t: '#e6d6bd' };
+  var FRED = [spr([
+    '...e......e.....',
+    '..eFe....eFe....',
+    '..FFFFFFFFFF....',
+    '.FFFFFFFFFFFF...',
+    'FFFKFFFFFFKFFF..',
+    'FFFFFLLLLFFFFF..',
+    'WFFFFLKKLFFFFWt.',
+    'WWFFFFLLFFFFWWTt',
+    'WWWWWWWWWWWWWWTT',
+    '.WWWWWWWWWWWWTTT',
+    '.FWWWWWWWWWWFTT.',
+    '.FFWWWWWWWWFF...',
+    '.FFFFFFFFFFFF...',
+    '..WW......WW....'
+  ], FRED_PAL), spr([
+    '...e......e.....',
+    '..eFe....eFe....',
+    '..FFFFFFFFFF....',
+    '.FFFFFFFFFFFF...',
+    'FFFKFFFFFFKFFFt.',
+    'FFFFFLLLLFFFFFTt',
+    'WFFFFLKKLFFFFWTT',
+    'WWFFFFLLFFFFWWTT',
+    'WWWWWWWWWWWWWWTT',
+    '.WWWWWWWWWWWWTT.',
+    '.FWWWWWWWWWWFT..',
+    '.FFWWWWWWWWFF...',
+    '.FFFFFFFFFFFF...',
+    '..WW......WW....'
+  ], FRED_PAL)];
+  function fred(f) {
+    var pulo = st.fred > 0 ? [0, 2, 3, 2, 0, 0][Math.min(5, (12 - st.fred) % 6)] : 0;
+    var abana = (f >> (st.fred > 0 ? 0 : 2)) % 2;
+    var x = 186, y = 162 - pulo;
+    g.drawImage(FRED[abana], x, y);
+    if (f % 80 < 2) { P(x + 3, y + 4, '#f0c896'); P(x + 10, y + 4, '#f0c896'); }
+    if (st.fred > 8) { P(x - 3, y + 1, '#ffc857'); P(x - 4, y, '#ffc857'); P(x - 2, y, '#ffc857'); }
+  }
+
   function vini(f) {
     var x0 = 145, y0 = 92 + Som.batida();
     var co = '#8e9fa4', cs = '#73858a', ch = '#a9b9bd', cap = '#7f9095', ci = '#56656a', sk = '#e2ab8a';
@@ -1120,6 +1364,7 @@ var Cena = (function () {
     if (liga('pc')) hole(292, 158, 22, .55);
     hole(44, 44, 42, ph === 'dia' ? .9 : .45);
     if (lamp) { hole(32, 104, 50, .95); hole(48, 118, 36, .7); }
+    hole(194, 168, 26, .45);
     L.globalCompositeOperation = 'source-over';
     g.drawImage(Lc, 0, 0);
     g.globalCompositeOperation = 'lighter';
@@ -1166,6 +1411,13 @@ var Cena = (function () {
     cloud: { r: [245, 91, 45, 31] },
     fone: { r: [290, 106, 21, 15] },
     pc: { r: [258, 140, 40, 37] },
+    frodo: { r: [153, 16, 10, 14] },
+    fsenna: { r: [165, 16, 10, 14] },
+    bottas: { r: [177, 16, 10, 14] },
+    f1: { r: [193, 20, 30, 10] },
+    lucifer: { r: [51, 68, 18, 9] },
+    mimi: { r: [24, 107, 15, 16] },
+    fred: { r: [184, 159, 20, 17] },
     vini: { r: [134, 90, 40, 46] },
     racco: { r: [0, 112, 16, 14] }
   };
@@ -1175,18 +1427,22 @@ var Cena = (function () {
     chapeu: T('Chapéu de mago', 'Wizard hat'), planta: T('Planta', 'Plant'), cortica: T('Recados', 'Notes'),
     lampada: T('Luminária', 'Desk lamp'), app: 'Símix Ponto', banditboard: 'Banditboard', senna: 'Senna',
     hud: 'ControlSensors HUD', lata: T('Energético', 'Energy drink'), cloud: 'Símix Ponto Cloud',
-    fone: T('Fone', 'Headphones'), pc: 'PC', vini: T('Eu', 'Me'), racco: 'Racco'
+    fone: T('Fone', 'Headphones'), pc: 'PC', vini: T('Eu', 'Me'), racco: 'Racco',
+    frodo: 'Frodo', fsenna: 'Ayrton Senna', bottas: 'Valtteri Bottas', f1: 'McLaren MP4/4',
+    lucifer: T('Lúcifer', 'Lucifer'), mimi: 'Mimi', fred: 'Fred'
   };
   var PROJ = { banditboard: 'banditboard', senna: 'senna', hud: 'hud', app: 'app', cloud: 'ponto-cloud' };
 
   function draw() {
     var f = st.f, ph = fase(canoas().h);
-    parede(ph); janela(ph, f); poster(f); cortica(f); estante(f);
-    mesa(); luminaria(); celApp(f); celBandit(f); monitorSenna(f); monitorHud(f); notebook(f);
+    parede(ph); janela(ph, f); if (GATOS.lucifer.modo === 'janela') { lucifer(f); olhosLucifer(f); } poster(f); cortica(f); prateleiraAlta(f); estante(f);
+    mesa(); fred(f); luminaria(); celApp(f); celBandit(f); monitorSenna(f); monitorHud(f); notebook(f);
     tapete(); lata(f); fone(); pc(f);
     desenhaRacco(f);
+    desenhaGato('mimi', f); desenhaGato('lucifer', f); coracoes();
     vini(f);
     luz(ph);
+    if (ph === 'noite' || ph === 'tarde') olhosLucifer(f);
     var alvo = st.hover || (st.flashAte > Date.now() ? st.flash : null);
     if (alvo && OBJ[alvo]) formigas(OBJ[alvo].r, f);
   }
@@ -1217,6 +1473,11 @@ var Cena = (function () {
     else if (f % 110 === 60) { st.toast = 60; st.toastX = 40; }
     if (st.appOk > 0) st.appOk--; else if (f % 160 === 100) { st.appOk = 16; st.novo = 30; }
     if (st.novo > 0) st.novo--;
+    if (st.f1 > 0) st.f1--;
+    if (st.mimi > 0) st.mimi--;
+    if (st.lucifer > 0) st.lucifer--;
+    if (st.fred > 0) st.fred--;
+    st.coracoes = st.coracoes.filter(function (h) { h[1] -= .5; h[0] += Math.sin(h[1] / 3) * .3; return h[1] > 92; });
     if (st.aviao >= 0) { st.aviao += .5; if (st.aviao > 64) st.aviao = -1; } else if (f % 420 === 300) st.aviao = 0;
     if (st.farol > 0) st.farol--;
     if (st.poster > 0) st.poster--;
@@ -1240,7 +1501,7 @@ var Cena = (function () {
         if (r.pausa % 25 === 0) r.look = [0, -1, 1][Math.floor(Math.random() * 3)];
       } else if (Math.round(r.x) === r.alvo) {
         r.pausa = Math.floor(rnd(25, 80));
-        var pontos = [24, 50, 74, 118, 186, 214, 222, 270, 296];
+        var pontos = [50, 74, 118, 186, 214, 222, 270, 296];
         r.alvo = pontos[Math.floor(Math.random() * pontos.length)];
       } else {
         r.dir = r.alvo > r.x ? 1 : -1;
@@ -1248,6 +1509,8 @@ var Cena = (function () {
       }
     }
     OBJ.racco.r[0] = Math.round(r.x);
+    gatoUpdate('mimi'); gatoUpdate('lucifer');
+    OBJ.mimi.r = rectGato('mimi'); OBJ.lucifer.r = rectGato('lucifer');
   }
 
   var hots = $('#hots'), tip = $('#sceneTip'), bal = $('#sceneBalao'), balT = null, BTN = {};
@@ -1418,6 +1681,45 @@ var Cena = (function () {
         Som.play('blip');
         balao('planta', T('Sobrevive a deploy de sexta.', 'Survives Friday deploys.'));
         break;
+      case 'mimi':
+        Som.play('purr');
+        st.mimi = 30;
+        var gm = GATOS.mimi; if (gm.modo === 'anda') { gm.modo = 'senta'; gm.pausa = 90; }
+        for (var hm = 0; hm < 3; hm++) st.coracoes.push([gm.x + rnd(1, 10), CHAO - 18 - hm * 4]);
+        conquista('mimi');
+        balao('mimi', T('Mimi. Ela manda na casa. Purrr…', 'Mimi. She runs the house. Purrr…'));
+        break;
+      case 'lucifer':
+        Som.play('miau');
+        st.lucifer = 18;
+        var gl = GATOS.lucifer; if (gl.modo === 'anda') { gl.modo = 'senta'; gl.pausa = 90; }
+        conquista('lucifer');
+        balao('lucifer', T('Lúcifer. Gato preto, olho amarelo, zero arrependimento.', 'Lucifer. Black cat, yellow eyes, zero regrets.'));
+        break;
+      case 'fred':
+        Som.play('au');
+        st.fred = 12;
+        conquista('fred');
+        balao('fred', T('Fred, o spitz alemão. Au! Au!', 'Fred, the German spitz. Woof! Woof!'));
+        break;
+      case 'f1':
+        Som.play('f1');
+        st.f1 = 20;
+        conquista('box');
+        balao('f1', T('McLaren MP4/4, a do Senna em 1988. Montei bloco por bloco. Box, box!', 'McLaren MP4/4, Senna\'s 1988 car. I built it brick by brick. Box, box!'));
+        break;
+      case 'frodo':
+        Som.play('blip');
+        balao('frodo', T('Frodo. Ele também saiu de casa sem saber o tamanho da jornada.', 'Frodo. He also left home not knowing how long the journey was.'));
+        break;
+      case 'fsenna':
+        Som.play('blip');
+        balao('fsenna', T('Ayrton Senna. O ídolo.', 'Ayrton Senna. The legend.'));
+        break;
+      case 'bottas':
+        Som.play('blip');
+        balao('bottas', T('Valtteri Bottas, dos tempos de Mercedes.', 'Valtteri Bottas, from his Mercedes days.'));
+        break;
       case 'cortica':
         Som.play('blip');
         if (!st.postit) {
@@ -1440,7 +1742,7 @@ var Cena = (function () {
     if (ts - ultimo < 1000 / FPS) return;
     ultimo = ts;
     update();
-    posiciona(BTN.racco, OBJ.racco.r);
+    posiciona(BTN.racco, OBJ.racco.r); posiciona(BTN.mimi, OBJ.mimi.r); posiciona(BTN.lucifer, OBJ.lucifer.r);
     draw();
   }
   update(); draw();
@@ -1470,6 +1772,7 @@ var Cena = (function () {
   var podeHover = matchMedia('(hover: hover)').matches;
   return {
     st: st,
+    gatos: GATOS,
     age: age,
     hesoyam: function () {
       st.hesoyam = true;
@@ -1506,7 +1809,7 @@ window.__cena = Cena;
   var PAL = {
     H: '#2b1a12', h: '#4d3123', S: '#efc3a2', s: '#d49c7c', E: '#e2ab8a', K: '#2b1a12', G: '#2e2a33',
     W: '#f5efe8', P: '#2a1a13', N: '#c88e6e', B: '#4a2e20', b: '#6a4433', M: '#c27a6e', n: '#e3b08f', q: '#c9937a',
-    T: '#8e9fa4', t: '#73858a', j: '#a9b9bd', k: '#55646a', X: '#f2f2ee', L: '#ffffff', z: '#ddb194', Z: '#b9907a'
+    T: '#8e9fa4', t: '#73858a', j: '#a9b9bd', k: '#55646a', X: '#f2f2ee', L: '#ffffff', z: '#b98a70', Z: '#6e4a38', Y: '#8c624c'
   };
   var SP = [
     [0, 11, 21, 'H'], [1, 9, 23, 'H'], [2, 7, 25, 'H'], [3, 6, 26, 'H'], [4, 5, 27, 'H'], [5, 5, 27, 'H'], [6, 5, 27, 'H'],
@@ -1520,15 +1823,15 @@ window.__cena = Cena;
     [14, 6, 6, 'E'], [14, 7, 25, 'S'], [14, 26, 26, 'E'], [14, 8, 9, 'G'], [14, 13, 19, 'G'], [14, 23, 24, 'G'],
     [15, 6, 6, 'E'], [15, 7, 25, 'S'], [15, 26, 26, 'E'], [15, 9, 9, 'G'], [15, 13, 13, 'G'], [15, 19, 19, 'G'], [15, 23, 23, 'G'], [15, 10, 12, 'W'], [15, 11, 11, 'P'], [15, 20, 22, 'W'], [15, 21, 21, 'P'],
     [16, 6, 6, 'E'], [16, 7, 25, 'S'], [16, 26, 26, 'E'], [16, 9, 9, 'G'], [16, 13, 13, 'G'], [16, 19, 19, 'G'], [16, 23, 23, 'G'], [16, 16, 16, 's'], [16, 10, 10, 'L'], [16, 20, 20, 'L'],
-    [17, 7, 25, 'S'], [17, 10, 12, 'G'], [17, 20, 22, 'G'], [17, 16, 16, 's'], [17, 7, 8, 'z'], [17, 24, 25, 'z'],
-    [18, 7, 8, 'z'], [18, 9, 23, 'S'], [18, 24, 25, 'z'], [18, 16, 16, 's'],
-    [19, 7, 9, 'z'], [19, 10, 22, 'S'], [19, 23, 25, 'z'], [19, 15, 15, 'N'], [19, 17, 17, 'N'], [19, 16, 16, 's'], [19, 8, 8, 'Z'], [19, 24, 24, 'Z'],
-    [20, 8, 24, 'z'], [20, 12, 12, 'Z'], [20, 14, 14, 'Z'], [20, 16, 16, 'Z'], [20, 18, 18, 'Z'], [20, 20, 20, 'Z'], [20, 9, 9, 'Z'], [20, 23, 23, 'Z'],
-    [21, 8, 24, 'z'], [21, 13, 19, 'M'], [21, 10, 10, 'Z'], [21, 22, 22, 'Z'],
-    [22, 9, 23, 'z'], [22, 10, 10, 'Z'], [22, 13, 13, 'Z'], [22, 16, 16, 'Z'], [22, 19, 19, 'Z'], [22, 22, 22, 'Z'],
-    [23, 10, 22, 'z'], [23, 12, 12, 'Z'], [23, 15, 15, 'Z'], [23, 18, 18, 'Z'], [23, 21, 21, 'Z'],
-    [24, 11, 21, 'z'], [24, 14, 14, 'Z'], [24, 17, 17, 'Z'], [24, 20, 20, 'Z'],
-    [25, 7, 10, 'T'], [25, 11, 12, 'n'], [25, 13, 19, 'z'], [25, 20, 21, 'n'], [25, 22, 25, 'T'], [25, 8, 10, 'j'], [25, 22, 24, 'j'],
+    [17, 7, 25, 'S'], [17, 10, 12, 'G'], [17, 20, 22, 'G'], [17, 16, 16, 's'], [17, 7, 7, 'z'], [17, 25, 25, 'z'],
+    [18, 7, 8, 'Z'], [18, 9, 9, 'z'], [18, 10, 22, 'S'], [18, 23, 23, 'z'], [18, 24, 25, 'Z'], [18, 16, 16, 's'],
+    [19, 7, 9, 'Z'], [19, 10, 10, 'z'], [19, 11, 21, 'S'], [19, 22, 22, 'z'], [19, 23, 25, 'Z'], [19, 15, 15, 'N'], [19, 17, 17, 'N'], [19, 16, 16, 's'], [19, 13, 13, 'z'], [19, 19, 19, 'z'],
+    [20, 8, 24, 'Z'], [20, 10, 10, 'Y'], [20, 22, 22, 'Y'], [20, 15, 17, 'Y'],
+    [21, 8, 24, 'Z'], [21, 13, 19, 'M'], [21, 9, 9, 'Y'], [21, 23, 23, 'Y'],
+    [22, 9, 23, 'Z'], [22, 12, 12, 'Y'], [22, 16, 16, 'Y'], [22, 20, 20, 'Y'],
+    [23, 10, 22, 'Z'], [23, 14, 14, 'Y'], [23, 18, 18, 'Y'],
+    [24, 11, 21, 'Z'], [24, 16, 16, 'Y'],
+    [25, 7, 10, 'T'], [25, 11, 12, 'n'], [25, 13, 19, 'Z'], [25, 20, 21, 'n'], [25, 22, 25, 'T'], [25, 8, 10, 'j'], [25, 22, 24, 'j'],
     [26, 5, 11, 'T'], [26, 12, 20, 'n'], [26, 13, 19, 'q'], [26, 21, 27, 'T'], [26, 6, 9, 'j'], [26, 23, 26, 'j'],
     [27, 3, 29, 'T'], [27, 11, 12, 'k'], [27, 13, 19, 'q'], [27, 20, 21, 'k'],
     [28, 2, 30, 'T'], [28, 12, 20, 'k'], [28, 11, 11, 'X'], [28, 21, 21, 'X'],
