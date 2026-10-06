@@ -223,14 +223,15 @@
               <span class="tag tag-work">Símix · work</span>
             </div>
             <p>The time clock app of the Símix Ponto ecosystem: online and offline with sync, GPS and geofencing, face recognition with Azure Face, biometrics, kiosk mode and protection against fake locations. It has a module for drivers and talks to legacy systems such as PcPonto.</p>
-            <h4>My part</h4>
+            <h4>A few things I have worked on</h4>
             <ul class="feats">
-              <li>Owner of the iOS version and the App Store release.</li>
-              <li>Automated releases to Google Play, TestFlight and the Microsoft Store with GitHub Actions, with automatic versioning.</li>
-              <li>Led the face verification integration, including validation and tests.</li>
-              <li>Wrote most of the API client used by the app (Refit, Polly), published as a NuGet package.</li>
+              <li>The app already existed when I joined. Since 2024 I have led its development, and in 2025 I redesigned the interface to match Símix Ponto Cloud.</li>
+              <li>Face verification at clock-in: per user, in kiosk mode and also validated on the server.</li>
+              <li>Offline clock-in: the punch stays on the device and uploads when the network is back.</li>
+              <li>Employee panel in the app: the days of the period, adding a missing punch, timesheets, documents and signatures.</li>
+              <li>I took over the iOS version: the app only ran on Android and Windows, and I did the port, the testing and the App Store release.</li>
             </ul>
-            <ul class="chips"><li>C#</li><li>.NET MAUI</li><li>SQLite</li><li>Azure Face</li><li>Offline first</li><li>GitHub Actions</li></ul>
+            <ul class="chips"><li>C#</li><li>.NET MAUI</li><li>SQLite</li><li>Azure Face</li><li>Refit</li><li>Offline first</li><li>GitHub Actions</li></ul>
             <div class="links">
               <a class="btn btn-main" href="https://play.google.com/store/apps/details?id=com.simix.ponto.app" target="_blank" rel="noopener noreferrer">Google Play <span aria-hidden="true">↗</span></a>
               <a class="btn btn-ghost" href="https://apps.apple.com/us/app/s%C3%ADmix-ponto/id6454298944" target="_blank" rel="noopener noreferrer">App Store <span aria-hidden="true">↗</span></a>
@@ -285,18 +286,19 @@
               <span class="tag tag-work">Símix · work</span>
             </div>
             <p>The cloud platform behind the app and the time clocks: workforce time management for companies in many industries, from supermarkets to trucking. It automates time tracking, schedules and days off and the hour bank, with a manager portal and an employee portal, and integrates with certified time clocks and the main payroll systems.</p>
-            <ul class="chips"><li>.NET</li><li>ABP Framework</li><li>Blazor</li><li>PostgreSQL</li><li>Multitenant</li><li>Azure</li></ul>
+            <ul class="chips"><li>.NET</li><li>ABP Framework</li><li>Blazor</li><li>WebAssembly</li><li>MudBlazor</li><li>PostgreSQL</li><li>Hangfire</li><li>Multitenant</li><li>Azure</li></ul>
             <div class="links">
               <a class="btn btn-main" href="https://simix.com.br/sistema/" target="_blank" rel="noopener noreferrer">See the product <span aria-hidden="true">↗</span></a>
             </div>
           </div>
           <div class="quest-body quest-side">
-            <h4>My part</h4>
+            <h4>A few things I have worked on</h4>
             <ul class="feats">
-              <li>I'm part of the team that builds the platform, from backend to UI.</li>
-              <li>Led the front-end migration from Blazor Server to WebAssembly: the bundle went from 39 MB to 16 MB.</li>
-              <li>Timesheets with PDF and electronic signature, payroll export, bulk approvals and offline clock-in with a PWA.</li>
-              <li>Automated tests with xUnit and Playwright that run on every deploy.</li>
+              <li>I build the dashboards and reports library: configurable widgets, global filters, the punch map and the timesheet PDF.</li>
+              <li>Timesheet with electronic signature: the PDF got 28 times smaller, and batch generation dropped from 6 minutes to under 1.</li>
+              <li>I migrated the front end from Blazor Server to WebAssembly.</li>
+              <li>I took part in migrating the time calculation engine to .NET: hour bank, payroll export and tax files.</li>
+              <li>Real-time notifications and alert rules, by site, email and app.</li>
             </ul>
           </div>
           <div class="quest-demo quest-full">
@@ -331,7 +333,7 @@
 
           <div class="about">
             <p class="lead">I'm a C# and .NET developer at Símix Sistemas. I joined in 2020 as a support intern, setting up time clocks, and got here self-taught, straight from the docs and practice.</p>
-            <p>I work from the database to the UI on Símix Ponto Cloud, a multitenant SaaS platform built with ABP Framework, Blazor, PostgreSQL and Azure, and on the Símix Ponto app in .NET MAUI, published on Google Play and the App Store. I led the front-end migration to Blazor WebAssembly, automated the app's store releases and took part in migrating the legacy VB6 system to .NET.</p>
+            <p>I work from the database to the UI on Símix Ponto Cloud, a multitenant SaaS platform built with ABP Framework, Blazor, PostgreSQL and Azure, and on the Símix Ponto app in .NET MAUI, published on Google Play and the App Store. I migrated the front end to Blazor WebAssembly, took over the iOS version of the app and took part in migrating the legacy VB6 system to .NET.</p>
             <p>I like performance, automated tests and automating whatever repeats. In my free time, I build the tools I use myself.</p>
             <div class="perks">
               <div class="perk"><span class="perk-k">Special move</span><p>Some ideas are useful. Others… I just wanted to see them working.</p></div>
