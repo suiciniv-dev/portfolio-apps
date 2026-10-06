@@ -162,56 +162,25 @@
           </div>
         </article>
 
-        <article class="quest" id="senna">
+        <article class="quest quest-wide" id="senna">
           <div class="quest-body">
             <div class="quest-head">
               <canvas class="quest-ico" data-ico="senna" aria-hidden="true"></canvas>
               <div>
                 <h3>Senna</h3>
-                <p class="sub">O assistente do meu Windows · v1 em Python, v2 em C#</p>
+                <p class="sub">O assistente do meu Windows · C# e WinUI 3</p>
               </div>
               <span class="tag tag-me">Projeto pessoal</span>
             </div>
-            <p><b>A v1 falava.</b> Eu chamava pelo nome, pedia em português e ela resolvia: reconhecimento de fala, respostas por LLM (Gemini, Claude e Ollama), voz sintetizada e integração com Spotify e Microsoft por OAuth 2.0. Eram umas 8 mil linhas de Python, e pesava: 682 MB de memória, com a esfera animada comendo 57% de CPU.</p>
-            <p><b>A v2 trabalha calada.</b> Em setembro de 2026 eu reescrevi tudo em C# com WinUI 3 e tirei o que eu não usava. Ficou um painel do dia e avisos do Windows quando chega PR para revisar, issue nova, merge, reunião, lembrete, chuva ou limite do Claude. E ficou a memória: o Claude Code grava ali as decisões, os motivos e onde parou, e lê tudo de volta na sessão seguinte.</p>
-            <ul class="chips"><li>C#</li><li>.NET 10</li><li>WinUI 3</li><li>SQLite</li><li>API local</li><li>Python (v1)</li><li>LLMs (v1)</li></ul>
+            <p><b>Trabalha calado.</b> Feito em C# com WinUI 3, mostra um painel do dia e manda avisos do Windows quando chega PR para revisar, issue nova, merge, reunião, lembrete, chuva ou limite do Claude. E guarda a memória: o Claude Code grava ali as decisões, os motivos e onde parou, e lê tudo de volta na sessão seguinte.</p>
+          </div>
+          <div class="quest-body quest-side">
+            <ul class="chips"><li>C#</li><li>.NET 10</li><li>WinUI 3</li><li>SQLite</li><li>API local</li></ul>
             <p class="note"><b>Sem download.</b> Foi feito para uma máquina só, a minha. Está aqui como construção, não como produto.</p>
           </div>
-          <div class="quest-demo">
-            <div class="tabs" role="tablist" aria-label="Versões do Senna">
-              <button type="button" role="tab" id="tabV1" aria-selected="false" aria-controls="sennaV1" tabindex="-1">v1 · falava</button>
-              <button type="button" role="tab" id="tabV2" aria-selected="true" aria-controls="sennaV2">v2 · trabalha calada</button>
-            </div>
-            <div class="senna-v2" id="sennaV2" role="tabpanel" aria-labelledby="tabV2">
-              <div class="desk-win">
-                <div class="sn-panel" aria-hidden="true">
-                  <div class="sn-h"><i>S</i>Senna <span>· hoje</span></div>
-                  <ul>
-                    <li><b>09:00</b>daily do time</li>
-                    <li><b>2</b>PRs para revisar</li>
-                    <li><b id="snTemp">16°</b>Canoas agora</li>
-                    <li><b>64%</b>Claude na semana</li>
-                  </ul>
-                  <div class="sn-mem">memória · 3 decisões, 1 handoff</div>
-                </div>
-                <div class="toasts-demo" id="sennaToasts" aria-live="polite"></div>
-                <div class="taskbar"><i></i><i></i><i></i><span id="sennaRelogio">08:55</span></div>
-              </div>
-              <p class="demo-cap">Um dia comum, em 20 segundos.</p>
-            </div>
-            <div class="senna-v1" id="sennaV1" role="tabpanel" aria-labelledby="tabV1" hidden>
-              <div class="orb-box">
-                <canvas id="orb" width="40" height="40" aria-hidden="true"></canvas>
-                <p class="orb-state" id="orbEstado">Em repouso</p>
-                <p class="orb-fala" id="orbFala" aria-live="polite">&nbsp;</p>
-              </div>
-              <div class="cmds" id="orbCmds">
-                <button type="button" class="cmd" data-fala="Tem 3 PRs esperando o seu review. Abrindo.">hey senna, meus PRs</button>
-                <button type="button" class="cmd" data-fala="Amanhã tem chuva a partir das 15 horas.">vai chover amanhã?</button>
-                <button type="button" class="cmd" data-fala="Tocando a sua playlist.">toca a playlist</button>
-                <button type="button" class="cmd" data-fala="@hora">que horas são?</button>
-              </div>
-            </div>
+          <div class="quest-demo quest-full">
+            <div class="sw" id="sennaWin" role="region" aria-label="Simulação do Senna"></div>
+            <p class="demo-cap">Uma simulação do Senna, com dados de exemplo. Arraste os nós do mapa, troque de tela na barra lateral e desligue avisos nos ajustes: o dia passa e ele só fala o que você deixou.</p>
           </div>
         </article>
 
@@ -305,7 +274,7 @@
           </div>
         </article>
 
-        <article class="quest quest-work" id="ponto-cloud">
+        <article class="quest quest-work quest-wide" id="ponto-cloud">
           <div class="quest-body">
             <div class="quest-head">
               <canvas class="quest-ico" data-ico="cloud" aria-hidden="true"></canvas>
@@ -316,6 +285,12 @@
               <span class="tag tag-work">Símix · trabalho</span>
             </div>
             <p>A plataforma na nuvem por trás do app e dos relógios de ponto: gestão de jornada para empresas de vários segmentos, do supermercado à transportadora. Automatiza o registro de jornada, as escalas e folgas e o banco de horas, com portal do gestor e portal do colaborador, e integra com relógios homologados e com os principais sistemas de folha.</p>
+            <ul class="chips"><li>.NET</li><li>ABP Framework</li><li>Blazor</li><li>PostgreSQL</li><li>Multitenant</li><li>Azure</li></ul>
+            <div class="links">
+              <a class="btn btn-main" href="https://simix.com.br/sistema/" target="_blank" rel="noopener noreferrer">Conhecer o produto <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+          <div class="quest-body quest-side">
             <h4>Minha parte</h4>
             <ul class="feats">
               <li>Faço parte do time que desenvolve a plataforma, do backend à interface.</li>
@@ -323,22 +298,10 @@
               <li>Espelho de ponto com PDF e assinatura eletrônica, exportação para folha, aprovações em lote e ponto offline com PWA.</li>
               <li>Testes automatizados com xUnit e Playwright, que rodam a cada deploy.</li>
             </ul>
-            <ul class="chips"><li>.NET</li><li>ABP Framework</li><li>Blazor</li><li>PostgreSQL</li><li>Multitenant</li><li>Azure</li></ul>
-            <div class="links">
-              <a class="btn btn-main" href="https://simix.com.br/sistema/" target="_blank" rel="noopener noreferrer">Conhecer o produto <span aria-hidden="true">↗</span></a>
-            </div>
           </div>
-          <div class="quest-demo">
-            <div class="tenants">
-              <div class="tn-pick" role="group" aria-label="Escolha uma empresa">
-                <button type="button" data-tn="mercado" aria-pressed="true">Supermercado</button>
-                <button type="button" data-tn="transp" aria-pressed="false">Transportadora</button>
-                <button type="button" data-tn="fabrica" aria-pressed="false">Indústria</button>
-              </div>
-              <canvas class="tn-city" id="tnCity" width="160" height="56" aria-hidden="true"></canvas>
-              <div class="tn-mods" id="tnMods"></div>
-              <p class="demo-cap" id="tnCap">&nbsp;</p>
-            </div>
+          <div class="quest-demo quest-full">
+            <div class="cw" id="cloudWin" role="region" aria-label="Simulação do portal Símix Ponto Cloud"></div>
+            <p class="demo-cap">Uma simulação do portal, com empresas e pessoas inventadas. Troque de empresa no topo, navegue pelo menu e recolha os cartões. O ponto que você bater no app ali em cima chega aqui.</p>
           </div>
         </article>
       </div>

@@ -162,56 +162,25 @@
           </div>
         </article>
 
-        <article class="quest" id="senna">
+        <article class="quest quest-wide" id="senna">
           <div class="quest-body">
             <div class="quest-head">
               <canvas class="quest-ico" data-ico="senna" aria-hidden="true"></canvas>
               <div>
                 <h3>Senna</h3>
-                <p class="sub">My Windows assistant · v1 in Python, v2 in C#</p>
+                <p class="sub">My Windows assistant · C# and WinUI 3</p>
               </div>
               <span class="tag tag-me">Side project</span>
             </div>
-            <p><b>v1 talked.</b> I called it by name, asked in Portuguese and it got things done: speech recognition, LLM answers (Gemini, Claude and Ollama), synthesized voice and Spotify and Microsoft integrations over OAuth 2.0. About 8,000 lines of Python, and it was heavy: 682 MB of memory, with the animated orb eating 57% of the CPU.</p>
-            <p><b>v2 works quietly.</b> In September 2026 I rewrote it in C# with WinUI 3 and dropped what I didn't use. What stayed is a daily panel and Windows notifications for PRs to review, new issues, merges, meetings, reminders, rain and Claude limits. And the memory stayed: Claude Code saves decisions, reasons and where it stopped, and reads it all back in the next session.</p>
-            <ul class="chips"><li>C#</li><li>.NET 10</li><li>WinUI 3</li><li>SQLite</li><li>Local API</li><li>Python (v1)</li><li>LLMs (v1)</li></ul>
+            <p><b>It works quietly.</b> Built in C# with WinUI 3, it shows a daily panel and sends Windows notifications for PRs to review, new issues, merges, meetings, reminders, rain and Claude limits. And it keeps the memory: Claude Code saves decisions, reasons and where it stopped, and reads it all back in the next session.</p>
+          </div>
+          <div class="quest-body quest-side">
+            <ul class="chips"><li>C#</li><li>.NET 10</li><li>WinUI 3</li><li>SQLite</li><li>Local API</li></ul>
             <p class="note"><b>No download.</b> It was made for a single machine: mine. It's here as a build, not as a product.</p>
           </div>
-          <div class="quest-demo">
-            <div class="tabs" role="tablist" aria-label="Senna versions">
-              <button type="button" role="tab" id="tabV1" aria-selected="false" aria-controls="sennaV1" tabindex="-1">v1 · talked</button>
-              <button type="button" role="tab" id="tabV2" aria-selected="true" aria-controls="sennaV2">v2 · works quietly</button>
-            </div>
-            <div class="senna-v2" id="sennaV2" role="tabpanel" aria-labelledby="tabV2">
-              <div class="desk-win">
-                <div class="sn-panel" aria-hidden="true">
-                  <div class="sn-h"><i>S</i>Senna <span>· today</span></div>
-                  <ul>
-                    <li><b>09:00</b>team daily</li>
-                    <li><b>2</b>PRs to review</li>
-                    <li><b id="snTemp">16°</b>Canoas now</li>
-                    <li><b>64%</b>Claude this week</li>
-                  </ul>
-                  <div class="sn-mem">memory · 3 decisions, 1 handoff</div>
-                </div>
-                <div class="toasts-demo" id="sennaToasts" aria-live="polite"></div>
-                <div class="taskbar"><i></i><i></i><i></i><span id="sennaRelogio">08:55</span></div>
-              </div>
-              <p class="demo-cap">A regular day, in 20 seconds.</p>
-            </div>
-            <div class="senna-v1" id="sennaV1" role="tabpanel" aria-labelledby="tabV1" hidden>
-              <div class="orb-box">
-                <canvas id="orb" width="40" height="40" aria-hidden="true"></canvas>
-                <p class="orb-state" id="orbEstado">Idle</p>
-                <p class="orb-fala" id="orbFala" aria-live="polite">&nbsp;</p>
-              </div>
-              <div class="cmds" id="orbCmds">
-                <button type="button" class="cmd" data-fala="Tem 3 PRs esperando o seu review. Abrindo.">hey senna, my PRs</button>
-                <button type="button" class="cmd" data-fala="Amanhã tem chuva a partir das 15 horas.">will it rain tomorrow?</button>
-                <button type="button" class="cmd" data-fala="Tocando a sua playlist.">play my playlist</button>
-                <button type="button" class="cmd" data-fala="@hora">what time is it?</button>
-              </div>
-            </div>
+          <div class="quest-demo quest-full">
+            <div class="sw" id="sennaWin" role="region" aria-label="Senna simulation"></div>
+            <p class="demo-cap">A simulation of Senna with sample data. Drag the map nodes, switch screens in the sidebar and turn alerts off in the settings: the day goes by and it only speaks up about what you allowed.</p>
           </div>
         </article>
 
@@ -305,7 +274,7 @@
           </div>
         </article>
 
-        <article class="quest quest-work" id="ponto-cloud">
+        <article class="quest quest-work quest-wide" id="ponto-cloud">
           <div class="quest-body">
             <div class="quest-head">
               <canvas class="quest-ico" data-ico="cloud" aria-hidden="true"></canvas>
@@ -316,6 +285,12 @@
               <span class="tag tag-work">Símix · work</span>
             </div>
             <p>The cloud platform behind the app and the time clocks: workforce time management for companies in many industries, from supermarkets to trucking. It automates time tracking, schedules and days off and the hour bank, with a manager portal and an employee portal, and integrates with certified time clocks and the main payroll systems.</p>
+            <ul class="chips"><li>.NET</li><li>ABP Framework</li><li>Blazor</li><li>PostgreSQL</li><li>Multitenant</li><li>Azure</li></ul>
+            <div class="links">
+              <a class="btn btn-main" href="https://simix.com.br/sistema/" target="_blank" rel="noopener noreferrer">See the product <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+          <div class="quest-body quest-side">
             <h4>My part</h4>
             <ul class="feats">
               <li>I'm part of the team that builds the platform, from backend to UI.</li>
@@ -323,22 +298,10 @@
               <li>Timesheets with PDF and electronic signature, payroll export, bulk approvals and offline clock-in with a PWA.</li>
               <li>Automated tests with xUnit and Playwright that run on every deploy.</li>
             </ul>
-            <ul class="chips"><li>.NET</li><li>ABP Framework</li><li>Blazor</li><li>PostgreSQL</li><li>Multitenant</li><li>Azure</li></ul>
-            <div class="links">
-              <a class="btn btn-main" href="https://simix.com.br/sistema/" target="_blank" rel="noopener noreferrer">See the product <span aria-hidden="true">↗</span></a>
-            </div>
           </div>
-          <div class="quest-demo">
-            <div class="tenants">
-              <div class="tn-pick" role="group" aria-label="Pick a company">
-                <button type="button" data-tn="mercado" aria-pressed="true">Supermarket</button>
-                <button type="button" data-tn="transp" aria-pressed="false">Trucking</button>
-                <button type="button" data-tn="fabrica" aria-pressed="false">Factory</button>
-              </div>
-              <canvas class="tn-city" id="tnCity" width="160" height="56" aria-hidden="true"></canvas>
-              <div class="tn-mods" id="tnMods"></div>
-              <p class="demo-cap" id="tnCap">&nbsp;</p>
-            </div>
+          <div class="quest-demo quest-full">
+            <div class="cw" id="cloudWin" role="region" aria-label="Símix Ponto Cloud portal simulation"></div>
+            <p class="demo-cap">A simulation of the portal, with made-up companies and people. Switch companies at the top, browse the menu and collapse the cards. The punch you clock on the app above shows up here.</p>
           </div>
         </article>
       </div>

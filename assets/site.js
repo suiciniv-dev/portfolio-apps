@@ -33,13 +33,14 @@ function canoas() {
 
 var clima = store.get('clima', null);
 (function () {
-  if (clima && Date.now() - clima.t < 30 * 60e3) return;
+  if (clima && clima.max != null && Date.now() - clima.t < 30 * 60e3) return;
   if (!window.fetch) return;
-  fetch('https://api.open-meteo.com/v1/forecast?latitude=-29.92&longitude=-51.18&current=temperature_2m,weather_code&timezone=America%2FSao_Paulo')
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=-29.92&longitude=-51.18&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&forecast_days=1&timezone=America%2FSao_Paulo')
     .then(function (r) { return r.json(); })
     .then(function (j) {
       if (!j || !j.current) return;
       clima = { t: Date.now(), temp: Math.round(j.current.temperature_2m), code: j.current.weather_code };
+      if (j.daily && j.daily.temperature_2m_max) { clima.max = Math.round(j.daily.temperature_2m_max[0]); clima.min = Math.round(j.daily.temperature_2m_min[0]); }
       store.set('clima', clima);
     })
     .catch(function () {});
@@ -2028,94 +2029,629 @@ window.__cena = Cena;
 })();
 
 (function () {
-  var t1 = $('#tabV1'), t2 = $('#tabV2'), p1 = $('#sennaV1'), p2 = $('#sennaV2');
-  if (!t1) return;
-  function aba(v) {
-    var um = v === 1;
-    t1.setAttribute('aria-selected', um); t2.setAttribute('aria-selected', !um);
-    t1.tabIndex = um ? 0 : -1; t2.tabIndex = um ? -1 : 0;
-    p1.hidden = !um; p2.hidden = um;
-    Som.play('blip');
-  }
-  t1.addEventListener('click', function () { aba(1); });
-  t2.addEventListener('click', function () { aba(2); });
-  [t1, t2].forEach(function (t) { t.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { var v = t === t1 ? 2 : 1; aba(v); (v === 1 ? t1 : t2).focus(); } }); });
-
-  var box = $('#sennaToasts'), rel = $('#sennaRelogio');
-  var DIA = [
-    ['08:57', T('Reunião em 3 minutos', 'Meeting in 3 minutes'), T('Daily do time. O link já está no Teams.', 'Team daily. The link is in Teams.')],
-    ['09:40', T('PR para revisar', 'PR to review'), T('Chegou um PR novo esperando a sua revisão.', 'A new PR is waiting for your review.')],
-    ['11:12', T('Merge feito', 'Merged'), T('O seu PR foi aprovado e entrou na main.', 'Your PR was approved and merged into main.')],
-    ['14:30', T('Vai chover', 'Rain ahead'), T('Chuva às 17h em Canoas. Leva o guarda-chuva.', 'Rain at 5 PM in Canoas. Take an umbrella.')],
-    ['16:05', T('Limite do Claude', 'Claude limit'), T('85% da semana usada. Libera quinta às 9h.', '85% of the week used. Resets Thursday at 9 AM.')],
-    ['18:00', T('Lembrete', 'Reminder'), T('Bater o ponto.', 'Clock out.')]
-  ];
-  var i = 0, timer = null, vis = false;
-  function passo() {
-    if (!vis || p2.hidden) { timer = setTimeout(passo, 1200); return; }
-    if (i >= DIA.length) {
-      $$('.toast-d', box).forEach(function (t) { t.classList.add('sai'); });
-      setTimeout(function () { box.innerHTML = ''; rel.textContent = '08:55'; }, 400);
-      i = 0; timer = setTimeout(passo, 2600); return;
-    }
-    var d = DIA[i++], tp = $('#snTemp');
-    if (tp && clima) tp.textContent = clima.temp + '°';
-    rel.textContent = d[0];
-    var el = document.createElement('div');
-    el.className = 'toast-d';
-    el.innerHTML = '<i>S</i><b>' + esc(d[1]) + '<span>Senna · ' + d[0] + '</span></b><p>' + esc(d[2]) + '</p>';
-    box.appendChild(el);
-    var all = $$('.toast-d', box);
-    if (all.length > 3) { var v = all[0]; v.classList.add('sai'); setTimeout(function () { v.remove(); }, 320); }
-    timer = setTimeout(passo, 3300);
-  }
-  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { vis = es[0].isIntersecting; }, { threshold: .3 }).observe(p2.parentNode);
-  else vis = true;
-  passo();
-
-  var cv = $('#orb'), c = cv.getContext('2d'), estado = $('#orbEstado'), falaEl = $('#orbFala');
-  var EST = {
-    idle: [[47, 191, 99], T('Em repouso', 'Idle'), .8],
-    ouvindo: [[57, 255, 20], T('Ouvindo', 'Listening'), 1.4],
-    pensando: [[255, 176, 32], T('Pensando', 'Thinking'), 1],
-    falando: [[56, 189, 248], T('Falando', 'Speaking'), 1.2]
+  var win = $('#sennaWin');
+  if (!win) return;
+  function q(s) { return $(s, win); }
+  function ic(d) { return '<svg viewBox="0 0 24 24" aria-hidden="true">' + d + '</svg>'; }
+  function hhmm(m) { m = ((m % 1440) + 1440) % 1440; return pad(Math.floor(m / 60)) + ':' + pad(m % 60); }
+  function dur(x) { var h = Math.floor(x / 60), m = x % 60; return h ? h + ' h ' + pad(m) : m + ' min'; }
+  var MONO = '"Cascadia Mono","Cascadia Code",Consolas,ui-monospace,monospace', SANS = '"Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,sans-serif';
+  var I = {
+    home: '<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-5h4v5"/>',
+    mem: '<path d="M4.5 4h4v16h-4zM10 4h4v16h-4z"/><path d="m15.6 5.3 3.9-1 3.6 15.4-3.9 1z"/>',
+    trab: '<path d="M12 3.5 21 8l-9 4.5L3 8z"/><path d="m3 12.5 9 4.5 9-4.5M3 16.5 12 21l9-4.5"/>',
+    avisos: '<path d="M3 12h4l2.5-7 5 14 2.5-7h4"/>',
+    ajustes: '<circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/>',
+    sino: '<path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 1.5h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
+    sol: '<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3 7 7M17 17l1.7 1.7M5.3 18.7 7 17M17 7l1.7-1.7"/>',
+    nuvem: '<path d="M7 18h10a4 4 0 0 0 .4-8A6 6 0 0 0 6 11a3.5 3.5 0 0 0 1 7z"/>',
+    chuva: '<path d="M7 14.5h10a4 4 0 0 0 .4-8A6 6 0 0 0 6 7.5a3.5 3.5 0 0 0 1 7z"/><path d="m8.5 18-1 2.5M12.5 18l-1 2.5M16.5 18l-1 2.5"/>',
+    lua: '<path d="M19 14.5A7.5 7.5 0 0 1 9.5 5a7.5 7.5 0 1 0 9.5 9.5z"/>'
   };
-  var atual = 'idle', fr = 0, roteiro = [];
-  function orb() {
-    fr++;
-    var e = EST[atual], col = e[0];
-    c.clearRect(0, 0, 40, 40);
-    var r = 11 + Math.sin(fr / (atual === 'pensando' ? 2 : 5)) * e[2] * 1.5;
-    for (var y = 0; y < 40; y++) for (var x = 0; x < 40; x++) {
-      var dx = x - 19.5, dy = y - 19.5, d = Math.sqrt(dx * dx + dy * dy);
-      var ang = Math.atan2(dy, dx), wob = Math.sin(ang * 5 + fr / 3) * (atual === 'falando' ? 1.6 : .7);
-      if (d < r + wob) {
-        var k = 1 - d / (r + 2);
-        var a = Math.max(.15, k);
-        if (((x + y + (fr >> 1)) % 4 === 0) && d > r - 4) a = 1;
-        c.fillStyle = 'rgba(' + col[0] + ',' + col[1] + ',' + col[2] + ',' + a.toFixed(2) + ')';
-        c.fillRect(x, y, 1, 1);
-      } else if (d < r + 4 + wob && ((x * 7 + y * 3 + fr) % 9 === 0)) {
-        c.fillStyle = 'rgba(' + col[0] + ',' + col[1] + ',' + col[2] + ',.5)';
-        c.fillRect(x, y, 1, 1);
+
+  var OCULTO = T('nome oculto na demo', 'name hidden in the demo');
+  var REPOS = [['senna', 'Senna'], ['clima', 'Canoas', 'clima'], ['band', 'Banditboard'], ['trab', T('trabalho', 'work')], ['port', 'portfolio-apps'], ['agenda', T('agenda', 'calendar'), 'agenda'], ['hud', 'ControlSensors'], ['perfil', 'suiciniv-dev']];
+  var NOTAS = {
+    senna: [T('decisão · C# com WinUI 3', 'decision · C# with WinUI 3'), T('decisão · avisos só do que importa', 'decision · alerts only for what matters'), T('descoberta · chat grande com cache frio sai caro', 'finding · a huge chat on a cold cache is expensive'), T('decisão · um handoff por branch', 'decision · one handoff per branch'), T('descoberta · texto com cara de ordem é selado', 'finding · text that looks like an order gets sealed'), T('decisão · memória em SQLite', 'decision · memory in SQLite'), T('descoberta · o mapa precisa de âncoras', 'finding · the map needs anchors'), T('handoff · mapa com zoom', 'handoff · map with zoom')],
+    band: [T('decisão · sem token no celular', 'decision · no token on the phone'), T('decisão · paridade entre plataformas', 'decision · platform parity'), T('decisão · issues em português', 'decision · issues in Portuguese'), T('decisão · o Racco sua perto do limite', 'decision · Racco sweats near the limit'), T('handoff · release 1.17', 'handoff · release 1.17')],
+    port: [T('handoff · main', 'handoff · main'), T('descoberta · a Pixelify fazia o C parecer O', 'finding · Pixelify made the C look like an O'), T('descoberta · String.replace e o $\'', 'finding · String.replace and $\''), T('decisão · Fred é só Fred', 'decision · Fred is just Fred'), T('decisão · projetos são do tempo livre', 'decision · side projects are free time'), T('descoberta · Raccos quentes saíam do celular', 'finding · hot Raccos escaped the phone')],
+    hud: [T('decisão · código aberto', 'decision · open source'), T('descoberta · cada placa chama o sensor de um jeito', 'finding · every board names its sensors differently')],
+    perfil: [T('decisão · README em inglês com bloco em PT', 'decision · README in English with a PT block'), T('decisão · capa animada', 'decision · animated cover'), T('descoberta · o GIF da mesa cabe em 96 quadros', 'finding · the desk GIF fits in 96 frames')]
+  };
+  var ESPERA0 = [
+    { id: 'e1', repo: 'trab', t: T('PR do time para revisar', 'Team PR to review'), s: T('trabalho · ', 'work · ') + OCULTO },
+    { id: 'e2', repo: 'hud', t: T('Bump actions/checkout de 4 para 5', 'Bump actions/checkout from 4 to 5'), s: 'ControlSensors · dependabot' }
+  ];
+  var ESPERA_NOVO = { id: 'e3', repo: 'band', t: T('Bump actions/setup-java de 4 para 5', 'Bump actions/setup-java from 4 to 5'), s: 'Banditboard · dependabot' };
+  var PRS0 = [
+    { id: 'p1', repo: 'band', t: T('Resumo de cota do Antigravity', 'Antigravity quota summary'), s: 'Banditboard', st: 'ok' },
+    { id: 'p2', repo: 'senna', t: T('Mapa com zoom e foco', 'Map with zoom and focus'), s: 'Senna', st: '' },
+    { id: 'p3', repo: 'port', t: T('Cursor em pixel art', 'Pixel art cursor'), s: 'portfolio-apps', st: 'draft' },
+    { id: 'p4', repo: 'trab', t: T('PR seu no trabalho', 'Your PR at work'), s: T('trabalho · ', 'work · ') + OCULTO, st: 'ok' }
+  ];
+  var ISS0 = [
+    { id: 'i2', repo: 'hud', t: T('Mostrar a temperatura do SSD', 'Show the SSD temperature'), s: 'ControlSensors' },
+    { id: 'i3', repo: 'trab', t: T('Issue do trabalho', 'Work issue'), s: T('trabalho · ', 'work · ') + OCULTO }
+  ];
+  var ISS_NOVA = { id: 'i1', repo: 'band', t: T('Widget do Windows com tema claro', 'Light theme for the Windows widget'), s: 'Banditboard' };
+  var AG = [[540, 'Daily'], [960, T('Planejamento', 'Planning')]];
+  var DIAS = T(['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'], ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']);
+  var EV = [
+    [537, 'reuniao', T('Reunião em 3 minutos', 'Meeting in 3 minutes'), T('Daily do time. O link está no Teams.', 'Team daily. The link is in Teams.')],
+    [582, 'pr', T('PR para revisar', 'PR to review'), T('O dependabot abriu um PR no Banditboard.', 'Dependabot opened a PR on Banditboard.'), function () { add('espera', ESPERA_NOVO); }],
+    [672, 'merge', T('Merge feito', 'Merged'), T('Resumo de cota do Antigravity entrou na main.', 'Antigravity quota summary is in main.'), function () { del('prs', 'p1'); }],
+    [801, 'issue', T('Issue nova', 'New issue'), T('Widget do Windows com tema claro, no Banditboard.', 'Light theme for the Windows widget, on Banditboard.'), function () { add('iss', ISS_NOVA); }],
+    [870, 'chuva', T('Vai chover', 'Rain ahead'), T('Chuva às 17h em Canoas. Leva o guarda-chuva.', 'Rain at 5 PM in Canoas. Take an umbrella.'), function () { S.chuva = 82; }],
+    [957, 'reuniao', T('Reunião em 3 minutos', 'Meeting in 3 minutes'), T('Planejamento. O link está no Teams.', 'Planning. The link is in Teams.')],
+    [966, 'limite', T('Limite do Claude', 'Claude limit'), T('85% da semana usada. Libera quinta às 9h.', '85% of the week used. Resets Thursday at 9 AM.'), function () { S.semana = 85; }],
+    [1080, 'lembrete', T('Lembrete', 'Reminder'), T('Bater o ponto. O app está logo ali embaixo.', 'Clock out. The app is right below.'), null, '#app']
+  ];
+  var TIPOS = [['pr', T('PR para revisar', 'PR to review')], ['issue', T('Issue nova', 'New issue')], ['merge', 'Merge'], ['reuniao', T('Reunião', 'Meeting')], ['lembrete', T('Lembrete', 'Reminder')], ['chuva', T('Chuva', 'Rain')], ['limite', T('Limite do Claude', 'Claude limit')]];
+  var FONTES = [['GitHub', 3], [T('Calendário do Teams', 'Teams calendar'), 7], ['Open-Meteo', 11], ['E-mail', 5], ['Claude Code', 1]];
+  var MEM = [
+    ['hand', 'Handoff: main', 'portfolio-apps', T('hoje', 'today'), T('Mesa publicada. Próximo passo: deixar o Senna e o Cloud interativos e trocar o cursor por um em pixel art.', 'Desk published. Next step: make Senna and the Cloud interactive and swap the cursor for a pixel art one.')],
+    ['dec', T('Por que C#', 'Why C#'), 'Senna', T('há 1 semana', '1 week ago'), T('Com WinUI 3 ele abre na hora, fica leve e fala direto com os avisos do Windows.', 'With WinUI 3 it opens instantly, stays light and talks straight to Windows notifications.')],
+    ['des', T('Retomar chat grande custa caro', 'Resuming a huge chat is expensive'), 'Senna', T('há 6 dias', '6 days ago'), T('Com o cache frio, reabrir uma conversa enorme sai caro antes da primeira pergunta. Um handoff curto deixa o chat novo começar sabendo onde parou.', 'On a cold cache, reopening a huge conversation costs a lot before the first question. A short handoff lets a new chat start knowing where things stopped.')],
+    ['dec', T('Sem token no celular', 'No token on the phone'), 'Banditboard', T('há 2 semanas', '2 weeks ago'), T('O celular nunca vê o token. Um hook no PC lê o uso e manda só o resumo, cifrado.', 'The phone never sees the token. A hook on the PC reads the usage and sends only the summary, encrypted.')],
+    ['des', T('A Pixelify fazia o C parecer O', 'Pixelify made the C look like an O'), 'portfolio-apps', T('ontem', 'yesterday'), T('No título, "C#" virava "O#". Troquei pela Jersey 10.', 'In the title, "C#" turned into "O#". I switched to Jersey 10.')],
+    ['dec', T('Avisos só do que importa', 'Alerts only for what matters'), 'Senna', T('há 1 semana', '1 week ago'), T('PR para revisar, merge, reunião, chuva e limite do Claude. O resto fica no painel, calado.', 'PR to review, merge, meeting, rain and Claude limit. The rest stays on the dashboard, quietly.')],
+    ['des', T('String.replace e o $\'', 'String.replace and $\''), 'portfolio-apps', T('ontem', 'yesterday'), T('No texto de troca do JavaScript, $\' e $$ viram padrões. Para injetar código, split e join.', 'In a JavaScript replacement string, $\' and $$ are patterns. To inject code, use split and join.')],
+    ['dec', T('Paridade entre plataformas', 'Platform parity'), 'Banditboard', T('há 3 semanas', '3 weeks ago'), T('Antes de publicar, conferir que cada plataforma tem as novidades da versão.', 'Before publishing, check that every platform has the release\'s new features.')],
+    ['dec', T('Fred é só Fred', 'Fred is just Fred'), 'portfolio-apps', T('ontem', 'yesterday'), T('O cachorro debaixo da mesa não precisa de raça na legenda.', 'The dog under the desk doesn\'t need a breed in the caption.')]
+  ];
+  var TIPO_N = { dec: T('decisão', 'decision'), des: T('descoberta', 'finding'), hand: 'handoff' };
+  var FIL = [['', T('tudo', 'all')], ['dec', T('decisões', 'decisions')], ['des', T('descobertas', 'findings')], ['hand', 'handoffs']];
+  var SIDE = [['home', T('Início', 'Home')], ['mem', T('Memória', 'Memory')], ['trab', T('Trabalho', 'Work')], ['avisos', T('Avisos', 'Alerts')], ['ajustes', T('Ajustes', 'Settings')]];
+
+  var S, on = {}, tela = 'home', memF = '', memAberto = -1;
+  TIPOS.forEach(function (t) { on[t[0]] = true; });
+  function novo() { S = { min: 510, espera: ESPERA0.slice(), prs: PRS0.slice(), iss: ISS0.slice(), chuva: 20, semana: 64, ev: 0, avisos: [], nao: 0, atual: 510 }; }
+  function nomeRepo(id) { for (var i = 0; i < REPOS.length; i++) if (REPOS[i][0] === id) return REPOS[i][1]; return id; }
+
+  function lbl(t, cls, extra) { return '<div class="sw-lbl' + (cls ? ' ' + cls : '') + '">' + t + (extra || '') + '</div>'; }
+  function vHome() {
+    return '<section class="sw-view" data-tela="home">' +
+      '<div class="sw-grid" id="swGrid">' +
+        '<div class="sw-card sw-map">' + lbl(T('MAPA', 'MAP'), '', ' <span id="swMapa"></span>') +
+          '<canvas id="swGrafo" role="img" aria-label="' + T('Mapa de nós: repositórios, agenda, clima e anotações em volta do Senna', 'Node map: repositories, calendar, weather and notes around Senna') + '"></canvas>' +
+          '<div class="sw-tip" id="swTip" hidden></div>' +
+          '<div class="sw-zoom"><button type="button" data-z="1" aria-label="' + T('Aproximar', 'Zoom in') + '">+</button><button type="button" data-z="-1" aria-label="' + T('Afastar', 'Zoom out') + '">−</button><button type="button" data-z="0" aria-label="' + T('Enquadrar', 'Fit') + '">⊡</button><button type="button" data-z="2" aria-label="' + T('Mapa grande', 'Large map') + '">⤢</button></div>' +
+          '<div class="sw-leg"><span><i class="k-repo"></i>' + T('repositório', 'repository') + '</span><span><i class="k-espera"></i>' + T('esperando você', 'waiting on you') + '</span><span><i class="k-pr"></i>' + T('PR seu', 'your PR') + '</span><span><i class="k-issue"></i>issue</span><span><i class="k-nota"></i>' + T('anotação', 'note') + '</span><span><i class="k-evento"></i>' + T('compromisso', 'event') + '</span></div>' +
+        '</div>' +
+        '<div class="sw-col">' +
+          '<div class="sw-card sw-next">' + lbl(T('PRÓXIMO', 'NEXT')) + '<b class="sw-big" id="swNxH"></b><p id="swNxT"></p><small id="swNxS"></small></div>' +
+          '<div class="sw-card sw-wait">' + lbl(T('ESPERANDO VOCÊ', 'WAITING ON YOU')) + '<div class="sw-wn"><b id="swWn"></b><span>' + T('PRs para revisar', 'PRs to review') + '</span></div><ol class="sw-ls" id="swWl"></ol></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="sw-tiles"><div><b id="swK1"></b><span>' + T('PRS SEUS', 'YOUR PRS') + '</span></div><div><b id="swK2"></b><span>' + T('ISSUES · +1 FEITA', 'ISSUES · +1 DONE') + '</span></div><div><b id="swK3"></b><span>' + T('AGORA', 'NOW') + '</span></div><div class="az"><b id="swK4"></b><span>' + T('CHUVA', 'RAIN') + '</span></div><div class="lv"><b>1</b><span>E-MAILS</span></div></div>' +
+      '<div class="sw-cards">' +
+        '<div class="sw-card">' + lbl(T('CLIMA', 'WEATHER'), 'az') + '<div class="sw-cl"><b id="swCt"></b><div><span id="swCd"></span><small>Canoas</small></div></div><div class="sw-mm"><span id="swCmin"></span><span id="swCmax"></span></div><div class="sw-bar t"><i id="swCtb"></i></div><div class="sw-mm"><span>' + T('CHUVA', 'RAIN') + '</span><span id="swCp"></span></div><div class="sw-bar b"><i id="swCpb"></i></div><div class="sw-hs" id="swCh"></div></div>' +
+        '<div class="sw-card">' + lbl(T('MEUS PRS', 'MY PRS'), '', ' <em id="swPn"></em>') + '<ol class="sw-ls" id="swPl"></ol></div>' +
+        '<div class="sw-card">' + lbl(T('COMPROMISSOS', 'CALENDAR'), 'vd') + '<ul class="sw-ag" id="swAg"></ul></div>' +
+        '<div class="sw-card">' + lbl(T('LIMITE DO CLAUDE', 'CLAUDE LIMIT'), 'co') + '<div class="sw-mm"><span>' + T('SESSÃO', 'SESSION') + '</span><b id="swL1"></b></div><div class="sw-bar c"><i id="swL1b"></i></div><div class="sw-mm"><span>' + T('SEMANA', 'WEEK') + '</span><b id="swL2"></b></div><div class="sw-bar a"><i id="swL2b"></i></div><small class="sw-fine">' + T('libera qui · 09:00', 'resets Thu · 09:00') + '</small></div>' +
+      '</div>' +
+    '</section>';
+  }
+  function vMem() {
+    return '<section class="sw-view" data-tela="mem" hidden><div class="sw-card sw-memc">' + lbl(T('MEMÓRIA', 'MEMORY'), '', ' <span>' + T('100 doc · 506 trechos · 13 projetos', '100 docs · 506 chunks · 13 projects') + '</span>') +
+      '<input type="search" class="sw-q" id="swQ" placeholder="' + T('buscar na memória…', 'search memory…') + '" autocomplete="off" spellcheck="false" aria-label="' + T('Buscar na memória', 'Search memory') + '">' +
+      '<div class="sw-fil" role="group" aria-label="' + T('Tipo', 'Type') + '">' + FIL.map(function (f) { return '<button type="button" data-f="' + f[0] + '" aria-pressed="' + (f[0] === memF) + '">' + f[1] + '</button>'; }).join('') + '</div>' +
+      '<ul class="sw-mem" id="swMl"></ul></div></section>';
+  }
+  function vTrab() {
+    return '<section class="sw-view" data-tela="trab" hidden><div class="sw-two">' +
+      '<div class="sw-card">' + lbl(T('MEUS PRS', 'MY PRS'), '', ' <em id="swPn2"></em>') + '<ol class="sw-ls" id="swPl2"></ol></div>' +
+      '<div class="sw-card">' + lbl(T('MINHAS ISSUES', 'MY ISSUES'), '', ' <em id="swIn"></em>') + '<ol class="sw-ls" id="swIl"></ol>' +
+        '<details class="sw-det"><summary>' + T('1 issue já feita esperando fechar', '1 issue done, waiting to be closed') + '</summary><p>' + T('Clima no painel do HUD · ControlSensors', 'Weather on the HUD panel · ControlSensors') + '</p></details></div>' +
+    '</div></section>';
+  }
+  function vAvisos() {
+    return '<section class="sw-view" data-tela="avisos" hidden><div class="sw-card">' + lbl(T('AVISOS DE HOJE', 'TODAY\'S ALERTS')) + '<ul class="sw-av" id="swAv"></ul></div></section>';
+  }
+  function vAjustes() {
+    return '<section class="sw-view" data-tela="ajustes" hidden><div class="sw-two">' +
+      '<div class="sw-card">' + lbl(T('AVISOS DO WINDOWS', 'WINDOWS ALERTS')) + '<ul class="sw-tg" id="swTg"></ul><small class="sw-fine">' + T('Desligado, o painel continua atualizando. Ele só não avisa.', 'When off, the dashboard keeps updating. It just doesn\'t tell you.') + '</small></div>' +
+      '<div class="sw-card">' + lbl(T('FONTES', 'SOURCES')) + '<ul class="sw-fo" id="swFo"></ul></div>' +
+    '</div></section>';
+  }
+
+  win.innerHTML =
+    '<div class="sw-top">' +
+      '<span class="sw-logo"><i></i>SENNA</span><span class="sw-hi" id="swHi"></span><span class="sw-sp"></span>' +
+      '<span class="sw-src"><i></i><span id="swSrc">' + T('fontes em dia', 'sources up to date') + '</span><span class="sw-dot">·</span><b id="swHora"></b></span>' +
+      '<button type="button" class="sw-find" data-v="mem" data-busca>' + T('buscar', 'search') + '<kbd>ctrl+k</kbd></button>' +
+      '<button type="button" class="sw-bell" data-v="avisos" aria-label="' + T('Avisos', 'Alerts') + '">' + ic(I.sino) + '<em id="swNao" hidden></em></button>' +
+      '<button type="button" class="sw-upd" id="swUpd">' + T('ATUALIZAR', 'REFRESH') + '</button>' +
+      '<span class="sw-ctl"><button type="button" data-ctl aria-label="' + T('Minimizar', 'Minimize') + '">—</button><button type="button" data-ctl aria-label="' + T('Maximizar', 'Maximize') + '">▢</button><button type="button" data-ctl aria-label="' + T('Fechar', 'Close') + '">✕</button></span>' +
+    '</div>' +
+    '<div class="sw-body">' +
+      '<nav class="sw-side" aria-label="' + T('Telas do Senna', 'Senna screens') + '">' + SIDE.map(function (s) { return '<button type="button" data-v="' + s[0] + '" aria-label="' + s[1] + '" title="' + s[1] + '">' + ic(I[s[0]]) + '</button>'; }).join('') + '</nav>' +
+      '<div class="sw-main" id="swMain">' + vHome() + vMem() + vTrab() + vAvisos() + vAjustes() + '</div>' +
+    '</div>' +
+    '<div class="sw-toasts" id="swToasts" aria-live="polite"></div>';
+
+  var cv = q('#swGrafo'), gx = cv.getContext('2d'), tip = q('#swTip');
+  var W = 0, H = 0, DPR = 1, nodes = [], byId = {}, edges = [], cam = { x: 0, y: 0, k: 1 }, alvo = null, alpha = 1, hover = null, foco = null, tipN = null, hl = null, mexeu = false, raf = 0, arr = null, vis = false;
+  var ELI = 2.55, RAIO = { core: 15, repo: 9, agenda: 9, clima: 9, hub: 6.5, nota: 2.6, espera: 4.6, pr: 4, issue: 3.6, evento: 4.4 };
+  var MOLA = { hub: 30, nota: 16, espera: 30, pr: 30, issue: 30, evento: 26 };
+  var CARGA = { core: 9, repo: 7, agenda: 7, clima: 7, hub: 4, nota: 1.6, espera: 2.6, pr: 2.6, issue: 2.6, evento: 2.6 };
+  var KN = { repo: T('repositório', 'repository'), hub: T('anotações', 'notes'), nota: T('anotação', 'note'), espera: T('esperando você', 'waiting on you'), pr: T('PR seu', 'your PR'), issue: 'issue', evento: T('compromisso', 'event') };
+  function folha(n) { return n.kind !== 'core' && n.kind !== 'repo' && n.kind !== 'agenda' && n.kind !== 'clima'; }
+  function no(id, kind, pai, label, info, L) {
+    var p = pai ? byId[pai] : null, a = Math.random() * 6.2832;
+    var n = { id: id, kind: kind, pai: pai, label: label || '', info: info || '', x: p ? p.x + Math.cos(a) * 18 : 0, y: p ? p.y + Math.sin(a) * 18 : 0, vx: 0, vy: 0, s: lento ? 1 : 0, vivo: true, nasce: Date.now() };
+    nodes.push(n); byId[id] = n;
+    if (p) edges.push([p, n, L || MOLA[kind]]);
+    return n;
+  }
+  function monta() {
+    nodes = []; byId = {}; edges = [];
+    no('core', 'core', null, 'SENNA').s = 1;
+    REPOS.forEach(function (r, i) {
+      var n = no(r[0], r[2] || 'repo', 'core', r[1], '', 200);
+      n.ang = i / REPOS.length * 6.2832 - 1.96; n.s = 1;
+    });
+    ancora(true);
+    Object.keys(NOTAS).forEach(function (k) {
+      no('h-' + k, 'hub', k, '', '').s = 1;
+      NOTAS[k].forEach(function (t, j) { no('n-' + k + j, 'nota', 'h-' + k, '', t).s = 1; });
+    });
+    S.espera.forEach(function (x) { no(x.id, 'espera', x.repo, '', x.t).s = 1; });
+    S.prs.forEach(function (x) { no(x.id, 'pr', x.repo, '', x.t).s = 1; });
+    S.iss.forEach(function (x) { no(x.id, 'issue', x.repo, '', x.t).s = 1; });
+    [['Daily', T('hoje 09:00', 'today 09:00')], [T('Planejamento', 'Planning'), T('hoje 16:00', 'today 16:00')], ['Daily', T('amanhã 09:00', 'tomorrow 09:00')], ['Daily', T('depois de amanhã', 'the day after')]].forEach(function (e, i) { no('a' + i, 'evento', 'agenda', '', e[0] + ' · ' + e[1]).s = 1; });
+    alpha = 1;
+    for (var i = 0; i < (lento ? 420 : 220); i++) fisica();
+  }
+  function ancora(poe) {
+    var A = W && H ? Math.max(.75, Math.min(2.6, W / H)) : 2.2, rx = 178 * Math.sqrt(A), ry = 178 / Math.sqrt(A);
+    ELI = rx / ry;
+    nodes.forEach(function (n) {
+      if (n.ang == null) return;
+      n.ax = Math.cos(n.ang) * rx; n.ay = Math.sin(n.ang) * ry;
+      if (poe) { n.x = n.ax; n.y = n.ay; }
+    });
+    edges.forEach(function (e) { if (e[0].kind === 'core') e[2] = rx; });
+  }
+  function sincGrafo() {
+    var quer = {};
+    [['espera', S.espera], ['pr', S.prs], ['issue', S.iss]].forEach(function (g) {
+      g[1].forEach(function (x) {
+        quer[x.id] = 1;
+        var n = byId[x.id];
+        if (n) n.vivo = true;
+        else { n = no(x.id, g[0], x.repo, '', x.t); n.pulso = !lento; }
+      });
+    });
+    nodes.forEach(function (n) { if ((n.kind === 'espera' || n.kind === 'pr' || n.kind === 'issue') && !quer[n.id]) n.vivo = false; });
+    alpha = Math.max(alpha, .4);
+    acorda();
+  }
+  function fisica() {
+    var n = nodes.length, i, j, a, b, dx, dy, d2, d, f;
+    for (i = 0; i < n; i++) {
+      a = nodes[i];
+      for (j = i + 1; j < n; j++) {
+        b = nodes[j];
+        dx = b.x - a.x; dy = b.y - a.y; d2 = dx * dx + dy * dy;
+        if (d2 > 40000) continue;
+        if (d2 < .01) { dx = Math.random() - .5; dy = Math.random() - .5; d2 = .5; }
+        f = CARGA[a.kind] * CARGA[b.kind] * 7 / d2 * alpha;
+        d = Math.sqrt(d2); dx /= d; dy /= d;
+        a.vx -= dx * f; a.vy -= dy * f; b.vx += dx * f; b.vy += dy * f;
       }
     }
-    estado.textContent = e[1];
-    estado.style.color = 'rgb(' + col.join(',') + ')';
+    for (i = 0; i < edges.length; i++) {
+      a = edges[i][0]; b = edges[i][1];
+      dx = b.x - a.x; dy = b.y - a.y;
+      if (a.kind === 'core') {
+        dy *= ELI; d = Math.sqrt(dx * dx + dy * dy) || 1;
+        f = (d - edges[i][2]) * .03 * alpha;
+        b.vx -= dx / d * f; b.vy -= dy / d * f * ELI;
+        continue;
+      }
+      d = Math.sqrt(dx * dx + dy * dy) || 1;
+      f = (d - edges[i][2]) * .07 * alpha;
+      dx /= d; dy /= d;
+      a.vx += dx * f * .25; a.vy += dy * f * .25;
+      b.vx -= dx * f; b.vy -= dy * f;
+    }
+    for (i = 0; i < n; i++) {
+      a = nodes[i];
+      if (a.kind === 'core' || a.fixo) { a.vx = a.vy = 0; continue; }
+      if (a.ax != null) { a.vx += (a.ax - a.x) * .006; a.vy += (a.ay - a.y) * .006; }
+      a.vx *= .78; a.vy *= .78;
+      a.x += Math.max(-6, Math.min(6, a.vx)); a.y += Math.max(-6, Math.min(6, a.vy));
+    }
+    alpha = Math.max(.04, alpha * .993);
   }
-  setInterval(function () { if (!p1.hidden) orb(); }, lento ? 1000 : 90);
-  orb();
-  $('#orbCmds').addEventListener('click', function (e) {
-    var b = e.target.closest('[data-fala]'); if (!b) return;
-    roteiro.forEach(clearTimeout); roteiro = [];
-    var txt = b.getAttribute('data-fala');
-    if (txt === '@hora') { var d = new Date(); txt = T('São ', 'It\'s ') + pad(d.getHours()) + ':' + pad(d.getMinutes()) + '.'; }
-    if (EN) txt = ({ 'Tem 3 PRs esperando o seu review. Abrindo.': '3 PRs are waiting for your review. Opening them.', 'Amanhã tem chuva a partir das 15 horas.': 'Rain tomorrow from 3 PM.', 'Tocando a sua playlist.': 'Playing your playlist.' })[txt] || txt;
-    atual = 'ouvindo'; falaEl.innerHTML = '&nbsp;'; Som.play('blip');
-    roteiro.push(setTimeout(function () { atual = 'pensando'; }, 1200));
-    roteiro.push(setTimeout(function () { atual = 'falando'; falaEl.textContent = txt; Som.play('oi'); }, 2500));
-    roteiro.push(setTimeout(function () { atual = 'idle'; }, 5200));
+  function tira(n) {
+    nodes.splice(nodes.indexOf(n), 1); delete byId[n.id];
+    edges = edges.filter(function (e) { return e[0] !== n && e[1] !== n; });
+    if (hover === n) hover = null;
+    if (tipN === n) tipN = null;
+  }
+  function passo() {
+    for (var i = nodes.length - 1; i >= 0; i--) {
+      var n = nodes[i];
+      if (n.vivo && n.s < 1) n.s = Math.min(1, n.s + .06);
+      else if (!n.vivo) { n.s -= .06; if (n.s <= 0 || lento) tira(n); }
+    }
+    fisica();
+    if (alvo) {
+      cam.x += (alvo.x - cam.x) * .16; cam.y += (alvo.y - cam.y) * .16; cam.k += (alvo.k - cam.k) * .16;
+      if (Math.abs(alvo.x - cam.x) + Math.abs(alvo.y - cam.y) < .3 && Math.abs(alvo.k - cam.k) < .003) { cam = alvo; alvo = null; }
+    }
+  }
+  function familia(n) {
+    var f = {}; f[n.id] = 1;
+    if (n.pai) f[n.pai] = 1;
+    edges.forEach(function (e) {
+      if (e[0] !== n) return;
+      f[e[1].id] = 1;
+      if (e[1].kind === 'hub') edges.forEach(function (e2) { if (e2[0] === e[1]) f[e2[1].id] = 1; });
+    });
+    return f;
+  }
+  function escala() { return Math.max(.8, Math.min(cam.k, 1.5)); }
+  function circ(x, y, r, fill, stroke, lw) {
+    gx.beginPath(); gx.arc(x, y, r, 0, 6.2832);
+    if (fill) { gx.fillStyle = fill; gx.fill(); }
+    if (stroke) { gx.strokeStyle = stroke; gx.lineWidth = lw || 1.3; gx.stroke(); }
+  }
+  function glifo(n, x, y, r) {
+    gx.lineWidth = 1; gx.lineCap = 'round';
+    if (n.kind === 'repo') {
+      gx.strokeStyle = '#86a8dc';
+      gx.strokeRect(x - r * .45, y - r * .22, r * .9, r * .6);
+      gx.beginPath(); gx.moveTo(x - r * .45, y - r * .22); gx.lineTo(x - r * .45, y - r * .38); gx.lineTo(x - r * .1, y - r * .38); gx.lineTo(x, y - r * .22); gx.stroke();
+    } else if (n.kind === 'agenda') {
+      gx.strokeStyle = '#8cc47a'; gx.beginPath();
+      for (var i = -1; i <= 1; i++) { gx.moveTo(x - r * .4, y + i * r * .3); gx.lineTo(x + r * .4, y + i * r * .3); }
+      gx.stroke();
+    } else if (n.kind === 'clima') {
+      gx.strokeStyle = '#e6d9c4'; circ(x, y, r * .25, null, '#e6d9c4', 1);
+      gx.beginPath();
+      for (var a = 0; a < 8; a++) { var c = Math.cos(a * .785), s = Math.sin(a * .785); gx.moveTo(x + c * r * .42, y + s * r * .42); gx.lineTo(x + c * r * .6, y + s * r * .6); }
+      gx.stroke();
+    } else if (n.kind === 'hub') {
+      gx.strokeStyle = '#e0704f';
+      gx.strokeRect(x - r * .45, y - r * .35, r * .38, r * .7); gx.strokeRect(x + r * .07, y - r * .35, r * .38, r * .7);
+    }
+  }
+  function rotulo(n, x, y, r, a) {
+    var cnt = 0;
+    edges.forEach(function (e) { if (e[0] === n && e[1].vivo) cnt += e[1].kind === 'hub' ? NOTAS[n.id].length : 1; });
+    var txt = n.kind === 'clima' ? 'Canoas ' + (clima ? clima.temp : 21) + '°' : n.label;
+    gx.font = '500 11px ' + SANS; gx.textAlign = 'center'; gx.textBaseline = 'top';
+    var w = gx.measureText(txt).width;
+    gx.fillStyle = 'rgba(20,17,15,.75)'; gx.fillRect(x - w / 2 - 3, y + r + 4, w + 6, 14);
+    gx.fillStyle = 'rgba(235,227,215,' + a + ')'; gx.fillText(txt, x, y + r + 5);
+    if (cnt && n.kind !== 'clima') { gx.font = '9px ' + SANS; gx.textAlign = 'left'; gx.fillStyle = 'rgba(143,133,122,' + a + ')'; gx.fillText(cnt, x + w / 2 + 3, y + r + 2); }
+  }
+  function desenha() {
+    if (!W) return;
+    var t = Date.now(), k = cam.k, ox = W / 2 - cam.x * k, oy = H / 2 - cam.y * k, fam = foco ? familia(foco) : null, hv = hover ? familia(hover) : null, es = escala();
+    gx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    gx.clearRect(0, 0, W, H);
+    var c = byId.core, cx = ox + c.x * k, cy = oy + c.y * k, g = gx.createRadialGradient(cx, cy, 0, cx, cy, 170 * Math.max(k, .6));
+    g.addColorStop(0, 'rgba(232,116,59,.30)'); g.addColorStop(.35, 'rgba(232,116,59,.09)'); g.addColorStop(1, 'rgba(232,116,59,0)');
+    gx.fillStyle = g; gx.fillRect(0, 0, W, H);
+    var P = {};
+    nodes.forEach(function (n, i) {
+      var x = ox + n.x * k, y = oy + n.y * k;
+      if (folha(n) && !lento) { x += Math.sin(t / 900 + i) * .7; y += Math.cos(t / 1100 + i * 1.7) * .7; }
+      P[n.id] = [x, y];
+    });
+    edges.forEach(function (e) {
+      var a = e[0], b = e[1], pa = P[a.id], pb = P[b.id];
+      if (!pa || !pb) return;
+      var dim = fam && !(fam[a.id] && fam[b.id]) ? .15 : 1, lit = hv && hv[a.id] && hv[b.id], al = b.s * dim;
+      gx.strokeStyle = a.kind === 'core' ? 'rgba(222,165,96,' + ((lit ? .95 : .4) * al) + ')' : 'rgba(176,132,104,' + ((lit ? .9 : .32) * al) + ')';
+      gx.lineWidth = lit ? 1.5 : a.kind === 'core' ? 1 : .8;
+      gx.beginPath(); gx.moveTo(pa[0], pa[1]); gx.lineTo(pb[0], pb[1]); gx.stroke();
+    });
+    nodes.forEach(function (n) {
+      var x = P[n.id][0], y = P[n.id][1], r = RAIO[n.kind] * es * n.s, a = fam && !fam[n.id] ? .22 : 1;
+      if (r <= 0) return;
+      gx.globalAlpha = a;
+      if (n.kind === 'core') {
+        var s = r * 1.05;
+        gx.fillStyle = '#221812'; gx.strokeStyle = 'rgba(232,116,59,.9)'; gx.lineWidth = 1.4;
+        gx.beginPath(); gx.moveTo(x - s + 5, y - s); gx.arcTo(x + s, y - s, x + s, y + s, 5); gx.arcTo(x + s, y + s, x - s, y + s, 5); gx.arcTo(x - s, y + s, x - s, y - s, 5); gx.arcTo(x - s, y - s, x + s, y - s, 5); gx.closePath(); gx.fill(); gx.stroke();
+        circ(x, y, r * .5, null, '#e8743b', 2); circ(x, y, r * .2, '#ffd9b0');
+        gx.font = '700 10px ' + MONO; gx.textAlign = 'center'; gx.textBaseline = 'top'; gx.fillStyle = '#e8743b';
+        var L = 'SENNA', sp = 8.5;
+        for (var j = 0; j < L.length; j++) gx.fillText(L[j], x + (j - 2) * sp, y + s + 7);
+      } else if (n.kind === 'repo' || n.kind === 'agenda' || n.kind === 'clima') {
+        circ(x, y, r, '#1c1a20', n.kind === 'repo' ? '#86a8dc' : n.kind === 'agenda' ? '#8cc47a' : '#cfc6b8', 1.3);
+        glifo(n, x, y, r);
+      } else if (n.kind === 'hub') {
+        circ(x, y, r, '#2a1814', '#e0704f', 1.2); glifo(n, x, y, r);
+      } else if (n.kind === 'nota') circ(x, y, r, '#e0704f');
+      else if (n.kind === 'espera') circ(x, y, r, '#f2c94c');
+      else if (n.kind === 'pr') circ(x, y, r, '#a99bf5');
+      else if (n.kind === 'issue') { gx.fillStyle = '#f5a524'; gx.fillRect(x - r, y - r, r * 2, r * 2); }
+      else if (n.kind === 'evento') { gx.fillStyle = '#8cc47a'; gx.beginPath(); gx.moveTo(x, y - r * 1.2); gx.lineTo(x + r * 1.2, y); gx.lineTo(x, y + r * 1.2); gx.lineTo(x - r * 1.2, y); gx.closePath(); gx.fill(); }
+      if (n.pulso && t - n.nasce < 1800) { var p = (t - n.nasce) / 1800; circ(x, y, r + 2 + p * 22, null, 'rgba(255,240,210,' + ((1 - p) * .8) + ')', 1.5); }
+      if (hl === n.id) circ(x, y, r + 4 + Math.sin(t / 160) * 1.5, null, '#fff', 1.4);
+      else if (hover === n) circ(x, y, r + 3, null, 'rgba(255,255,255,.75)', 1);
+    });
+    nodes.forEach(function (n) {
+      if (n.kind !== 'repo' && n.kind !== 'agenda' && n.kind !== 'clima') return;
+      var a = fam && !fam[n.id] ? .22 : 1;
+      gx.globalAlpha = a;
+      rotulo(n, P[n.id][0], P[n.id][1], RAIO[n.kind] * es * n.s, a);
+    });
+    gx.globalAlpha = 1;
+    if (tip && !tip.hidden) poeDica(P);
+  }
+  function acha(px, py) {
+    var k = cam.k, ox = W / 2 - cam.x * k, oy = H / 2 - cam.y * k, best = null, bd = 1e9, es = escala();
+    nodes.forEach(function (n) {
+      if (!n.vivo) return;
+      var dx = ox + n.x * k - px, dy = oy + n.y * k - py, d = dx * dx + dy * dy, r = Math.max(RAIO[n.kind] * es, 4) + 5;
+      if (d < r * r && d < bd) { bd = d; best = n; }
+    });
+    return best;
+  }
+  function resumo(n) {
+    var c = { espera: 0, pr: 0, issue: 0, nota: 0 }, p = [];
+    edges.forEach(function (e) { if (e[0] === n && e[1].vivo) { if (e[1].kind === 'hub') c.nota += NOTAS[n.id].length; else c[e[1].kind]++; } });
+    if (c.espera) p.push(c.espera + ' ' + T('esperando você', 'waiting on you'));
+    if (c.pr) p.push(c.pr + (c.pr > 1 ? T(' PRs seus', ' PRs of yours') : T(' PR seu', ' PR of yours')));
+    if (c.issue) p.push(c.issue + (c.issue > 1 ? ' issues' : ' issue'));
+    if (c.nota) p.push(c.nota + (c.nota > 1 ? T(' anotações', ' notes') : T(' anotação', ' note')));
+    if (n.id === 'trab') p.push(T('nomes ocultos na demo', 'names hidden in the demo'));
+    return p.join(' · ') || T('tudo em dia', 'all clear');
+  }
+  function dica() {
+    var n = hover || tipN;
+    if (!n || !n.vivo) { tip.hidden = true; return; }
+    var t, s;
+    if (n.kind === 'core') { t = 'Senna'; s = T('o centro: repositórios, agenda, clima e memória', 'the center: repos, calendar, weather and memory'); }
+    else if (n.kind === 'repo') { t = n.label; s = resumo(n); }
+    else if (n.kind === 'clima') { t = 'Canoas · ' + (clima ? clima.temp : 21) + '°'; s = climaDesc() + ' · ' + S.chuva + T('% de chuva', '% chance of rain'); }
+    else if (n.kind === 'agenda') { t = n.label; s = T('Daily às 09:00 e planejamento às 16:00', 'Daily at 9:00 and planning at 16:00'); }
+    else if (n.kind === 'hub') { t = KN.hub; s = NOTAS[n.pai].length + T(' em ', ' in ') + nomeRepo(n.pai); }
+    else { t = KN[n.kind]; s = n.info; }
+    tip.innerHTML = '<b>' + esc(t) + '</b><span>' + esc(s) + '</span>';
+    tip.hidden = false;
+    tip._n = n;
+  }
+  function poeDica(P) {
+    var n = tip._n, p = n && P[n.id];
+    if (!p) return;
+    var w = tip.offsetWidth, h = tip.offsetHeight, x = Math.max(6, Math.min(W - w - 6, p[0] - w / 2)), y = p[1] - h - RAIO[n.kind] * escala() - 10;
+    if (y < 26) y = p[1] + RAIO[n.kind] * escala() + 12;
+    tip.style.transform = 'translate(' + Math.round(x) + 'px,' + Math.round(y) + 'px)';
+  }
+  function fit(ja) {
+    if (!W) return;
+    var x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+    nodes.forEach(function (n) { if (!n.vivo) return; x0 = Math.min(x0, n.x); x1 = Math.max(x1, n.x); y0 = Math.min(y0, n.y); y1 = Math.max(y1, n.y); });
+    var lado = W < 520 ? 44 : 0, k = Math.max(.4, Math.min(1.7, Math.min((W - 30 - lado) / Math.max(80, x1 - x0 + 90), (H - 64) / Math.max(80, y1 - y0 + 36))));
+    alvo = { x: (x0 + x1) / 2 + lado / 2 / k, y: (y0 + y1) / 2 + 4, k: k };
+    if (ja || lento) { cam = alvo; alvo = null; }
+    acorda();
+  }
+  function medir() {
+    var w = cv.clientWidth, h = cv.clientHeight;
+    if (!w || !h) return;
+    DPR = Math.min(2, window.devicePixelRatio || 1);
+    if (w !== W || h !== H) {
+      var antes = W && H ? W / H : 0;
+      W = w; H = h; cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
+      if (Math.abs(W / H - antes) > .15) { ancora(true); alpha = 1; for (var i = 0; i < 160; i++) fisica(); }
+      if (!mexeu) fit(true);
+    }
+    desenha();
+  }
+  function zoom(z) {
+    if (z === 2) { q('#swGrid').classList.toggle('grande'); mexeu = false; foco = null; requestAnimationFrame(medir); return; }
+    if (z === 0) { foco = null; tipN = null; dica(); mexeu = false; fit(); return; }
+    var b = alvo || cam;
+    alvo = { x: b.x, y: b.y, k: Math.max(.35, Math.min(3, b.k * (z > 0 ? 1.3 : 1 / 1.3))) };
+    mexeu = true; acorda();
+  }
+  function clique(n) {
+    Som.play('blip');
+    if (!n || n === foco || n.kind === 'core') { foco = null; tipN = n && n.kind === 'core' ? n : null; mexeu = false; fit(); dica(); return; }
+    if (n.kind === 'repo' || n.kind === 'agenda' || n.kind === 'clima') { foco = n; alvo = { x: n.x, y: n.y, k: Math.min(2.4, Math.max(cam.k * 1.5, 1.4)) }; mexeu = true; }
+    tipN = n; dica(); acorda();
+  }
+  function pos(e) { var r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+  cv.addEventListener('pointerdown', function (e) {
+    var p = pos(e);
+    arr = { n: acha(p.x, p.y), x0: p.x, y0: p.y, cx: cam.x, cy: cam.y, mov: false, toque: e.pointerType === 'touch' };
+    if (!arr.toque) try { cv.setPointerCapture(e.pointerId); } catch (er) {}
   });
+  cv.addEventListener('pointermove', function (e) {
+    var p = pos(e);
+    if (arr) {
+      if (Math.abs(p.x - arr.x0) + Math.abs(p.y - arr.y0) > 4) arr.mov = true;
+      if (arr.toque || !arr.mov) return;
+      if (arr.n && arr.n.kind !== 'core') {
+        arr.n.x = cam.x + (p.x - W / 2) / cam.k; arr.n.y = cam.y + (p.y - H / 2) / cam.k; arr.n.vx = arr.n.vy = 0; arr.n.fixo = true;
+        alpha = Math.max(alpha, .35);
+      } else { cam.x = arr.cx - (p.x - arr.x0) / cam.k; cam.y = arr.cy - (p.y - arr.y0) / cam.k; alvo = null; }
+      mexeu = true; cv.classList.add('arrasta'); acorda();
+      return;
+    }
+    var n = acha(p.x, p.y);
+    if (n !== hover) { hover = n; cv.classList.toggle('mao', !!n); dica(); acorda(); }
+  });
+  cv.addEventListener('pointerup', function () {
+    if (!arr) return;
+    var a = arr; arr = null; cv.classList.remove('arrasta');
+    if (a.n) a.n.fixo = false;
+    if (!a.mov) clique(a.n);
+  });
+  cv.addEventListener('pointercancel', function () { if (arr && arr.n) arr.n.fixo = false; arr = null; cv.classList.remove('arrasta'); });
+  cv.addEventListener('pointerleave', function () { if (!arr && hover) { hover = null; cv.classList.remove('mao'); dica(); acorda(); } });
+
+  function quadro() {
+    raf = 0;
+    if (!vis || document.hidden || tela !== 'home') return;
+    passo(); desenha();
+    raf = requestAnimationFrame(quadro);
+  }
+  function acorda() { if (!raf && vis && !document.hidden && tela === 'home') raf = requestAnimationFrame(quadro); }
+
+  function add(l, x) { if (!S[l].some(function (y) { return y.id === x.id; })) S[l].unshift(x); sincGrafo(); }
+  function del(l, id) { S[l] = S[l].filter(function (y) { return y.id !== id; }); sincGrafo(); }
+  function climaDesc() {
+    if (!clima) return T('algumas nuvens', 'some clouds');
+    return chove() ? T('chuva', 'rain') : nublado() ? T('nublado', 'cloudy') : clima.code === 0 ? T('céu limpo', 'clear sky') : T('algumas nuvens', 'some clouds');
+  }
+  function chip(st) { return st === 'ok' ? '<span class="sw-chip ok">' + T('aprovado', 'approved') + '</span>' : st === 'draft' ? '<span class="sw-chip">' + T('rascunho', 'draft') + '</span>' : ''; }
+  function itens(l, comChip) {
+    return l.map(function (x, i) { return '<li data-hl="' + x.id + '"><em>' + pad(i + 1) + '</em><div><b>' + (comChip ? chip(x.st) : '') + esc(x.t) + '</b><small>' + esc(x.s) + '</small></div></li>'; }).join('');
+  }
+  function pintaDados() {
+    q('#swWn').textContent = S.espera.length;
+    q('#swWl').innerHTML = itens(S.espera);
+    q('#swPn').textContent = q('#swPn2').textContent = S.prs.length;
+    q('#swPl').innerHTML = q('#swPl2').innerHTML = itens(S.prs, true);
+    q('#swIn').textContent = S.iss.length;
+    q('#swIl').innerHTML = itens(S.iss);
+    q('#swK1').textContent = S.prs.length;
+    q('#swK2').textContent = S.iss.length;
+    q('#swK4').textContent = q('#swCp').textContent = S.chuva + '%';
+    q('#swCpb').style.width = S.chuva + '%';
+    q('#swL2').textContent = S.semana + '%';
+    q('#swL2b').style.width = S.semana + '%';
+    var nn = 0, nt = 0;
+    nodes.forEach(function (n) { if (n.vivo) { nn++; if (n.kind === 'nota') nt++; } });
+    q('#swMapa').textContent = nn + T(' nós', ' nodes') + ' · 6 ' + T('repositórios', 'repositories') + ' · ' + nt + T(' anotações', ' notes');
+    pintaAvisos();
+  }
+  function pintaHora() {
+    var m = S.min, i, nx = null;
+    q('#swHora').textContent = hhmm(m);
+    q('#swHi').textContent = (m < 720 ? T('Bom dia', 'Good morning') : m < 1080 ? T('Boa tarde', 'Good afternoon') : T('Boa noite', 'Good evening')) + T(', visitante.', ', visitor.');
+    for (i = 0; i < AG.length; i++) if (m < AG[i][0] + 30) { nx = [AG[i][0], AG[i][1], 0]; break; }
+    if (!nx) nx = [AG[0][0], AG[0][1], 1];
+    var falta = nx[0] + nx[2] * 1440 - m;
+    q('#swNxH').textContent = hhmm(nx[0]);
+    q('#swNxT').textContent = nx[1];
+    q('#swNxS').textContent = (nx[2] ? T('amanhã', 'tomorrow') : T('hoje', 'today')) + ' · Teams · ' + (falta <= 0 ? T('agora', 'now') : T('em ', 'in ') + dur(falta));
+    var dow = new Date().getDay();
+    q('#swAg').innerHTML = [[540, AG[0][1], 0], [960, AG[1][1], 0], [540, AG[0][1], 1], [540, AG[0][1], 2]].map(function (a) {
+      var cls = a[2] ? '' : m >= a[0] + 30 ? 'foi' : m >= a[0] ? 'ja' : '';
+      return '<li class="' + cls + '"><b>' + hhmm(a[0]) + '</b><span>' + esc(a[1]) + '</span><small>' + (a[2] === 0 ? (cls === 'ja' ? T('agora', 'now') : T('hoje', 'today')) : a[2] === 1 ? T('amanhã', 'tomorrow') : DIAS[(dow + a[2]) % 7]) + '</small></li>';
+    }).join('');
+    var ses = Math.round(6 + ((m - 510) % 300) / 300 * 72);
+    q('#swL1').textContent = ses + '%'; q('#swL1b').style.width = ses + '%';
+    var tp = clima ? clima.temp : 21, mn = clima && clima.min != null ? clima.min : tp - 5, mx = clima && clima.max != null ? clima.max : tp + 2;
+    if (mx <= mn) mx = mn + 1;
+    q('#swK3').textContent = q('#swCt').textContent = tp + '°';
+    q('#swCd').textContent = climaDesc();
+    q('#swCmin').textContent = T('mín ', 'min ') + mn + '°'; q('#swCmax').textContent = T('máx ', 'max ') + mx + '°';
+    q('#swCtb').style.width = Math.max(4, Math.min(100, (tp - mn) / (mx - mn) * 100)) + '%';
+    var h0 = Math.floor(m / 60), hs = '';
+    for (i = 0; i < 9; i++) {
+      var h = (h0 + i) % 24, ico = S.chuva >= 80 && h >= 17 && h <= 21 ? I.chuva : (h >= 19 || h < 6) ? I.lua : chove() ? I.chuva : nublado() ? I.nuvem : I.sol;
+      hs += '<span><small>' + (i ? pad(h) : T('agora', 'now')) + '</small>' + ic(ico) + '</span>';
+    }
+    q('#swCh').innerHTML = hs;
+    if (tela === 'ajustes') pintaFontes();
+  }
+  function pintaAvisos() {
+    q('#swAv').innerHTML = S.avisos.length ? S.avisos.map(function (a) {
+      return '<li' + (a.mudo ? ' class="mudo"' : '') + '><b>' + a.h + '</b><div><strong>' + esc(a.t) + (a.mudo ? ' <span class="sw-chip">' + T('silenciado', 'muted') + '</span>' : '') + '</strong><p>' + esc(a.p) + '</p></div></li>';
+    }).join('') : '<li class="sw-vazio">' + T('Nenhum aviso ainda. Ele trabalha calado.', 'No alerts yet. It works quietly.') + '</li>';
+    var b = q('#swNao'); b.hidden = !S.nao; b.textContent = S.nao;
+  }
+  function pintaToggles() {
+    q('#swTg').innerHTML = TIPOS.map(function (t) { return '<li><span>' + t[1] + '</span><button type="button" role="switch" class="sw-sw" data-tg="' + t[0] + '" aria-checked="' + on[t[0]] + '" aria-label="' + t[1] + '"><i></i></button></li>'; }).join('');
+  }
+  function pintaFontes() {
+    var d = S.min - S.atual;
+    q('#swFo').innerHTML = FONTES.map(function (f) { var x = (d + f[1]) % 15; return '<li><i></i><span>' + f[0] + '</span><small>' + (x < 1 ? T('agora', 'now') : T('há ', '') + x + T(' min', ' min ago')) + '</small></li>'; }).join('');
+  }
+  var VAR = { a: '[aáàâã]', e: '[eéê]', i: '[ií]', o: '[oóôõ]', u: '[uú]', c: '[cç]' };
+  function norm(s) { return String(s).normalize ? s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase() : s.toLowerCase(); }
+  function rx(s) { return new RegExp(norm(s).split('').map(function (ch) { return VAR[ch] || ch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join(''), 'gi'); }
+  function marca(s, re) { s = esc(s); return re ? s.replace(re, '<mark>$&</mark>') : s; }
+  function pintaMem() {
+    var raw = q('#swQ').value.trim(), qv = norm(raw), re = raw ? rx(raw) : null;
+    var l = MEM.map(function (m, i) { return [m, i]; }).filter(function (p) { var m = p[0]; return (!memF || m[0] === memF) && (!qv || norm(m[1] + ' ' + m[2] + ' ' + m[4]).indexOf(qv) >= 0); });
+    q('#swMl').innerHTML = l.length ? l.map(function (p) {
+      var m = p[0], ab = p[1] === memAberto || !!qv;
+      return '<li><button type="button" class="sw-mi" data-mem="' + p[1] + '" aria-expanded="' + ab + '"><span class="sw-chip t-' + m[0] + '">' + TIPO_N[m[0]] + '</span><b>' + marca(m[1], re) + '</b><small>' + esc(m[2]) + ' · ' + esc(m[3]) + '</small></button>' + (ab ? '<p>' + marca(m[4], re) + '</p>' : '') + '</li>';
+    }).join('') : '<li class="sw-vazio">' + T('Nada na memória sobre isso.', 'Nothing in memory about that.') + '</li>';
+  }
+  function toast(h, t, p, link) {
+    var box = q('#swToasts'), el = document.createElement(link ? 'a' : 'div');
+    if (link) el.href = link;
+    el.className = 'sw-toast';
+    el.innerHTML = '<i class="sw-ti"></i><div><small>Senna · ' + h + '</small><b>' + esc(t) + '</b><p>' + esc(p) + '</p></div>';
+    box.appendChild(el);
+    while (box.children.length > 2) box.removeChild(box.firstChild);
+    setTimeout(function () { el.classList.add('sai'); setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 400); }, 4600);
+  }
+  function avisa(ev) {
+    var a = { h: hhmm(S.min), t: ev[2], p: ev[3], mudo: !on[ev[1]] };
+    S.avisos.unshift(a);
+    if (!a.mudo) { if (tela !== 'avisos') S.nao++; toast(a.h, a.t, a.p, ev[5]); }
+  }
+  function vai(t, busca) {
+    tela = t;
+    $$('.sw-view', win).forEach(function (v) { v.hidden = v.getAttribute('data-tela') !== t; });
+    $$('.sw-side [data-v]', win).forEach(function (b) { if (b.getAttribute('data-v') === t) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
+    if (t === 'avisos') S.nao = 0;
+    if (t === 'mem') pintaMem();
+    if (t === 'ajustes') pintaFontes();
+    pintaAvisos();
+    q('#swMain').scrollTop = 0;
+    if (busca) setTimeout(function () { try { q('#swQ').focus({ preventScroll: true }); } catch (e) {} }, 30);
+    if (t === 'home') { medir(); acorda(); }
+  }
+  function reinicia() {
+    novo(); sincGrafo(); pintaDados(); pintaHora();
+    q('#swToasts').innerHTML = '';
+  }
+  var fim = 0;
+  function corre() {
+    if (!vis || document.hidden) return;
+    if (fim) { if (Date.now() > fim) { fim = 0; reinicia(); } return; }
+    S.min += 3;
+    var mudou = false;
+    while (S.ev < EV.length && EV[S.ev][0] <= S.min) { var ev = EV[S.ev++]; if (ev[4]) ev[4](); avisa(ev); mudou = true; }
+    if (S.min >= 1110) fim = Date.now() + 3500;
+    if (mudou) pintaDados();
+    pintaHora();
+  }
+
+  win.addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (!b || !win.contains(b)) return;
+    if (b.hasAttribute('data-v')) { vai(b.getAttribute('data-v'), b.hasAttribute('data-busca')); Som.play('blip'); return; }
+    if (b.hasAttribute('data-z')) { zoom(+b.getAttribute('data-z')); Som.play('clic'); return; }
+    if (b.hasAttribute('data-tg')) { var k = b.getAttribute('data-tg'); on[k] = !on[k]; b.setAttribute('aria-checked', on[k]); Som.play('clic'); return; }
+    if (b.hasAttribute('data-f')) { memF = b.getAttribute('data-f'); $$('[data-f]', win).forEach(function (x) { x.setAttribute('aria-pressed', x === b); }); pintaMem(); Som.play('clic'); return; }
+    if (b.hasAttribute('data-mem')) { var i = +b.getAttribute('data-mem'); memAberto = memAberto === i ? -1 : i; pintaMem(); Som.play('clic'); return; }
+    if (b.id === 'swUpd') {
+      b.classList.add('gira'); q('#swSrc').textContent = T('atualizando…', 'refreshing…'); Som.play('blip');
+      setTimeout(function () { b.classList.remove('gira'); q('#swSrc').textContent = T('fontes em dia', 'sources up to date'); S.atual = S.min; pintaFontes(); }, 900);
+      return;
+    }
+    if (b.hasAttribute('data-ctl')) { Som.play('clic'); toast(hhmm(S.min), T('Continua na bandeja', 'Still in the tray'), T('Fechar só esconde a janela. Os avisos continuam chegando.', 'Closing only hides the window. Alerts keep coming.')); }
+  });
+  q('#swQ').addEventListener('input', pintaMem);
+  win.addEventListener('pointerover', function (e) {
+    var li = e.target.closest('[data-hl]'), id = li ? li.getAttribute('data-hl') : null;
+    if (id !== hl) { hl = id; acorda(); }
+  });
+
+  novo(); monta(); pintaDados(); pintaHora(); pintaToggles(); vai('home');
+  if ('ResizeObserver' in window) new ResizeObserver(function () { medir(); }).observe(cv);
+  else window.addEventListener('resize', medir);
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { vis = es[0].isIntersecting; if (vis) { medir(); acorda(); } }, { threshold: .15 }).observe(win);
+  else { vis = true; medir(); }
+  document.addEventListener('visibilitychange', acorda);
+  setInterval(corre, lento ? 600 : 250);
 })();
 
 (function () {
@@ -2184,6 +2720,9 @@ window.__cena = Cena;
     clearTimeout(avisoT); avisoT = setTimeout(function () { aviso.classList.remove('on'); }, 2400);
   }
   function conta() { qtd.textContent = list.children.length; }
+  function sobe(t) {
+    try { document.dispatchEvent(new CustomEvent('ponto', { detail: { h: $('b', t).textContent, tipo: $('small', t).textContent } })); } catch (e) {}
+  }
   net.addEventListener('click', function () {
     online = !online;
     net.setAttribute('aria-pressed', online);
@@ -2197,6 +2736,7 @@ window.__cena = Cena;
     pend.forEach(function (t, i) {
       setTimeout(function () {
         t.classList.remove('pend');
+        sobe(t);
         if (i === pend.length - 1) {
           sync.classList.remove('gira');
           avisa(T('Sincronizado: ', 'Synced: ') + pend.length + T(' registro(s) enviado(s).', ' punch(es) sent.'));
@@ -2223,68 +2763,484 @@ window.__cena = Cena;
         while (list.children.length > 8) list.removeChild(list.lastChild);
         conta();
         msg.textContent = online ? T('Ponto registrado às ', 'Clocked in at ') + hms(d) + '.' : T('Salvo no aparelho. Sobe quando a rede voltar.', 'Saved on the device. It uploads when the network is back.');
-        setTimeout(function () { sheet.classList.remove('on'); ocupado = false; }, 1100);
+        if (online) sobe(el);
+        setTimeout(function () {
+          sheet.classList.remove('on'); ocupado = false;
+          if (online) avisa(T('Enviado. Já aparece no portal, logo abaixo.', 'Sent. It already shows up in the portal below.'));
+        }, 1100);
       }, lento ? 100 : 950);
     });
   });
 })();
 
 (function () {
-  var city = $('#tnCity'), mods = $('#tnMods'), cap = $('#tnCap'), pick = $$('[data-tn]');
-  if (!city) return;
-  var MODS = [
-    ['BH', T('Banco de horas', 'Hour bank')], ['ES', T('Escalas', 'Schedules')], ['MT', T('Motoristas', 'Drivers')], ['FP', T('Folha', 'Payroll')],
-    ['RE', T('Relógios REP', 'Time clocks')], ['AP', T('App mobile', 'Mobile app')], ['PG', T('Portal do gestor', 'Manager portal')], ['PC', T('Portal do colaborador', 'Employee portal')]
-  ];
-  var TN = {
-    mercado: { usa: ['BH', 'ES', 'FP', 'RE', 'PG', 'PC'], cap: T('Supermercado: escala de fim de semana, banco de horas e relógio na entrada da loja.', 'Supermarket: weekend schedules, hour bank and a time clock at the store door.') },
-    transp: { usa: ['BH', 'MT', 'FP', 'AP', 'PG', 'PC'], cap: T('Transportadora: jornada de motorista e ponto pelo app, até sem sinal na estrada.', 'Trucking: driver hours and clocking in from the app, even with no signal on the road.') },
-    fabrica: { usa: ['BH', 'ES', 'FP', 'RE', 'AP', 'PG'], cap: T('Indústria: turnos, vários relógios e exportação para a folha.', 'Factory: shifts, many time clocks and export to payroll.') }
+  var win = $('#cloudWin');
+  if (!win) return;
+  function q(s) { return $(s, win); }
+  function sv(d) { return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + d + '"/></svg>'; }
+  var P = {
+    search: 'M15.5 14h-.8l-.3-.3A6.5 6.5 0 1 0 9.5 16a6.5 6.5 0 0 0 4.2-1.6l.3.3v.8l5 5 1.5-1.5-5-5zm-6 0a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z',
+    sync: 'M12 4V1L8 5l4 4V6a6 6 0 0 1 5.3 8.8l1.5 1.5A8 8 0 0 0 12 4zm0 14a6 6 0 0 1-5.3-8.8L5.2 7.7A8 8 0 0 0 12 20v3l4-4-4-4v3z',
+    filter: 'M4.3 5.6C6.3 8.2 10 13 10 13v6a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-6s3.7-4.8 5.7-7.4A1 1 0 0 0 19 4H5a1 1 0 0 0-.7 1.6z',
+    tune: 'M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z',
+    headset: 'M12 1a9 9 0 0 0-9 9v7a3 3 0 0 0 3 3h3v-8H5v-2a7 7 0 0 1 14 0v2h-4v8h3a3 3 0 0 0 3-3v-7a9 9 0 0 0-9-9z',
+    feedback: 'M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-7 12h-2v-2h2v2zm0-4h-2V6h2v4z',
+    help: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 17h-2v-2h2v2zm2.1-7.8-.9.9C13.5 12.9 13 13.5 13 15h-2v-.5a4 4 0 0 1 1.2-2.8l1.2-1.3A2 2 0 1 0 10 9H8a4 4 0 1 1 7.1 2.2z',
+    bell: 'M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6v-5c0-3.1-1.6-5.6-4.5-6.3V4a1.5 1.5 0 0 0-3 0v.7C7.6 5.4 6 7.9 6 11v5l-2 2v1h16v-1l-2-2z',
+    full: 'M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z',
+    drop: 'M7 10l5 5 5-5z',
+    less: 'M12 8l-6 6 1.4 1.4 4.6-4.6 4.6 4.6L18 14z',
+    left: 'M15.4 7.4 14 6l-6 6 6 6 1.4-1.4-4.6-4.6z',
+    right: 'M10 6 8.6 7.4l4.6 4.6-4.6 4.6L10 18l6-6z',
+    bookmark: 'M17 3H7a2 2 0 0 0-2 2v16l7-3 7 3V5a2 2 0 0 0-2-2z',
+    dash: 'M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z',
+    people: 'M16 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-8 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 2c-2.3 0-7 1.2-7 3.5V19h14v-2.5C15 14.2 10.3 13 8 13zm8 0h-1c1.2.8 2 2 2 3.5V19h6v-2.5c0-2.3-4.7-3.5-7-3.5z',
+    eye: 'M12 4.5C7 4.5 2.7 7.6 1 12c1.7 4.4 6 7.5 11 7.5s9.3-3.1 11-7.5c-1.7-4.4-6-7.5-11-7.5zM12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z',
+    warn: 'M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z',
+    edit: 'M3 17.2V21h3.8L17.8 10 14 6.2 3 17.2zM20.7 7a1 1 0 0 0 0-1.4l-2.3-2.3a1 1 0 0 0-1.4 0l-1.8 1.8 3.8 3.8L20.7 7z',
+    print: 'M19 8H5a3 3 0 0 0-3 3v6h4v4h12v-4h4v-6a3 3 0 0 0-3-3zm-3 11H8v-5h8v5zm3-7a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm-1-9H6v4h12V3z',
+    cal: 'M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V9h14v11zM7 11h5v5H7z',
+    biz: 'M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10z',
+    tree: 'M22 11V3h-7v3H9V3H2v8h7V8h2v10h4v3h7v-8h-7v3h-2V8h2v3z',
+    cancel: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm5 13.6L15.6 17 12 13.4 8.4 17 7 15.6 10.6 12 7 8.4 8.4 7 12 10.6 15.6 7 17 8.4 13.4 12 17 15.6z',
+    table: 'M10 10h5v11h-5zM17 21h3a2 2 0 0 0 2-2v-9h-5v11zm3-18H5a2 2 0 0 0-2 2v3h19V5a2 2 0 0 0-2-2zM3 19a2 2 0 0 0 2 2h3V10H3v9z',
+    open: 'M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.6l-9.8 9.8 1.4 1.4L19 6.4V10h2V3h-7z',
+    more: 'M12 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm0 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4z',
+    school: 'M5 13.2v4L12 21l7-3.8v-4L12 17l-7-3.8zM12 3 1 9l11 6 9-4.9V17h2V9L12 3z',
+    add: 'M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z',
+    refresh: 'M17.6 6.4A8 8 0 1 0 19.7 14h-2.1A6 6 0 1 1 12 6c1.7 0 3.1.7 4.2 1.8L13 11h7V4l-2.4 2.4z',
+    cols: 'M10 18h5V5h-5v13zm-6 0h5V5H4v13zM16 5v13h5V5h-5z',
+    gps: 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm9 3a9 9 0 0 0-8-8V1h-2v2a9 9 0 0 0-8 8H1v2h2a9 9 0 0 0 8 8v2h2v-2a9 9 0 0 0 8-8h2v-2h-2zm-9 8a7 7 0 1 1 0-14 7 7 0 0 1 0 14z',
+    clock: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm.5-13H11v6l5.3 3.2.7-1.3-4.5-2.6z',
+    home: 'M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z',
+    person: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-2.7 0-8 1.3-8 4v2h16v-2c0-2.7-5.3-4-8-4z',
+    globe: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 17.9A8 8 0 0 1 4.2 10.2L9 15v1a2 2 0 0 0 2 2v1.9zm6.9-2.5A2 2 0 0 0 16 16h-1v-3a1 1 0 0 0-1-1H8v-2h2a1 1 0 0 0 1-1V7h2a2 2 0 0 0 2-2v-.4a8 8 0 0 1 2.9 12.8z',
+    chart: 'M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z',
+    shield: 'M12 1 3 5v6c0 5.6 3.8 10.7 9 12 5.2-1.3 9-6.4 9-12V5l-9-4zm-1 16-4-4 1.4-1.4 2.6 2.6 5.6-5.6L18 10l-7 7z',
+    map: 'M20.5 3h-.2L15 5.1 9 3 3.4 4.9a.5.5 0 0 0-.4.5v15.1a.5.5 0 0 0 .7.5L9 18.9l6 2.1 5.6-1.9a.5.5 0 0 0 .4-.5V3.5a.5.5 0 0 0-.5-.5zM15 19l-6-2.1V5l6 2.1V19z',
+    viewlist: 'M3 14h4v-4H3v4zm0 5h4v-4H3v4zM3 9h4V5H3v4zm5 5h13v-4H8v4zm0 5h13v-4H8v4zM8 5v4h13V5H8z',
+    med: 'M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-1 11h-4v4h-4v-4H6v-4h4V6h4v4h4v4z',
+    sun: 'M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM2 13h2v-2H2v2zm18 0h2v-2h-2v2zM11 2v2h2V2h-2zm0 18v2h2v-2h-2zM6 5 4.6 3.6 3.6 4.6 5 6l1-1zm12.4 12.4 1.4 1.4 1-1-1.4-1.4-1 1zM19.4 4.6l-1-1L17 5l1 1 1.4-1.4zM5 18l1 1-1.4 1.4-1-1L5 18z'
   };
-  var atual = 'mercado', c = city.getContext('2d'), fr = 0;
-  mods.innerHTML = MODS.map(function (m) { return '<div class="tn-mod" data-m="' + m[0] + '"><b>' + m[0] + '</b><span>' + esc(m[1]) + '</span></div>'; }).join('');
-  function R(x, y, w, h, col) { c.fillStyle = col; c.fillRect(x, y, w, h); }
-  function predio(x, sel, tipo) {
-    var on = sel, wall = on ? '#3b5a8a' : '#262130', win = on ? '#ffd27a' : '#3a3346', roof = on ? '#6cc6ff' : '#3a3346';
-    if (tipo === 'mercado') {
-      R(x, 22, 40, 26, wall); R(x - 2, 18, 44, 4, roof);
-      R(x + 4, 26, 32, 4, on ? '#ee7a5b' : '#3a3346');
-      for (var i = 0; i < 4; i++) R(x + 4 + i * 9, 34, 6, 6, win);
-      R(x + 16, 40, 8, 8, '#1a1520');
-    } else if (tipo === 'transp') {
-      R(x, 26, 34, 22, wall); R(x, 23, 34, 3, roof);
-      R(x + 4, 32, 10, 16, '#1a1520'); R(x + 18, 32, 10, 16, '#1a1520');
-      var tx = on ? (fr % 60) - 10 : 6;
-      R(x + 6 + tx, 41, 14, 6, on ? '#e8e2d4' : '#3a3346'); R(x + 20 + tx, 43, 5, 4, on ? '#ee7a5b' : '#3a3346');
-      R(x + 8 + tx, 47, 2, 1, '#000'); R(x + 21 + tx, 47, 2, 1, '#000');
-    } else {
-      R(x, 28, 38, 20, wall); R(x + 2, 22, 6, 6, wall); R(x + 12, 24, 6, 4, wall);
-      R(x + 26, 10, 5, 18, on ? '#8a8fa0' : '#2e2938');
-      if (on) for (var s = 0; s < 3; s++) R(x + 26 + ((fr >> 2) + s) % 3, 8 - s * 3 - ((fr >> 1) % 3), 3, 2, 'rgba(220,220,230,' + (.6 - s * .15) + ')');
-      for (var j = 0; j < 4; j++) R(x + 3 + j * 9, 34, 5, 4, win);
+  var LOGO = '<svg viewBox="0 0 24 24" class="cw-lg" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.4l2.6 2.6 5-5.4"/></svg>';
+  var MES = T(['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'], ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']);
+  var MESA = T(['jan.', 'fev.', 'mar.', 'abr.', 'mai.', 'jun.', 'jul.', 'ago.', 'set.', 'out.', 'nov.', 'dez.'], ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']);
+  var HOJE = new Date(); HOJE.setHours(12, 0, 0, 0);
+  function dm(d) { return pad(d.getDate()) + '/' + pad(d.getMonth() + 1); }
+  function dmy(d) { return dm(d) + '/' + d.getFullYear(); }
+  function hm(x) { return pad(Math.floor(x / 60)) + ':' + pad(x % 60); }
+  function sg(x) { return (x < 0 ? '-' : '') + hm(Math.abs(x)); }
+  function agora() { var c = canoas(); return c.h * 60 + c.m; }
+  function mesmoDia(a, b) { return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate(); }
+  function rng(s) {
+    var a = 2166136261;
+    for (var i = 0; i < s.length; i++) { a ^= s.charCodeAt(i); a = Math.imul(a, 16777619); }
+    return function () { a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  }
+
+  var HOR = { adm: [510, 720, 780, 1098], loja: [420, 660, 720, 920], tarde: [820, 1080, 1140, 1320], mad: [240, 480, 540, 740], mot: [360, 660, 720, 920], ta: [360, 600, 660, 860], tb: [860, 1080, 1140, 1360], vis: [420, 720, 780, 1008] };
+  var HORN = { adm: T('Padrão · seg a sex', 'Standard · Mon–Fri'), loja: T('Escala 6x1', '6x1 roster'), tarde: T('Escala 6x1 · tarde', '6x1 roster · late'), mad: T('Madrugada · 6x1', 'Early · 6x1'), mot: T('Motorista · 12x36', 'Driver · 12x36'), ta: T('Turno A', 'Shift A'), tb: T('Turno B', 'Shift B'), vis: T('Livre · home office', 'Flexible · home office') };
+  var VISITANTE = [99, T('Visitante', 'Visitor'), T('Visitante do portfólio', 'Portfolio visitor'), -1, 'vis', 0];
+  var TEN = {
+    mercado: { nome: 'Mercado Demo Ltda', ori: 'rep', est: [T('Loja Centro', 'Downtown store'), T('Loja Bairro', 'Uptown store')], gente: [
+      [14, 'Ana Ribeiro', T('Operadora de caixa', 'Cashier'), 0, 'loja', 1],
+      [27, 'Bruno Costa', T('Repositor', 'Stock clerk'), 0, 'loja', 1, 'atestado'],
+      [31, 'Carla Nunes', T('Fiscal de loja', 'Floor supervisor'), 1, 'tarde', 0],
+      [38, 'Diego Martins', T('Açougueiro', 'Butcher'), 0, 'loja', 1],
+      [45, 'Elaine Prado', T('Padeira', 'Baker'), 1, 'mad', 1],
+      [52, 'Fábio Teles', T('Gerente de loja', 'Store manager'), 0, 'adm', 1],
+      [66, 'Gisele Moraes', T('Operadora de caixa', 'Cashier'), 1, 'tarde', 0, 'falta'],
+      [71, 'Henrique Alves', T('Auxiliar de padaria', 'Bakery assistant'), 1, 'mad', 0, 'ferias'],
+      VISITANTE
+    ] },
+    transp: { nome: 'Transportes Demo Ltda', ori: 'app', est: [T('Matriz', 'Head office'), T('Filial Sul', 'South branch')], gente: [
+      [103, 'Igor Pacheco', T('Motorista', 'Driver'), 0, 'mot', 1],
+      [108, 'Júlia Campos', T('Despachante', 'Dispatcher'), 0, 'adm', 1],
+      [115, 'Kleber Souza', T('Mecânico', 'Mechanic'), 1, 'adm', 0],
+      [121, 'Lívia Rocha', T('Analista de frota', 'Fleet analyst'), 0, 'adm', 1, 'atestado'],
+      [126, 'Márcio Dias', T('Motorista', 'Driver'), 1, 'mot', 1],
+      [133, 'Natália Freitas', T('Auxiliar de logística', 'Logistics assistant'), 0, 'loja', 0],
+      [140, 'Otávio Lemos', T('Motorista', 'Driver'), 1, 'mot', 0, 'ferias'],
+      [147, 'Priscila Moura', T('Conferente', 'Checker'), 0, 'tarde', 1, 'falta']
+    ] },
+    fabrica: { nome: 'Indústria Demo S.A.', ori: 'rep', est: [T('Planta 1', 'Plant 1'), T('Planta 2', 'Plant 2')], gente: [
+      [201, 'Rafael Antunes', T('Eletricista', 'Electrician'), 0, 'adm', 1],
+      [204, 'Sabrina Lopes', T('Técnica de qualidade', 'Quality technician'), 0, 'ta', 1],
+      [209, 'Tiago Barros', T('Operador de empilhadeira', 'Forklift operator'), 1, 'ta', 0],
+      [213, 'Úrsula Mota', T('Analista de PCP', 'Planning analyst'), 0, 'adm', 1, 'atestado'],
+      [218, 'Vítor Gomes', T('Supervisor de turno', 'Shift supervisor'), 1, 'tb', 1],
+      [222, 'Wesley Cardoso', T('Torneiro', 'Lathe operator'), 1, 'tb', 0],
+      [230, 'Yara Fontes', T('Operadora de máquina', 'Machine operator'), 0, 'ta', 1, 'falta'],
+      [236, 'Zeca Moreira', T('Soldador', 'Welder'), 1, 'tb', 1]
+    ] }
+  };
+  var VIS = [{ t: 426, c: 'RHO' }, { t: 734, c: 'RHO' }, { t: 777, c: 'RHO' }];
+  var NOT = [];
+  var st = { ten: 'mercado', v: 'painel', abertas: ['painel'], fechados: {}, filtros: {}, grupos: {}, mes: 0, dia: 0, colQ: '', conQ: '', est: '', fotos: {}, nao: 0 };
+  var NAV = [['inicio', P.bookmark, T('Início', 'Home')], ['painel', P.dash, T('Painel', 'Dashboard')], ['colab', P.people, T('Colaboradores', 'Employees')], ['con', P.eye, T('Consulta diária', 'Daily view')], ['inc', P.warn, T('Inconsistências', 'Exceptions')], ['man', P.edit, T('Manutenção', 'Maintenance')], ['esp', P.print, T('Espelho do ponto', 'Timesheet')]];
+  var NOMEV = { painel: T('Painel', 'Dashboard'), colab: T('Colaboradores', 'Employees'), con: T('Consulta diária', 'Daily view'), inc: T('Inconsistências', 'Exceptions') };
+  var GRUPOS = [[T('Principal', 'Main'), T('Cadastros', 'Records')], [T('Ponto', 'Time'), T('Fechamento', 'Closing'), T('BH', 'HB'), T('Escalas', 'Rosters')], ['App', T('Documentos', 'Documents'), 'VTs', 'VRs'], [T('Configurações', 'Settings'), T('Segurança', 'Security'), T('Avançado', 'Advanced')]];
+
+  function ten() { return TEN[st.ten]; }
+  function est(p) { return p[3] < 0 ? 'Home office' : ten().est[p[3]]; }
+  function horTxt(k) { var h = HOR[k]; return hm(h[0]) + ' ' + hm(h[1]) + '; ' + hm(h[2]) + ' ' + hm(h[3]); }
+  function prevMin(k) { var h = HOR[k]; return h[1] - h[0] + h[3] - h[2]; }
+  function diaSel() { var d = new Date(HOJE); d.setDate(d.getDate() + st.dia); return d; }
+  function linha(p, d) {
+    var hj = mesmoDia(d, HOJE), lim = hj ? agora() : 2000, dow = d.getDay(), folga = dow === 0 || (dow === 6 && (p[4] === 'adm' || p[4] === 'vis'));
+    var h = HOR[p[4]], prev = folga ? 0 : prevMin(p[4]), bs = [], af = folga ? 'folga' : p[6] || '';
+    if (p[0] === 99) {
+      if (hj) bs = VIS.map(function (b) { return { t: b.t, o: 'app', c: b.c, novo: b.novo }; });
+      else if (!folga) { var rv = rng('vis' + dmy(d)); bs = h.map(function (t) { return { t: t + Math.round((rv() - .5) * 16), o: 'app', c: 'RHO' }; }); }
+    } else if (af !== 'falta' && af !== 'ferias' && af !== 'folga') {
+      var r = rng(p[1] + dmy(d)), ori = ten().ori;
+      for (var i = 0; i < 4; i++) {
+        var t = h[i] + Math.round((r() - .55) * 16);
+        if ((af === 'atestado' && i >= 2) || t > lim) break;
+        bs.push({ t: t, o: ori, c: ori === 'app' ? 'RSE' : '' });
+      }
     }
+    var trab = 0;
+    for (var j = 0; j + 1 < bs.length; j += 2) trab += bs[j + 1].t - bs[j].t;
+    var abono = af === 'atestado' ? h[3] - h[2] : 0;
+    var saldo = af === 'ferias' || af === 'folga' ? 0 : trab + abono - prev;
+    return { p: p, bs: bs, trab: trab, prev: prev, saldo: saldo, af: af, abono: abono, inc: bs.length % 2 === 1 || af === 'falta' };
   }
-  function draw() {
-    fr++;
-    R(0, 0, 160, 56, '#0e0b12');
-    R(0, 48, 160, 8, '#1d1824');
-    for (var x = 0; x < 160; x += 10) R(x + ((fr >> 1) % 10), 51, 5, 1, '#3a3346');
-    predio(8, atual === 'mercado', 'mercado');
-    predio(62, atual === 'transp', 'transp');
-    predio(112, atual === 'fabrica', 'fabrica');
+  function linhas() { var d = diaSel(); return ten().gente.map(function (p) { return linha(p, d); }); }
+
+  var AVC = {};
+  function avatar(p) {
+    if (AVC[p[1]]) return AVC[p[1]];
+    var r = rng('av' + p[1]), c = document.createElement('canvas'), g = c.getContext('2d');
+    c.width = c.height = 12;
+    function pick(a) { return a[Math.floor(r() * a.length)]; }
+    var pele = pick(['#f1c7a5', '#e0a97f', '#c68863', '#8d5a3b', '#5e3a24']), cab = pick(['#2b1d14', '#4a2f1d', '#7a4b26', '#c99a5b', '#1a1a1a', '#8a8a8a']);
+    g.fillStyle = pick(['#cfe0f5', '#f5dccf', '#d9efd6', '#ece0f5', '#f5efcf']); g.fillRect(0, 0, 12, 12);
+    g.fillStyle = pick(['#5b6b84', '#8a4f4f', '#3f7a5a', '#6a5a8a', '#b07a3a']); g.fillRect(1, 10, 10, 2);
+    g.fillStyle = pele; g.fillRect(5, 8, 2, 2); g.fillRect(3, 3, 6, 6);
+    g.fillStyle = cab; g.fillRect(3, 2, 6, 2); g.fillRect(2, 3, 1, 2); g.fillRect(9, 3, 1, 2);
+    if (r() < .45) { g.fillRect(2, 5, 1, 5); g.fillRect(9, 5, 1, 5); }
+    g.fillStyle = '#1b1b1b'; g.fillRect(4, 5, 1, 1); g.fillRect(7, 5, 1, 1);
+    if (r() < .3) { g.fillStyle = '#3a3a3a'; g.fillRect(3, 5, 6, 1); g.fillStyle = '#9fc3e8'; g.fillRect(4, 5, 1, 1); g.fillRect(7, 5, 1, 1); }
+    g.fillStyle = '#a0524a'; g.fillRect(5, 7, 2, 1);
+    return (AVC[p[1]] = c.toDataURL());
   }
-  function escolhe(k) {
-    atual = k;
-    pick.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-tn') === k); });
-    $$('.tn-mod', mods).forEach(function (m) { var on = TN[k].usa.indexOf(m.getAttribute('data-m')) >= 0; m.classList.toggle('on', on); m.classList.toggle('off', !on); });
-    cap.textContent = TN[k].cap + ' ' + T('Mesma base, cada empresa só vê o que é dela.', 'Same codebase, and each company only sees its own data.');
-    draw();
+  function foto(p, vazia) { return '<span class="cw-av">' + (p[5] && !vazia ? '<img alt="" src="' + avatar(p) + '">' : sv(P.person)) + '</span>'; }
+
+  win.innerHTML =
+    '<div class="cw-bar">' +
+      '<span class="cw-logo">' + LOGO + '<b>Símix</b><sup>®</sup></span>' +
+      '<span class="cw-mods x2"><i>' + sv(P.globe) + '</i><i>' + sv(P.person) + '</i><i>' + sv(P.chart) + '</i><i>' + sv(P.shield) + '</i></span>' +
+      '<span class="cw-sp"></span>' +
+      '<button type="button" class="cw-ten" id="cwTen" aria-haspopup="true" aria-expanded="false"><span id="cwTenN"></span>' + sv(P.drop) + '</button>' +
+      '<i class="x1">' + sv(P.search) + '</i>' +
+      '<button type="button" class="cw-ib" id="cwSync" aria-label="' + T('Sincronizar', 'Sync') + '">' + sv(P.sync) + '</button>' +
+      '<span class="cw-per x1">' + sv(P.filter) + '<b>' + MESA[HOJE.getMonth()] + '/' + HOJE.getFullYear() + '</b></span>' +
+      '<i class="x2">' + sv(P.tune) + '</i><span class="cw-chat x2">' + sv(P.headset) + 'CHAT</span><i class="x2">' + sv(P.feedback) + '</i><i class="x2">' + sv(P.help) + '</i>' +
+      '<button type="button" class="cw-ib cw-bell" id="cwBell" aria-label="' + T('Notificações', 'Notifications') + '" aria-expanded="false">' + sv(P.bell) + '<em id="cwBadge" hidden></em></button>' +
+      '<i class="x2">' + sv(P.full) + '</i><span class="cw-avt">V</span>' +
+      '<div class="cw-pop cw-tenm" id="cwTenM" hidden></div><div class="cw-pop cw-notm" id="cwNotM" hidden></div>' +
+    '</div>' +
+    '<div class="cw-mod">' + GRUPOS.map(function (g, i) { return '<span class="cw-g">' + g.map(function (x, j) { return '<button type="button" data-mod="' + i + j + '"' + (i + j === 0 ? ' class="on"' : '') + '>' + x + '</button>'; }).join('') + '</span>'; }).join('') + '</div>' +
+    '<nav class="cw-nav" id="cwNav" aria-label="' + T('Menu do portal', 'Portal menu') + '">' + NAV.map(function (n) { return '<button type="button" data-v="' + n[0] + '">' + sv(n[1]) + '<span>' + n[2] + '</span>' + sv(P.drop) + '</button>'; }).join('') + '</nav>' +
+    '<div class="cw-open" id="cwOpen"></div>' +
+    '<div class="cw-load" id="cwLoad"></div>' +
+    '<div class="cw-main" id="cwMain"></div>' +
+    '<div class="cw-snack" id="cwSnack" role="status"></div>';
+
+  function card(id, ico, tit, corpo) {
+    var off = st.fechados[id];
+    return '<section class="cw-card' + (off ? ' off' : '') + '" data-card="' + id + '"><header><span class="cw-ct">' + sv(P[ico]) + '<b>' + tit + '</b></span><span class="cw-ca">' +
+      '<button type="button" data-busca="' + id + '" aria-label="' + T('Filtrar', 'Filter') + '">' + sv(P.search) + '</button><i>' + sv(P.open) + '</i><i>' + sv(P.more) + '</i>' +
+      '<button type="button" data-fecha="' + id + '" aria-expanded="' + !off + '" aria-label="' + T('Recolher ', 'Collapse ') + tit + '">' + sv(P.less) + '</button></span></header>' +
+      '<div class="cw-fil"' + (st.filtros[id] != null ? '' : ' hidden') + '><input type="search" data-filtro="' + id + '" placeholder="' + T('Filtrar…', 'Filter…') + '" value="' + esc(st.filtros[id] || '') + '"></div>' +
+      '<div class="cw-cb">' + corpo + '</div></section>';
   }
-  pick.forEach(function (b) { b.addEventListener('click', function () { Som.play('blip'); escolhe(b.getAttribute('data-tn')); }); });
-  escolhe('mercado');
-  var vis = false;
-  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { vis = es[0].isIntersecting; }).observe(city);
-  setInterval(function () { if (vis && !lento) draw(); }, 110);
+  function tabela(cab, rows, vazio) {
+    return '<div class="cw-scroll"><table class="cw-t"><thead><tr>' + cab.map(function (c) { return '<th>' + c + '</th>'; }).join('') + '</tr></thead><tbody>' +
+      (rows.length ? rows.join('') : '<tr><td colspan="' + cab.length + '" class="cw-vazio">' + (vazio || T('Nenhum registro encontrado', 'No records found')) + '</td></tr>') + '</tbody></table></div>';
+  }
+  function tr(cells, txt, cls) { return '<tr data-txt="' + esc(txt.toLowerCase()) + '"' + (cls ? ' class="' + cls + '"' : '') + '>' + cells.map(function (c) { return '<td>' + c + '</td>'; }).join('') + '</tr>'; }
+  function seta(t, up) { return t + ' <span class="cw-ord">' + (up ? '↑' : '↓') + '</span>'; }
+  function ultimos() {
+    var lim = agora(), regs = [];
+    ten().gente.forEach(function (p) { linha(p, HOJE).bs.forEach(function (b) { if (b.t <= lim || p[0] === 99) regs.push([p[1], b.t, b.novo]); }); });
+    regs.sort(function (a, b) { return b[1] - a[1]; });
+    return tabela([T('Nome', 'Name'), seta(T('DataHora', 'DateTime'))], regs.slice(0, 9).map(function (r) { return tr([esc(r[0]), dm(HOJE) + ' ' + hm(r[1]) + (r[2] ? ' <span class="cw-app">app</span>' : '')], r[0], r[2] ? 'novo' : ''); }));
+  }
+  function mesRef() { return new Date(HOJE.getFullYear(), HOJE.getMonth() + st.mes, 1); }
+  function noturno() {
+    var m = mesRef(), r = rng('not' + st.ten + m.getMonth()), rows = [];
+    var cand = ten().gente.filter(function (p) { return !p[6] && (p[4] === 'mad' || p[4] === 'tb' || p[4] === 'mot'); });
+    var ult = st.mes === 0 ? HOJE.getDate() : 28;
+    for (var i = 0; i < 4 && cand.length; i++) {
+      var p = cand[(i + Math.floor(r() * 2)) % cand.length], d = new Date(m.getFullYear(), m.getMonth(), 1 + Math.floor(r() * ult));
+      var v = p[4] === 'mad' ? 50 + Math.floor(r() * 25) : p[4] === 'tb' ? 30 + Math.floor(r() * 18) : 60 + Math.floor(r() * 220);
+      rows.push([p, d, v]);
+    }
+    rows.sort(function (a, b) { return a[0][1] < b[0][1] ? -1 : 1; });
+    return tabela(['CdFunc', seta('FuncNome', 1), T('Data', 'Date'), 'HrAdNot'], rows.map(function (x) { return tr([x[0][0], esc(x[0][1]), dm(x[1]), hm(x[2])], x[0][1]); }));
+  }
+  function vencimento() {
+    var r = rng('venc' + st.ten), g = ten().gente.filter(function (p) { return p[0] !== 99 && !p[6]; }), rows = [];
+    for (var i = 0; i < 2; i++) {
+      var p = g.splice(Math.floor(r() * g.length), 1)[0], dias = r() < .5 ? 45 : 90, d = new Date(HOJE); d.setDate(d.getDate() + 3 + Math.floor(r() * 30));
+      var adm = new Date(d); adm.setDate(adm.getDate() - dias);
+      rows.push(tr([esc(p[1]), dm(d), dias, dm(adm)], p[1]));
+    }
+    return tabela([seta(T('Nome', 'Name'), 1), T('Data', 'Date'), T('Dias', 'Days'), T('Admissão', 'Hired')], rows);
+  }
+  function porCargo() {
+    var gr = {}, ord = [];
+    ten().gente.forEach(function (p) { if (!gr[p[2]]) { gr[p[2]] = []; ord.push(p[2]); } gr[p[2]].push(p); });
+    return '<ul class="cw-gr">' + ord.map(function (c, i) {
+      var ab = st.grupos[st.ten + i];
+      return '<li data-txt="' + esc((c + ' ' + gr[c].map(function (p) { return p[1]; }).join(' ')).toLowerCase()) + '"><button type="button" data-grupo="' + i + '" aria-expanded="' + !!ab + '">' + sv(ab ? P.drop : P.right) + '<b>' + esc(c) + '</b> <span>(' + gr[c].length + ' ' + (gr[c].length > 1 ? T('registros', 'records') : T('registro', 'record')) + ')</span></button>' +
+        (ab ? '<ul>' + gr[c].map(function (p) { return '<li>' + p[0] + ' · ' + esc(p[1]) + '</li>'; }).join('') + '</ul>' : '') + '</li>';
+    }).join('') + '</ul>';
+  }
+  function banco() {
+    var m = mesRef(), rows = ten().gente.filter(function (p) { return p[0] !== 99; }).map(function (p) { var r = rng('bh' + p[1] + m.getMonth()); return [p, Math.round(r() * 15000 - 1800)]; });
+    rows.sort(function (a, b) { return b[1] - a[1]; });
+    return tabela([T('Código', 'Code'), T('Nome', 'Name'), '<span class="x3">' + T('Estabelecimento', 'Site') + '</span>', seta(T('Saldo', 'Balance'))], rows.map(function (x) {
+      var v = x[1], s = (v < 0 ? '-' : '') + Math.floor(Math.abs(v) / 60) + ':' + pad(Math.abs(v) % 60);
+      return tr([x[0][0], esc(x[0][1]), '<span class="x3">' + esc(est(x[0])) + '</span>', '<b class="' + (v < 0 ? 'neg' : 'red') + '">' + s + '</b>'], x[0][1]);
+    }));
+  }
+  function vPainel() {
+    var m = mesRef();
+    return '<div class="cw-fb"><i>' + sv(P.filter) + '</i><button type="button" class="cw-ib2" data-mes="-1" aria-label="' + T('Mês anterior', 'Previous month') + '">' + sv(P.left) + '</button>' +
+      '<span class="cw-chip">' + sv(P.cal) + T('Período: ', 'Period: ') + pad(m.getMonth() + 1) + '/' + m.getFullYear() + sv(P.cancel) + '</span>' +
+      '<button type="button" class="cw-ib2" data-mes="1" aria-label="' + T('Próximo mês', 'Next month') + '">' + sv(P.right) + '</button>' +
+      '<span class="cw-chip x1">' + sv(P.biz) + T('Estabelecimento', 'Site') + sv(P.cancel) + '</span><span class="cw-chip x1">' + sv(P.tree) + T('Departamentos', 'Departments') + sv(P.cancel) + '</span>' +
+      '<span class="cw-sp"></span><span class="cw-dash">' + T('Meu Dashboard', 'My dashboard') + '</span><i class="x1">' + sv(P.refresh) + '</i><i>' + sv(P.more) + '</i></div>' +
+      '<div class="cw-cards">' +
+        card('ult', 'table', T('Últimos Registros', 'Latest punches'), ultimos()) +
+        card('not', 'table', T('Adicional noturno por dia', 'Night premium by day'), noturno()) +
+        card('venc', 'table', T('Vencimento de contrato', 'Contract expiry'), vencimento()) +
+        card('cargo', 'table', T('Colaboradores por Cargo', 'Employees by role'), porCargo()) +
+        card('bh', 'table', T('Banco de Horas', 'Hour bank'), banco()) +
+        card('mapa', 'map', T('Mapa de Registros (GPS)', 'Punch map (GPS)'), '<div class="cw-mapa"><canvas data-mapa></canvas><p class="cw-mapv" hidden>' + T('Nenhum registro com GPS hoje: aqui o ponto é no relógio.', 'No GPS punches today: here people clock in on the time clock.') + '</p></div>') +
+      '</div>';
+  }
+  function rowsColab() {
+    var qv = st.colQ.toLowerCase(), g = ten().gente.filter(function (p) { return !qv || (p[1] + ' ' + p[2] + ' ' + p[0]).toLowerCase().indexOf(qv) >= 0; });
+    var vazia = !st.fotos[st.ten];
+    q('#cwColN') && (q('#cwColN').textContent = (g.length ? '1-' + g.length : '0') + T(' de ', ' of ') + g.length);
+    return g.length ? g.map(function (p) {
+      var r = rng('alt' + p[1]), d = new Date(HOJE); d.setDate(d.getDate() - 2 - Math.floor(r() * 60));
+      return '<tr><td><span class="cw-act"><i>' + sv(P.edit) + '</i><i>' + sv(P.drop) + '</i></span></td><td>' + foto(p, vazia) + '</td><td>' + p[0] + '</td><td><button type="button" class="cw-link" data-nome="' + esc(p[1]) + '">' + esc(p[1]) + '</button></td><td>' + esc(p[2]) + '</td><td class="x3">' + esc(est(p)) + '</td><td class="x4">' + esc(HORN[p[4]]) + ': ' + horTxt(p[4]) + '</td><td class="x4">' + dm(d) + ' ' + hm(480 + Math.floor(r() * 600)) + '</td></tr>';
+    }).join('') : '<tr><td colspan="8" class="cw-vazio">' + T('Nenhum registro encontrado', 'No records found') + '</td></tr>';
+  }
+  function vColab() {
+    var m = mesRef();
+    return '<div class="cw-panel"><div class="cw-tb"><h3>' + T('Colaboradores', 'Employees') + sv(P.school) + '</h3>' +
+      '<span class="cw-vis x1">' + sv(P.viewlist) + T('VISÕES', 'VIEWS') + sv(P.drop) + '</span>' +
+      '<span class="cw-per2 x1">' + sv(P.left) + pad(m.getMonth() + 1) + ' - ' + MES[m.getMonth()] + sv(P.drop) + sv(P.right) + '</span>' +
+      '<span class="cw-chipo x1">' + T('Ativos', 'Active') + ' ✕ ' + sv(P.drop) + '</span><span class="cw-sp"></span>' +
+      '<label class="cw-search">' + sv(P.search) + '<input type="search" id="cwColQ" placeholder="' + T('Pesquisar', 'Search') + '" value="' + esc(st.colQ) + '" aria-label="' + T('Pesquisar colaborador', 'Search employee') + '"></label>' +
+      '<button type="button" class="cw-novo" data-snack="novo">' + sv(P.add) + T('NOVO', 'NEW') + '</button></div>' +
+      '<div class="cw-scroll"><table class="cw-t cw-colab"><thead><tr><th>' + T('Ações', 'Actions') + '</th><th>' + T('Foto', 'Photo') + '</th><th>' + T('Código', 'Code') + '</th><th>' + T('Nome', 'Name') + '</th><th>' + T('Cargo', 'Role') + '</th><th class="x3">' + T('Estabelecimento', 'Site') + '</th><th class="x4">' + T('Horário', 'Schedule') + '</th><th class="x4">' + T('Alteração', 'Changed') + '</th></tr></thead><tbody id="cwColB"></tbody></table></div>' +
+      '<div class="cw-pg"><span id="cwColN"></span><i>' + sv(P.left) + '</i><i>' + sv(P.right) + '</i></div></div>';
+  }
+  function badge(x) {
+    if (x.af === 'atestado') return '<span class="cw-bd or">' + sv(P.med) + T('Atestado', 'Sick note') + ' (' + hm(x.abono) + ')</span>';
+    if (x.af === 'falta') return '<span class="cw-bd cz">' + T('Falta', 'Absent') + '</span>';
+    if (x.af === 'ferias') return '<span class="cw-bd az">' + sv(P.sun) + T('Férias', 'Vacation') + '</span>';
+    if (x.af === 'folga') return '<span class="cw-bd cz">' + T('Folga', 'Day off') + '</span>';
+    return '';
+  }
+  function rowsConsulta() {
+    var inc = st.v === 'inc', qv = st.conQ.toLowerCase();
+    var ls = linhas().filter(function (x) { return (!inc || x.inc) && (!st.est || est(x.p) === st.est) && (!qv || (x.p[1] + ' ' + x.p[2]).toLowerCase().indexOf(qv) >= 0); });
+    var tot = { s: 0, e: 0, f: 0, pr: 0, fa: 0 };
+    var html = ls.map(function (x) {
+      tot.s += x.saldo; if (x.saldo > 0) tot.e += x.saldo; else tot.f -= x.saldo;
+      if (x.bs.length) tot.pr++;
+      if (x.af === 'falta') tot.fa++;
+      var bs = x.bs.map(function (b) { return '<span class="cw-b' + (b.novo ? ' novo' : '') + '">' + sv(b.o === 'app' ? P.gps : P.clock) + hm(b.t) + (b.c ? ' <small>' + b.c + '</small>' : '') + '</span>'; }).join('') + (x.bs.length % 2 ? '<span class="cw-q">?</span>' : '');
+      return '<tr' + (x.p[0] === 99 ? ' class="cw-voce"' : '') + '><td><span class="cw-act"><i>' + sv(P.open) + '</i><i>' + sv(P.drop) + '</i></span></td><td><span class="cw-nm">' + foto(x.p) + esc(x.p[1]) + '</span></td>' +
+        '<td class="x3"><span class="cw-hp">' + horTxt(x.p[4]) + (x.p[4] === 'vis' ? sv(P.home) : '') + '</span></td><td class="cw-bs">' + bs + '</td><td class="x4">' + hm(x.prev) + '</td><td>' + (x.trab ? hm(x.trab) : '') + '</td>' +
+        '<td><b class="' + (x.saldo < 0 ? 'neg' : x.saldo > 0 ? 'pos' : '') + '">' + sg(x.saldo) + '</b></td><td>' + badge(x) + '</td></tr>';
+    }).join('');
+    q('#cwConB').innerHTML = html || '<tr><td colspan="8" class="cw-vazio">' + (inc ? T('Nenhuma inconsistência neste dia.', 'No exceptions on this day.') : T('Nenhum registro encontrado', 'No records found')) + '</td></tr>';
+    q('#cwTot').innerHTML = [[T('Saldo', 'Balance'), sg(tot.s)], [T('Horas extras', 'Overtime'), hm(tot.e)], [T('Horas faltas', 'Missing hours'), hm(tot.f)], [T('Adicional noturno', 'Night premium'), '00:00'], [T('Total de presenças', 'Present'), tot.pr], [T('Total de faltas', 'Absences'), tot.fa]].map(function (r) { return '<div><span>' + r[0] + '</span><b>' + r[1] + '</b></div>'; }).join('');
+  }
+  function vConsulta() {
+    var inc = st.v === 'inc', d = diaSel();
+    return '<div class="cw-panel"><div class="cw-tb"><h3>' + (inc ? T('Inconsistências', 'Exceptions') : T('Consulta diária', 'Daily view')) + sv(P.school) + '</h3>' +
+      '<span class="cw-fld"><small>' + T('Data', 'Date') + '</small><button type="button" data-dia="-1" aria-label="' + T('Dia anterior', 'Previous day') + '">' + sv(P.left) + '</button><b>' + dmy(d) + '</b>' + sv(P.cal) + '<button type="button" data-dia="1" aria-label="' + T('Próximo dia', 'Next day') + '"' + (st.dia >= 0 ? ' disabled' : '') + '>' + sv(P.right) + '</button></span>' +
+      '<label class="cw-fld cw-sel"><small>' + T('Estabelecimento', 'Site') + '</small><select id="cwEst"><option value="">' + T('Todos', 'All') + '</option>' + ten().est.concat(st.ten === 'mercado' ? ['Home office'] : []).map(function (e) { return '<option' + (e === st.est ? ' selected' : '') + '>' + esc(e) + '</option>'; }).join('') + '</select></label>' +
+      '<span class="cw-fld x1"><small>' + T('Departamento', 'Department') + '</small><b class="cw-ph">' + T('Departamento', 'Department') + '</b>' + sv(P.search) + '</span>' +
+      '<span class="cw-sp"></span><label class="cw-search">' + sv(P.search) + '<input type="search" id="cwConQ" placeholder="' + T('Pesquisar', 'Search') + '" value="' + esc(st.conQ) + '" aria-label="' + T('Pesquisar na consulta', 'Search the daily view') + '"></label>' +
+      '<button type="button" class="cw-ib2" data-recarrega aria-label="' + T('Recarregar', 'Reload') + '">' + sv(P.refresh) + '</button><i class="x1">' + sv(P.cols) + '</i></div>' +
+      '<div class="cw-scroll"><table class="cw-t cw-con"><thead><tr><th>' + T('Ações', 'Actions') + '</th><th>' + T('Nome', 'Name') + '</th><th class="x3">' + T('Horário Prev.', 'Planned') + '</th><th>' + T('Horário Trab.', 'Worked') + '</th><th class="x4">' + T('Horas Prev.', 'Planned h') + '</th><th>' + T('Horas Trab.', 'Worked h') + '</th><th>' + T('Saldo', 'Balance') + '</th><th>' + T('Afastamento', 'Leave') + '</th></tr></thead>' +
+      '<tbody id="cwConB"><tr><td colspan="8" class="cw-vazio"><span class="cw-prog"></span>' + T('Carregando…', 'Loading…') + '</td></tr></tbody></table></div>' +
+      '<div class="cw-tot"><h4>' + T('Totais', 'Totals') + '</h4><div id="cwTot"></div></div></div>';
+  }
+  function desenhaMapa() {
+    var cv = q('[data-mapa]');
+    if (!cv) return;
+    var w = cv.clientWidth, h = cv.clientHeight;
+    if (!w || !h) return;
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+    var c = cv.getContext('2d'), r = rng('mapa');
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.fillStyle = '#eef0ea'; c.fillRect(0, 0, w, h);
+    for (var i = 0; i < 9; i++) { c.fillStyle = i % 3 ? '#e4e2dc' : '#d5ead0'; c.beginPath(); c.ellipse(r() * w, r() * h, 20 + r() * 50, 12 + r() * 30, r() * 3, 0, 6.3); c.fill(); }
+    c.strokeStyle = '#aad3f2'; c.lineWidth = 10; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(-10, h * .82); c.bezierCurveTo(w * .3, h * .58, w * .5, h * 1.02, w + 10, h * .66); c.stroke();
+    c.strokeStyle = '#fff'; c.lineWidth = 3;
+    for (i = 0; i < 7; i++) { c.beginPath(); var y = r() * h; c.moveTo(0, y); c.lineTo(w, y + (r() - .5) * 80); c.stroke(); }
+    for (i = 0; i < 6; i++) { c.beginPath(); var x = r() * w; c.moveTo(x, 0); c.lineTo(x + (r() - .5) * 90, h); c.stroke(); }
+    c.strokeStyle = '#f6cf77'; c.lineWidth = 4;
+    c.beginPath(); c.moveTo(w * .55, -5); c.bezierCurveTo(w * .5, h * .4, w * .62, h * .6, w * .58, h + 5); c.stroke();
+    var pins = [];
+    ten().gente.forEach(function (p) {
+      var x = linha(p, HOJE);
+      if (!x.bs.length || x.bs[0].o !== 'app') return;
+      var rp = rng('pin' + p[1]);
+      pins.push([p[0] === 99 ? w * .5 : 20 + rp() * (w - 40), p[0] === 99 ? h * .45 : 18 + rp() * (h - 30), p[0] === 99]);
+    });
+    pins.forEach(function (pn) {
+      var x = pn[0], y = pn[1], cor = pn[2] ? '#e53935' : '#1e6fd9';
+      c.fillStyle = 'rgba(0,0,0,.18)'; c.beginPath(); c.ellipse(x, y + 1, 4, 1.6, 0, 0, 6.3); c.fill();
+      c.fillStyle = cor; c.beginPath(); c.arc(x, y - 11, 6, Math.PI * .85, Math.PI * 2.15); c.lineTo(x, y); c.closePath(); c.fill();
+      c.fillStyle = '#fff'; c.beginPath(); c.arc(x, y - 11, 2.2, 0, 6.3); c.fill();
+      if (pn[2]) { c.font = '600 10px Roboto,"Segoe UI",sans-serif'; c.fillStyle = '#b71c1c'; c.textAlign = 'left'; c.fillText(T('você', 'you'), x + 8, y - 8); }
+    });
+    q('.cw-mapv').hidden = pins.length > 0;
+  }
+  function pintaTopo() {
+    q('#cwTenN').textContent = ten().nome;
+    var b = q('#cwBadge'), n = st.ten === 'mercado' ? st.nao : 0;
+    b.hidden = !n; b.textContent = n;
+    $$('#cwNav [data-v]', win).forEach(function (x) {
+      var v = x.getAttribute('data-v'), on = v === st.v;
+      x.classList.toggle('on', on);
+      if (on) x.setAttribute('aria-current', 'page'); else x.removeAttribute('aria-current');
+    });
+    q('#cwOpen').innerHTML = st.abertas.map(function (v) { return '<button type="button" data-v="' + v + '"' + (v === st.v ? ' class="on"' : '') + '>' + NOMEV[v] + sv(P.drop) + '</button>'; }).join('');
+  }
+  function barra(ms) {
+    var b = q('#cwLoad');
+    b.classList.remove('on'); void b.offsetWidth; b.classList.add('on');
+    clearTimeout(b._t); b._t = setTimeout(function () { b.classList.remove('on'); }, ms || 500);
+  }
+  var carga = null;
+  function render() {
+    var m = q('#cwMain');
+    clearTimeout(carga);
+    m.innerHTML = st.v === 'painel' ? vPainel() : st.v === 'colab' ? vColab() : vConsulta();
+    m.scrollTop = 0;
+    pintaTopo();
+    if (st.v === 'painel') requestAnimationFrame(desenhaMapa);
+    if (st.v === 'colab') {
+      q('#cwColB').innerHTML = rowsColab();
+      if (!st.fotos[st.ten]) carga = setTimeout(function () { st.fotos[st.ten] = 1; if (q('#cwColB')) q('#cwColB').innerHTML = rowsColab(); }, lento ? 0 : 450);
+    }
+    if (st.v === 'con' || st.v === 'inc') carga = setTimeout(function () { if (q('#cwConB')) rowsConsulta(); }, lento ? 0 : 650);
+  }
+  function vai(v) {
+    if (v === 'inicio') v = 'painel';
+    if (v === 'man') { snack(T('Manutenção fica fora desta demo.', 'Maintenance is not part of this demo.')); return; }
+    if (v === 'esp') { snack(T('O meu espelho de ponto está lá embaixo.', 'My own timesheet is further down.'), '#espelho', T('ver ↓', 'see ↓')); return; }
+    if (st.abertas.indexOf(v) < 0) st.abertas.push(v);
+    st.v = v;
+    barra(st.v === 'con' || st.v === 'inc' ? 700 : 400);
+    render();
+  }
+  function snack(txt, href, lbl) {
+    var s = q('#cwSnack');
+    s.innerHTML = esc(txt) + (href ? ' <a href="' + href + '">' + esc(lbl) + '</a>' : '');
+    s.classList.add('on');
+    clearTimeout(s._t); s._t = setTimeout(function () { s.classList.remove('on'); }, href ? 5200 : 3200);
+  }
+  function fechaPops(menos) {
+    [['#cwTenM', '#cwTen'], ['#cwNotM', '#cwBell']].forEach(function (x) { if (x[0] !== menos) { q(x[0]).hidden = true; q(x[1]).setAttribute('aria-expanded', 'false'); } });
+  }
+  function abrePop(sel, btn, html) {
+    var p = q(sel), aberto = !p.hidden;
+    fechaPops(sel);
+    if (aberto) { p.hidden = true; q(btn).setAttribute('aria-expanded', 'false'); return; }
+    p.innerHTML = html; p.hidden = false; q(btn).setAttribute('aria-expanded', 'true');
+    var b = q(btn);
+    p.style.left = Math.max(8, Math.min(win.clientWidth - p.offsetWidth - 8, b.offsetLeft + b.offsetWidth - p.offsetWidth)) + 'px';
+  }
+  function troca(k) {
+    fechaPops();
+    if (k === st.ten) return;
+    st.ten = k; st.colQ = ''; st.conQ = ''; st.est = ''; st.filtros = {};
+    barra(700);
+    render();
+    snack(T('Agora em ', 'Now in ') + ten().nome + T('. Mesma plataforma; cada empresa só vê os dados dela.', '. Same platform; each company only sees its own data.'));
+  }
+
+  win.addEventListener('click', function (e) {
+    var b = e.target.closest('button,a');
+    if (!b || !win.contains(b)) { if (!e.target.closest('.cw-pop')) fechaPops(); return; }
+    if (b.id === 'cwTen') { Som.play('clic'); abrePop('#cwTenM', '#cwTen', Object.keys(TEN).map(function (k) { return '<button type="button" data-ten="' + k + '">' + (k === st.ten ? '✓ ' : '') + esc(TEN[k].nome) + '</button>'; }).join('')); return; }
+    if (b.id === 'cwBell') {
+      Som.play('clic');
+      var lst = st.ten === 'mercado' ? NOT : [];
+      abrePop('#cwNotM', '#cwBell', '<h5>' + T('Notificações', 'Notifications') + '</h5>' + (lst.length ? lst.map(function (n) { return '<p><b>' + T('Visitante', 'Visitor') + '</b> ' + T('registrou ponto às ', 'clocked in at ') + n.h + ' · ' + esc(n.tipo) + T(' · pelo app', ' · from the app') + '</p>'; }).join('') : '<p class="cw-vazio">' + T('Nenhuma notificação. Bata o ponto no app ali em cima.', 'No notifications. Clock in on the app above.') + '</p>'));
+      if (st.ten === 'mercado') { st.nao = 0; pintaTopo(); }
+      return;
+    }
+    fechaPops();
+    if (b.hasAttribute('data-ten')) { Som.play('blip'); troca(b.getAttribute('data-ten')); return; }
+    if (b.hasAttribute('data-v')) { Som.play('blip'); vai(b.getAttribute('data-v')); return; }
+    if (b.hasAttribute('data-mod')) { Som.play('clic'); if (b.getAttribute('data-mod') !== '00') snack(T('Esta demo mostra só o módulo Principal.', 'This demo only shows the Main module.')); return; }
+    if (b.hasAttribute('data-fecha')) {
+      var id = b.getAttribute('data-fecha'), c = b.closest('.cw-card');
+      st.fechados[id] = !st.fechados[id];
+      c.classList.toggle('off', !!st.fechados[id]); b.setAttribute('aria-expanded', !st.fechados[id]);
+      Som.play('clic');
+      if (id === 'mapa' && !st.fechados[id]) requestAnimationFrame(desenhaMapa);
+      return;
+    }
+    if (b.hasAttribute('data-busca')) {
+      var cid = b.getAttribute('data-busca'), f = b.closest('.cw-card').querySelector('.cw-fil');
+      f.hidden = !f.hidden;
+      if (f.hidden) { st.filtros[cid] = null; f.querySelector('input').value = ''; filtra(cid, ''); } else { st.filtros[cid] = st.filtros[cid] || ''; f.querySelector('input').focus(); }
+      Som.play('clic');
+      return;
+    }
+    if (b.hasAttribute('data-grupo')) { var g = st.ten + b.getAttribute('data-grupo'); st.grupos[g] = !st.grupos[g]; var cb = b.closest('.cw-cb'); cb.innerHTML = porCargo(); Som.play('clic'); return; }
+    if (b.hasAttribute('data-mes')) { st.mes = Math.max(-11, Math.min(0, st.mes + +b.getAttribute('data-mes'))); Som.play('clic'); barra(400); render(); return; }
+    if (b.hasAttribute('data-dia')) { st.dia = Math.min(0, st.dia + +b.getAttribute('data-dia')); Som.play('clic'); barra(700); render(); return; }
+    if (b.hasAttribute('data-recarrega') || b.id === 'cwSync') { Som.play('clic'); if (b.id === 'cwSync') { b.classList.add('gira'); setTimeout(function () { b.classList.remove('gira'); }, 800); } barra(700); render(); return; }
+    if (b.hasAttribute('data-nome')) { st.conQ = b.getAttribute('data-nome'); Som.play('blip'); vai('con'); return; }
+    if (b.hasAttribute('data-snack')) { Som.play('erro'); snack(T('Cadastro desligado na demo. Os dados aqui são inventados.', 'Sign-up is off in the demo. The data here is made up.')); return; }
+  });
+  document.addEventListener('click', function (e) { if (!win.contains(e.target)) fechaPops(); });
+  win.addEventListener('keydown', function (e) { if (e.key === 'Escape') fechaPops(); });
+  function filtra(id, v) {
+    v = v.toLowerCase();
+    $$('[data-card="' + id + '"] [data-txt]', win).forEach(function (r) { r.hidden = !!v && r.getAttribute('data-txt').indexOf(v) < 0; });
+  }
+  win.addEventListener('input', function (e) {
+    var t = e.target;
+    if (t.hasAttribute('data-filtro')) { st.filtros[t.getAttribute('data-filtro')] = t.value; filtra(t.getAttribute('data-filtro'), t.value); }
+    else if (t.id === 'cwColQ') { st.colQ = t.value; q('#cwColB').innerHTML = rowsColab(); }
+    else if (t.id === 'cwConQ') { st.conQ = t.value; rowsConsulta(); }
+  });
+  win.addEventListener('change', function (e) { if (e.target.id === 'cwEst') { st.est = e.target.value; barra(400); rowsConsulta(); } });
+  document.addEventListener('ponto', function (e) {
+    var x = e.detail || {}, p = String(x.h || '').split(':'), t = +p[0] * 60 + +p[1];
+    if (isNaN(t)) return;
+    VIS.push({ t: t, c: x.tipo || 'RHO', novo: 1 });
+    VIS.sort(function (a, b) { return a.t - b.t; });
+    NOT.unshift({ h: x.h, tipo: x.tipo === 'RSE' ? T('Serviço externo', 'Field service') : T('Home office', 'Home office') });
+    st.nao++;
+    if (st.ten !== 'mercado') return;
+    pintaTopo();
+    if (st.v === 'painel') { var cb = q('[data-card="ult"] .cw-cb'); if (cb) { cb.innerHTML = ultimos(); if (st.filtros.ult) filtra('ult', st.filtros.ult); } desenhaMapa(); }
+    else if ((st.v === 'con' || st.v === 'inc') && st.dia === 0 && q('#cwConB') && !q('.cw-prog')) rowsConsulta();
+  });
+  if ('ResizeObserver' in window) new ResizeObserver(function () { if (st.v === 'painel') desenhaMapa(); }).observe(q('#cwMain'));
+  render();
 })();
 
 (function () {
