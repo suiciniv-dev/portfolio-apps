@@ -932,6 +932,30 @@ var Cena = (function () {
     R(x + 3, y + 31, 16, 2, '#2e2b33'); R(x + 9, y + 28, 4, 1, '#3a3a44');
   }
 
+  function tocaRacco() {
+    if (!st.toca) st.toca = { x: 8, alvo: 18, pausa: 0, fala: 0, dir: 1 };
+    return st.toca;
+  }
+
+  function tocaMini(sx, sy, f) {
+    var t = tocaRacco(), bx = sx + 3, by = sy + 44, bw = 30;
+    R(bx + 1, by, bw - 2, 4, '#26304a'); R(bx, by + 1, 1, 2, '#26304a'); R(bx + bw - 1, by + 1, 1, 2, '#26304a');
+    R(bx + 1, by, bw - 2, 1, '#5a6788');
+    var cores = ['#3d9bff', '#3fc7a0', '#2f80ed', '#6c63ff'];
+    cores.forEach(function (c, i) { R(bx + 3 + i * 5, by + 1, 3, 2, c); });
+    P(bx + 13, by + 3, '#60cdff'); P(bx + 14, by + 3, '#60cdff'); P(bx + 20, by, '#ff6257');
+    R(bx + 23, by + 1, 1, 2, '#4a5577');
+    R(bx + 25, by + 1, 3, 2, '#3a4560'); P(bx + 25, by + 1, '#f0a83c'); P(bx + 26, by + 2, '#8fb573');
+    var rx = bx + 2 + Math.round(t.x), ry = by - 3;
+    P(rx, ry, '#a39b90'); P(rx + 3, ry, '#a39b90');
+    R(rx, ry + 1, 4, 1, '#4a413b'); P(rx + (t.dir > 0 ? 2 : 1), ry + 1, '#f3efea');
+    R(rx, ry + 2, 4, 1, '#a39b90');
+    if (t.fala > 0) {
+      R(rx - 2, ry - 6, 8, 4, '#f3efea'); P(rx + 1, ry - 2, '#f3efea');
+      R(rx - 1, ry - 5, 2, 2, '#8fb573'); R(rx + 2, ry - 5, 2, 2, '#f0a83c');
+    }
+  }
+
   function monitorSenna(f) {
     var x = 98, y = 58;
     R(x, y, 102, 56, '#0f0e13'); R(x + 1, y + 1, 100, 54, '#1b1a22');
@@ -990,7 +1014,7 @@ var Cena = (function () {
       R(tx + 2, ty + 2, 4, 4, '#e8743b'); R(tx + 3, ty + 3, 2, 2, '#1b1714');
       R(tx + 8, ty + 2, 20, 1, '#e6e6e6'); R(tx + 8, ty + 4, 26, 1, '#9a9a9a');
     }
-    R(sx, sy + 45, sw, 4, '#0a0d16'); R(sx + 44, sy + 46, 2, 2, '#6cc6ff'); R(sx + 48, sy + 46, 2, 2, '#3a4560'); R(sx + 52, sy + 46, 2, 2, '#3a4560');
+    tocaMini(sx, sy, f);
     R(x, y + 53, 102, 3, '#0f0e13'); P(x + 98, y + 54, '#e8743b');
     R(x + 46, y + 56, 10, 6, '#25232c'); R(x + 34, y + 62, 34, 2, '#25232c'); R(x + 34, y + 62, 34, 1, '#34313d');
   }
@@ -1417,6 +1441,7 @@ var Cena = (function () {
     app: { r: [44, 92, 16, 31] },
     banditboard: { r: [66, 90, 22, 33] },
     senna: { r: [98, 58, 102, 64] },
+    toca: { r: [101, 97, 35, 13] },
     hud: { r: [205, 60, 30, 62] },
     lata: { r: [237, 109, 8, 13] },
     cloud: { r: [245, 91, 45, 31] },
@@ -1436,13 +1461,13 @@ var Cena = (function () {
     janela: T('Lá fora, em Canoas', 'Outside, in Canoas'), poster: 'Mercedes C180', livros: T('Estante', 'Bookshelf'),
     bloco: T('Bloco de grama', 'Grass block'), pocao: T('Poção de vida', 'Health potion'), mini: 'Mercedes C180',
     chapeu: T('Chapéu de mago', 'Wizard hat'), planta: T('Planta', 'Plant'), cortica: T('Recados', 'Notes'),
-    lampada: T('Luminária', 'Desk lamp'), app: 'Símix Ponto', banditboard: 'Banditboard', senna: 'Senna',
+    lampada: T('Luminária', 'Desk lamp'), app: 'Símix Ponto', banditboard: 'Banditboard', senna: 'Senna', toca: 'Toca',
     hud: 'ControlSensors HUD', lata: T('Energético', 'Energy drink'), cloud: 'Símix Ponto Cloud',
     fone: T('Fone', 'Headphones'), pc: 'PC', vini: T('Eu', 'Me'), racco: 'Racco',
     frodo: 'Frodo', fsenna: 'Ayrton Senna', bottas: 'Valtteri Bottas', f1: 'McLaren MP4/4',
     lucifer: T('Lúcifer', 'Lucifer'), mimi: 'Mimi', fred: 'Fred'
   };
-  var PROJ = { banditboard: 'banditboard', senna: 'senna', hud: 'hud', app: 'app', cloud: 'ponto-cloud' };
+  var PROJ = { banditboard: 'banditboard', senna: 'senna', toca: 'toca', hud: 'hud', app: 'app', cloud: 'ponto-cloud' };
 
   function draw() {
     var f = st.f, ph = fase(canoas().h);
@@ -1520,6 +1545,13 @@ var Cena = (function () {
       }
     }
     OBJ.racco.r[0] = Math.round(r.x);
+    var tr = tocaRacco();
+    if (tr.fala > 0) tr.fala--;
+    if (f % 4 === 0 && !lento) {
+      if (tr.pausa > 0) tr.pausa--;
+      else if (Math.round(tr.x) === tr.alvo) { tr.pausa = Math.floor(rnd(6, 30)); tr.alvo = Math.floor(rnd(0, 25)); }
+      else { tr.dir = tr.alvo > tr.x ? 1 : -1; tr.x += tr.dir; }
+    }
     gatoUpdate('mimi'); gatoUpdate('lucifer');
     OBJ.mimi.r = rectGato('mimi'); OBJ.lucifer.r = rectGato('lucifer');
   }
@@ -1600,6 +1632,7 @@ var Cena = (function () {
     if (PROJ[id]) {
       Som.play('blip');
       if (id === 'senna') { st.toast = 60; st.toastX = 40; }
+      if (id === 'toca') tocaRacco().fala = 40;
       if (id === 'app') st.appOk = 16;
       if (id === 'cloud') st.novo = 30;
       vai(PROJ[id]);
@@ -1763,7 +1796,19 @@ var Cena = (function () {
     b.addEventListener('click', function () { age(b.getAttribute('data-obj')); });
   });
 
+  function iconeToca(c) {
+    c.width = 30; c.height = 24;
+    var x = c.getContext('2d');
+    function q(a, b, w, h, cor) { x.fillStyle = cor; x.fillRect(a, b, w, h); }
+    q(1, 18, 28, 6, '#2c3550'); q(0, 19, 1, 4, '#2c3550'); q(29, 19, 1, 4, '#2c3550');
+    q(1, 18, 28, 1, '#7d8bb0');
+    ['#3d9bff', '#3fc7a0', '#2f80ed', '#6c63ff', '#f5c04a'].forEach(function (cor, i) { q(3 + i * 5, 20, 3, 3, cor); });
+    q(16, 23, 3, 1, '#60cdff');
+    racco(x, 7, 4, { acc: ['GLASSES'] });
+  }
+
   function icone(alvo, r) {
+    if (r === 'toca') { iconeToca(alvo); return; }
     var off = document.createElement('canvas'); off.width = W; off.height = H;
     var salvo = g, boot = st.boot;
     g = off.getContext('2d'); st.boot = null;
@@ -3264,7 +3309,7 @@ window.__cena = Cena;
   var C = {
     ajuda: function () { p(T('comandos: sobre · projetos · contato · email · cv · github · linkedin · whatsapp · clima · hora · segredos · racco · limpar', 'commands: about · projects · contact · email · resume · github · linkedin · whatsapp · weather · time · secrets · racco · clear')); },
     sobre: function () { p(T('Vinícius Pires da Silva. Desenvolvedor C# e .NET, Pleno III na Símix, em Canoas, RS. Começou no suporte em 2020 e aprendeu sozinho.', 'Vinícius Pires da Silva. C# and .NET developer, mid-level III at Símix, in Canoas, Brazil. Started in support in 2020 and is self-taught.')); },
-    projetos: function () { p([link('#banditboard', 'banditboard/'), link('#senna', 'senna/'), link('#hud', 'controlsensors/'), link('#app', 'simix-ponto/'), link('#ponto-cloud', 'simix-ponto-cloud/')].join('  ')); },
+    projetos: function () { p([link('#banditboard', 'banditboard/'), link('#senna', 'senna/'), link('#toca', 'toca/'), link('#hud', 'controlsensors/'), link('#app', 'simix-ponto/'), link('#ponto-cloud', 'simix-ponto-cloud/')].join('  ')); },
     contato: function () { p('e-mail: ' + link('mailto:' + EMAIL, EMAIL) + '\nwhatsapp: ' + link('https://wa.me/5551982515375', '+55 51 98251-5375') + '\nlinkedin: ' + link('https://www.linkedin.com/in/viniciuspiresdasilva/', 'in/viniciuspiresdasilva')); },
     email: function () { if (navigator.clipboard) navigator.clipboard.writeText(EMAIL).then(function () { p(T('Copiei o e-mail: ', 'Copied the email: ') + EMAIL); }, function () { p(EMAIL); }); else p(EMAIL); },
     cv: function () { p(link('/assets/Curriculo-Vinicius-Pires-da-Silva.pdf', T('Currículo em PDF ↓', 'Résumé in Portuguese ↓')) + '  ' + link('/assets/Resume-Vinicius-Pires-da-Silva.pdf', 'Résumé in English ↓')); },
@@ -3345,6 +3390,384 @@ window.__cena = Cena;
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
   secs.forEach(function (s) { if (s) nav.observe(s); });
+})();
+
+(function () {
+  var box = $('#tocaDemo'), cmds = $('#tocaCmds'), opcoes = $('#tocaOpcoes'), falaEl = $('#tocaFala');
+  if (!box || !cmds) return;
+
+  var ICONES = {
+    iniciar: [['.BBBBBBBBBB.', 'BBBBBBBBBBBB', 'BBWWWBBWWWBB', 'BBWWWBBWWWBB', 'BBWWWBBWWWBB', 'BBBBBBBBBBBB', 'BBBBBBBBBBBB', 'BBWWWBBWWWBB', 'BBWWWBBWWWBB', 'BBWWWBBWWWBB', 'BBBBBBBBBBBB', '.BBBBBBBBBB.'], { B: '#2f7fe8', W: '#ffffff' }],
+    web: [['....GGGG....', '..GGTTTTGG..', '.GTTGTTGTTG.', '.GTGTTTTGTG.', 'GTTGTTTTGTTG', 'GGGGGGGGGGGG', 'GTTGTTTTGTTG', 'GTTGTTTTGTTG', '.GTGTTTTGTG.', '.GTTGTTGTTG.', '..GGTTTTGG..', '....GGGG....'], { G: '#0f8a6a', T: '#3fc7a0' }],
+    codigo: [['.CCCCCCCCCC.', 'CCCCCCCCCCCC', 'CCCCCCCCCWCC', 'CCCWCCCCCWCC', 'CCWCCCCCWCCC', 'CWCCCCCCWCWC', 'CCWCCCCWCCCW', 'CCCWCCCWCCWC', 'CCCCCCWCCWCC', 'CCCCCCWCCCCC', 'CCCCCCCCCCCC', '.CCCCCCCCCC.'], { C: '#2f80ed', W: '#e8f1ff' }],
+    chat: [['.PPPPPPPPPP.', 'PPPPPPPPPPPP', 'PPWWWWWWWWPP', 'PWWWWWWWWWWP', 'PWWPWWPWWPWP', 'PWWWWWWWWWWP', 'PPWWWWWWWWPP', 'PPPWWPPPPPPP', 'PPPWPPPPPPPP', 'PPPPPPPPPPPP', 'PPPPPPPPPPPP', '.PPPPPPPPPP.'], { P: '#6c63ff', W: '#ffffff' }],
+    pasta: [['............', '............', '.YYYY.......', 'YYYYYY......', 'YYYYYYYYYYYY', 'DDDDDDDDDDDD', 'YYYYYYYYYYYY', 'YYYYYYYYYYYY', 'YYYYYYYYYYYY', 'YYYYYYYYYYYY', 'YYYYYYYYYYYY', 'DDDDDDDDDDDD'], { Y: '#f5c04a', D: '#c9932a' }],
+    terminal: [['.KKKKKKKKKK.', 'KKKKKKKKKKKK', 'KKKKKKKKKKKK', 'KKGKKKKKKKKK', 'KKKGKKKKKKKK', 'KKKKGKKKKKKK', 'KKKGKKKKKKKK', 'KKGKKKKKKKKK', 'KKKKKKGGGGKK', 'KKKKKKKKKKKK', 'KKKKKKKKKKKK', '.KKKKKKKKKK.'], { K: '#1d1d24', G: '#5cf2a0' }],
+    musica: [['.NNNNNNNNNN.', 'NNNNNNNNNNNN', 'NNNNNNWWWNNN', 'NNNNNNWNNWNN', 'NNNNNNWNNNNN', 'NNNNNNWNNNNN', 'NNNNNNWNNNNN', 'NNNNWWWNNNNN', 'NNNWWWWNNNNN', 'NNNNWWNNNNNN', 'NNNNNNNNNNNN', '.NNNNNNNNNN.'], { N: '#3aa35b', W: '#ffffff' }]
+  };
+  var LENCOL = ['................', '................', '................', '......XXXX......', '....XXXXXXXX....', '...XXXXXXXXXS...', '..XXHHXXXXHHXSS.', '..XXHHXXXXHHXXS.', '.XXXXXXXXXXXXSS.', '.XXXXXXXXXXXXXS.', 'XXXXXXXXXXXXXXSS', 'XXXXXXXXXXXXXXXS', 'XX.XXXX.XXXX.XXS', '................'];
+  var BOO = ['....WWWWW....', '..WWWWWWWWW..', '.WWWWWWWWWWW.', '.WWEWWWWWEWWS', 'WWWEWWWWWEWWS', 'WWWWWWWWWWWWS', 'WWMMMMMMMMWWS', 'WWMTMMMMTMWWS', '.WWMMMMMMWWS.', '.WWWWWWWWWWS.', '..WWWWWWWWS..', '...WWW.WWS...'];
+  var BOO_TIMIDO = ['....WWWWW....', '..WWWWWWWWW..', '.WWWWWWWWWWW.', '.WAAWWWWWAAWS', 'WWAAWWWWWAAWS', 'WWWPWWWWWPWWS', 'WWWWWWWWWWWWS', 'WWWWWMMMWWWWS', '.WWWWWWWWWWS.', '.WWWWWWWWWWS.', '..WWWWWWWWS..', '...WWW.WWS...'];
+  var ABOBORA = ['.....GG....', '..OOOGOOO..', '.OOOOOOOOO.', 'OOYOOOOOYOO', 'OYYYOOOYYYO', 'OOOOOYOOOOO', 'OYOYOYOYOYO', 'OOYYYYYYYOO', '.OOOOOOOOO.', '...OOOOO...'];
+  var PAL_ENF = { W: '#f8f8f2', S: '#d6ccf5', E: '#282a36', M: '#44233a', T: '#f8f8f2', A: '#e6e1f7', P: '#ff79c6', O: '#ffb86c', Y: '#f1fa8c', G: '#50fa7b' };
+  ACC.NATAL = [[4, 2, 8, 1, '#d6455d'], [6, 1, 5, 1, '#d6455d'], [9, 0, 3, 1, '#d6455d'], [12, 0, 2, 2, '#f3efea'], [4, 3, 8, 1, '#f3efea']];
+
+  var AMBIENTES = {
+    trabalho: { nome: T('Trabalho', 'Work'), acc: 'GLASSES', cor: '#60cdff', apps: ['web', 'codigo', 'chat', 'terminal', 'pasta'] },
+    pessoal: { nome: T('Pessoal', 'Personal'), acc: 'HEADPHONES', cor: '#f59ac0', apps: ['web', 'musica', 'chat', 'pasta'] }
+  };
+  var NOMES_APPS = { web: T('Navegador', 'Browser'), codigo: T('Editor de código', 'Code editor'), chat: 'Chat', terminal: 'Terminal', pasta: 'Downloads', musica: T('Música', 'Music') };
+  var est = { tema: 'vidro', pos: 'baixo', amb: 'trabalho', x: 40, alvo: 120, pausa: 10, passo: 0, olhar: 0, pulo: 0, balaoAte: 0, placa: false, apontar: null, alerta: false, chuva: false, musica: false };
+
+  box.setAttribute('data-tema', est.tema);
+  box.setAttribute('data-pos', est.pos);
+  box.innerHTML =
+    '<div class="tc-janela" aria-hidden="true"><div class="tc-jbar"><i></i><i></i><i></i></div><div class="tc-jcod"></div></div>' +
+    '<div class="tc-dock"></div>' +
+    '<canvas class="tc-enf" data-e="boo1" hidden></canvas><canvas class="tc-enf" data-e="boo2" hidden></canvas>' +
+    '<canvas class="tc-enf" data-e="ab1" hidden></canvas><canvas class="tc-enf" data-e="ab2" hidden></canvas>' +
+    '<div class="tc-luzes" aria-hidden="true" hidden></div>' +
+    '<span class="tc-haste" hidden></span><div class="tc-placa" hidden></div>' +
+    '<canvas class="tc-racco" width="16" height="14" role="button" tabindex="0" aria-label="' + T('Racco, clique para falar', 'Racco, click to talk') + '"></canvas>' +
+    '<div class="tc-bal" hidden></div>';
+  var jcod = $('.tc-jcod', box), dock = $('.tc-dock', box), cv = $('.tc-racco', box), bal = $('.tc-bal', box), luzes = $('.tc-luzes', box);
+  var placa = $('.tc-placa', box), haste = $('.tc-haste', box), ctx = cv.getContext('2d');
+  var CORES_COD = ['#7aa2f7', '#c3e88d', '#f78c6c', '#89ddff', '#c792ea', '#ffcb6b', '#5c6370'];
+  for (var l = 0; l < 9; l++) {
+    var linha = '<p style="padding-left:' + ((l % 3) * 14) + 'px">';
+    for (var k = 0; k < 2 + (l * 7) % 4; k++) linha += '<i style="width:' + (18 + ((l * 13 + k * 29) % 46)) + 'px;background:' + CORES_COD[(l + k * 3) % CORES_COD.length] + '"></i>';
+    jcod.insertAdjacentHTML('beforeend', linha + '</p>');
+  }
+  var CORES_LUZ = ['#ff4d4d', '#ffd34d', '#4dd97a', '#4da6ff'];
+  for (var z = 0; z < 16; z++) luzes.insertAdjacentHTML('beforeend', '<i style="--c:' + CORES_LUZ[z % 4] + ';animation-delay:' + (z % 2 ? '-.6s' : '0s') + '"></i>');
+
+  function icone(nome) {
+    var c = spr(ICONES[nome][0], ICONES[nome][1]);
+    c.className = 'tc-ic';
+    return c;
+  }
+  function slot(nome, rotulo) {
+    var s = document.createElement('button');
+    s.type = 'button'; s.className = 'tc-slot'; s.setAttribute('data-nome', rotulo); s.setAttribute('data-app', nome); s.setAttribute('aria-label', rotulo);
+    s.appendChild(icone(nome));
+    s.insertAdjacentHTML('beforeend', '<span class="tc-ind"></span>');
+    return s;
+  }
+  function anel(p, raio, cor) {
+    var c = 2 * Math.PI * raio;
+    return '<circle cx="16" cy="16" r="' + raio + '" stroke="rgba(255,255,255,.16)" stroke-width="3" fill="none"/><circle cx="16" cy="16" r="' + raio + '" stroke="' + cor + '" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="' + (c * p / 100).toFixed(1) + ' ' + c.toFixed(1) + '" transform="rotate(-90 16 16)"/>';
+  }
+  function heatmap() {
+    var h = '', cores = ['rgba(255,255,255,.12)', '#0e4429', '#006d32', '#26a641', '#39d353'];
+    for (var i = 0; i < 70; i++) h += '<i style="background:' + cores[(i * 7 + (i >> 3) * 5) % 9 > 3 ? ((i * 13) % 4) + 1 : 0] + '"></i>';
+    return h;
+  }
+  function neve() {
+    var h = '';
+    for (var i = 0; i < 22; i++) h += '<i style="left:' + ((i * 37) % 100) + '%;animation-duration:' + (2.6 + (i % 5) * .5) + 's;animation-delay:-' + ((i * 0.43) % 3).toFixed(2) + 's;width:' + (i % 3 ? 2 : 3) + 'px;height:' + (i % 3 ? 2 : 3) + 'px"></i>';
+    return '<span class="tc-neve" aria-hidden="true">' + h + '</span>';
+  }
+  function montar() {
+    var a = AMBIENTES[est.amb];
+    dock.innerHTML = neve();
+    dock.appendChild(slot('iniciar', T('Iniciar · role para trocar de ambiente', 'Start · scroll to switch environment')));
+    var ponto = document.createElement('button');
+    ponto.type = 'button'; ponto.className = 'tc-amb'; ponto.style.setProperty('--c', a.cor);
+    ponto.setAttribute('data-nome', T('Ambiente ', 'Environment: ') + a.nome); ponto.setAttribute('aria-label', T('Ambiente ', 'Environment: ') + a.nome);
+    dock.appendChild(ponto);
+    a.apps.forEach(function (n) { dock.appendChild(slot(n, NOMES_APPS[n])); });
+    dock.insertAdjacentHTML('beforeend', '<span class="tc-sep"></span>' +
+      '<button type="button" class="tc-card tc-claude" data-nome="' + T('Claude Code · sessão 42% · semana 61%', 'Claude Code · session 42% · week 61%') + '"><svg viewBox="0 0 32 32">' + anel(42, 13, '#f0a83c') + anel(61, 8, '#8fb573') + '</svg></button>' +
+      '<button type="button" class="tc-card tc-clima" data-nome="' + T('Clima, do Senna', 'Weather, from Senna') + '"><span class="tc-nuvem"></span><span><b>' + (clima ? clima.temp : 24) + '°</b><small>Canoas</small></span></button>' +
+      '<button type="button" class="tc-card tc-player" data-nome="' + T('Tocar ou pausar', 'Play or pause') + '"><span class="tc-capa"></span><span><b>' + T('lo-fi da mesa', 'desk lo-fi') + '</b><small>' + (est.musica ? T('tocando', 'playing') : T('pausado', 'paused')) + '</small><em><i></i></em></span></button>' +
+      '<button type="button" class="tc-card tc-git" data-nome="' + T('GitHub, do Senna', 'GitHub, from Senna') + '"><span class="tc-gh">' + heatmap() + '</span><span class="tc-selo">3</span></button>' +
+      '<span class="tc-sep"></span><button type="button" class="tc-rel" data-nome="' + T('Relógio', 'Clock') + '"><b></b><small></small></button>');
+    var abertos = { web: 1, codigo: 1, chat: 1, terminal: 1, musica: 1 };
+    $$('.tc-slot', dock).forEach(function (s) {
+      var n = s.getAttribute('data-app');
+      if (abertos[n]) s.setAttribute('data-aberto', '');
+      if (n === 'codigo') s.setAttribute('data-ativo', '');
+      if (n === 'chat') s.insertAdjacentHTML('beforeend', '<span class="tc-selo">2</span>');
+    });
+    box.classList.toggle('tc-tocando', est.musica);
+    relogio();
+  }
+  function relogio() {
+    var r = $('.tc-rel', dock); if (!r) return;
+    var d = new Date();
+    $('b', r).textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()) + (est.tema === 'pixel' && d.getSeconds() % 2 ? '_' : '');
+    $('small', r).textContent = pad(d.getDate()) + '/' + pad(d.getMonth() + 1);
+  }
+
+  function caixa(el) {
+    var b = box.getBoundingClientRect(), r = el.getBoundingClientRect();
+    return { x: r.left - b.left, y: r.top - b.top, w: r.width, h: r.height };
+  }
+  function escala() { return parseFloat(getComputedStyle(box).getPropertyValue('--S')) || 3; }
+  function faixa() {
+    var d = caixa(dock), S = escala();
+    return { min: d.x + 10, max: d.x + d.w - 10 - 16 * S, topo: d.y, base: d.y + d.h };
+  }
+
+  function desenhar() {
+    ctx.clearRect(0, 0, 16, 14);
+    var andando = est.passo % 4 < 2 ? 1 : 2, parado = est.pausa > 0 || est.balaoAte > Date.now() || est.placa || est.musica;
+    var dancando = est.musica && !est.alerta && !est.placa, batida = Math.floor(est.passo / 5);
+    if (est.tema === 'halloween') {
+      var cor = { X: '#f6f3ec', S: '#d9d4c8', H: '#1a1622' };
+      for (var j = 0; j < 14; j++) for (var i = 0; i < 16; i++) {
+        var ch = LENCOL[j][i]; if (ch === '.') continue;
+        ctx.fillStyle = cor[ch]; ctx.fillRect(i + (j >= 10 && !parado ? (andando === 1 ? -1 : 0) : 0), j + (dancando && batida % 2 ? 1 : 0), 1, 1);
+      }
+      ctx.fillStyle = '#a39b90';
+      [3, 5, 10, 12].forEach(function (c, i) { if (parado || (andando === 1 ? i % 2 : !(i % 2))) ctx.fillRect(c, 13, 1, 1); });
+    } else {
+      var acc = est.tema === 'natal' ? 'NATAL' : AMBIENTES[est.amb].acc;
+      racco(ctx, 0, 0, {
+        step: dancando ? (batida % 2 ? 0 : (batida / 2) % 2 + 1) : parado ? 0 : andando,
+        look: dancando ? (batida % 4 < 2 ? 1 : -1) : est.olhar,
+        bob: dancando && batida % 2 === 1,
+        acc: [acc], wave: est.placa || est.alerta || (dancando && batida % 4 < 2)
+      });
+      if (est.chuva) {
+        ctx.fillStyle = '#8ab4f8'; ctx.fillRect(1, 0, 3, 1);
+        ctx.fillStyle = '#4f8fd8'; ctx.fillRect(0, 1, 5, 1);
+        ctx.fillStyle = '#3a6fb0'; ctx.fillRect(0, 2, 6, 1);
+        ctx.fillStyle = '#3a3a40'; ctx.fillRect(1, 3, 1, 5);
+      }
+    }
+    if (dancando) {
+      var nx = batida % 4 < 2 ? 13 : 0;
+      ctx.fillStyle = '#b9a6f2'; ctx.fillRect(nx + 1, 0, 2, 1); ctx.fillRect(nx + 1, 1, 1, 1); ctx.fillRect(nx, 2, 2, 1);
+    }
+    if (est.alerta && (est.passo % 10) < 7) { ctx.fillStyle = '#f0a83c'; ctx.fillRect(14, 0, 1, 2); ctx.fillRect(14, 3, 1, 1); }
+  }
+
+  function posicionar() {
+    var f = faixa(), S = escala(), cima = est.pos === 'cima';
+    est.x = Math.max(0, Math.min(est.x, f.max - f.min));
+    var salto = est.pulo > 0 ? 2 * S : 0;
+    var left = Math.round(f.min + est.x), top = Math.round(cima ? f.base - 2 + salto : f.topo - 14 * S + 2 - salto);
+    cv.style.left = left + 'px'; cv.style.top = top + 'px';
+    var bw = box.clientWidth, centro = left + 8 * S;
+    if (!bal.hidden) {
+      var w = bal.offsetWidth, h = bal.offsetHeight;
+      var bl = Math.max(6 + w / 2, Math.min(bw - 6 - w / 2, centro));
+      bal.style.left = bl + 'px'; bal.style.top = (cima ? top + 14 * S + 9 : top - h - 8) + 'px';
+      bal.style.setProperty('--cauda', (centro - (bl - w / 2)) + 'px');
+    }
+    if (!placa.hidden) {
+      var pw = placa.offsetWidth, ph = placa.offsetHeight, mao = left + 14.5 * S;
+      var pl = Math.max(6, Math.min(bw - 6 - pw, mao - pw / 2));
+      placa.style.left = pl + 'px'; haste.style.left = (mao - 1) + 'px'; haste.style.height = (7 * S + 6) + 'px';
+      if (cima) { var b2 = top + 14 * S + 6; placa.style.top = b2 + 'px'; haste.style.top = (top + 7 * S) + 'px'; }
+      else { var b1 = top - 6; placa.style.top = (b1 - ph) + 'px'; haste.style.top = b1 + 'px'; }
+    }
+    if (est.tema === 'halloween') enfeites(left, S);
+    if (est.tema === 'natal') {
+      var d = caixa(dock);
+      luzes.style.left = (d.x + 14) + 'px'; luzes.style.width = (d.w - 28) + 'px';
+      luzes.style.top = (cima ? d.y + d.h - 4 : d.y - 4) + 'px';
+    }
+  }
+
+  var ENF = {};
+  $$('.tc-enf', box).forEach(function (c) { ENF[c.getAttribute('data-e')] = c; });
+  function pinta(c, mapa) {
+    var x = c.getContext('2d'), w = mapa[0].length, h = mapa.length;
+    if (c.width !== w) { c.width = w; c.height = h; }
+    x.clearRect(0, 0, w, h);
+    for (var j = 0; j < h; j++) for (var i = 0; i < w; i++) { var ch = mapa[j][i]; if (ch !== '.') { x.fillStyle = PAL_ENF[ch]; x.fillRect(i, j, 1, 1); } }
+  }
+  function enfeites(raccoX, S) {
+    var d = caixa(dock), s = Math.max(2, S - 1), cima = est.pos === 'cima';
+    [['boo1', d.x - 13 * s * .35], ['boo2', d.x + d.w - 13 * s * .65]].forEach(function (b, i) {
+      var c = ENF[b[0]], timido = Math.abs(raccoX + 8 * S - (b[1] + 6.5 * s)) < 110, flutua = Math.sin((est.passo + i * 17) / 7) * 4;
+      pinta(c, timido ? BOO_TIMIDO : BOO);
+      c.style.width = 13 * s + 'px'; c.style.left = b[1] + 'px';
+      c.style.top = (cima ? d.y + d.h + 8 + flutua : d.y - 12 * s - 8 + flutua) + 'px';
+    });
+    [['ab1', .24], ['ab2', .70]].forEach(function (a) {
+      var c = ENF[a[0]];
+      if (c.width !== 11) pinta(c, ABOBORA);
+      c.style.width = 11 * s + 'px'; c.style.left = (d.x + d.w * a[1]) + 'px';
+      c.style.top = (cima ? d.y + d.h - 3 : d.y - 10 * s + 3) + 'px';
+    });
+  }
+
+  function falar(t1, cor, t2, ms) {
+    bal.innerHTML = '<b style="color:' + cor + '">' + t1 + '</b>' + (t2 ? '<small>' + t2 + '</small>' : '');
+    bal.hidden = false;
+    est.balaoAte = Date.now() + (ms || 5000);
+    est.pulo = 3;
+    posicionar();
+  }
+  function usoHtml() {
+    var renova = new Date(Date.now() + 2 * 3600e3);
+    bal.innerHTML = T('Sessão ', 'Session ') + '<b style="color:#4e8a2e">42%</b>  ·  ' + T('Semana ', 'Week ') + '<b style="color:#c77a12">61%</b>' +
+      '<small>' + T('a sessão renova às ', 'the session resets at ') + pad(renova.getHours()) + ':00</small>';
+    bal.hidden = false; est.balaoAte = Date.now() + 5500; est.pulo = 3; est.pausa = 30;
+    posicionar();
+  }
+  function legenda(t) { if (falaEl) falaEl.textContent = t; }
+  function marca(grupo, atributo, valor) {
+    $$('[' + atributo + ']', grupo).forEach(function (b) { if (b.getAttribute(atributo) === valor) b.setAttribute('data-ativo', '1'); else b.removeAttribute('data-ativo'); });
+  }
+
+  var ACOES = {
+    uso: function () {
+      Som.play('moeda'); usoHtml();
+      legenda(T('Quando o Claude Code manda um uso novo, o Racco para e fala: sessão de 5 horas e semana, com a hora em que a sessão renova.', 'When Claude Code sends new usage, Racco stops and says it: 5-hour session and week, with the time the session resets.'));
+    },
+    pr: function () {
+      Som.play('blip'); falar(T('PR para revisar', 'PR to review'), '#2563eb', 'senna#48 · ' + T('Avisos pela Toca', 'Alerts through Toca'), 6000);
+      var g = $('.tc-git .tc-selo', dock); if (g) g.textContent = '4';
+      legenda(T('Os avisos do Senna chegam pelo Racco, e o Senna não repete a notificação do Windows.', 'Senna\'s alerts come through Racco, and Senna doesn\'t repeat the Windows notification.'));
+    },
+    reuniao: function () {
+      est.placa = !est.placa;
+      placa.hidden = haste.hidden = !est.placa;
+      placa.textContent = T('Daily em 10 min', 'Daily in 10 min');
+      if (est.placa) { Som.play('nota'); est.pulo = 3; bal.hidden = true; }
+      posicionar();
+      legenda(est.placa
+        ? T('Dez minutos antes de uma reunião da agenda, ele segura a plaquinha. Clicar nele entra na reunião.', 'Ten minutes before a calendar meeting, he holds up the sign. Clicking him joins the meeting.')
+        : T('Plaquinha guardada.', 'Sign put away.'));
+    },
+    permissao: function () {
+      var alvo = $('.tc-slot[data-app="codigo"]', dock) || $('.tc-slot[data-app="web"]', dock);
+      var a = caixa(alvo), f = faixa(), S = escala();
+      est.apontar = a.x + a.w / 2 - 8 * S - f.min; est.alerta = true; bal.hidden = true;
+      Som.play('erro');
+      legenda(T('Quando uma sessão do Claude Code para esperando permissão, ele corre até o ícone da janela e aponta. Clicar nele leva até lá.', 'When a Claude Code session stops waiting for permission, he runs to that window\'s icon and points. Clicking him takes you there.'));
+    },
+    ambiente: function () {
+      est.amb = est.amb === 'trabalho' ? 'pessoal' : 'trabalho';
+      Som.play('oi'); montar();
+      falar(T('Modo ', 'Mode: ') + AMBIENTES[est.amb].nome, '#7c3aed', T('role no botão Iniciar para trocar', 'scroll on the Start button to switch'), 3500);
+      legenda(T('Trabalho e Pessoal trocam os apps do dock e o acessório do Racco: óculos no trabalho, fones em casa.', 'Work and Personal swap the dock apps and Racco\'s accessory: glasses at work, headphones at home.'));
+    }
+  };
+
+  function aplicarTema(t) {
+    est.tema = t;
+    box.setAttribute('data-tema', t);
+    $$('.tc-enf', box).forEach(function (c) { c.hidden = t !== 'halloween'; });
+    luzes.hidden = t !== 'natal';
+    marca(opcoes, 'data-tema', t);
+    Som.play(t === 'vidro' || t === 'pixel' ? 'blip' : 'conq');
+    if (t === 'halloween') falar(T('Feliz Halloween!', 'Happy Halloween!'), '#7c3aed', T('o tema da época entra sozinho', 'the seasonal theme turns on by itself'), 3500);
+    if (t === 'natal') falar(T('Feliz Natal!', 'Merry Christmas!'), '#c0392b', T('de 1º de dezembro a 6 de janeiro', 'from December 1st to January 6th'), 3500);
+    legenda({
+      vidro: T('Vidro: transparente, dá para ver o que está atrás do dock.', 'Glass: see-through, you can see what is behind the dock.'),
+      halloween: T('Halloween, nas cores do Dracula: Boos que ficam com vergonha quando o Racco chega perto, abóboras e o Racco de lençol.', 'Halloween, in Dracula colors: Boos that get shy when Racco comes close, pumpkins and Racco in a bedsheet.'),
+      natal: T('Natal: neve dentro da barra, pisca-pisca e o Racco de gorro.', 'Christmas: snow inside the bar, twinkle lights and Racco in a Santa hat.'),
+      pixel: T('Pixel: cantos retos e a fonte deste portfólio. No app tem mais temas.', 'Pixel: square corners and the font from this portfolio. The app has more themes.')
+    }[t]);
+    relogio(); posicionar();
+  }
+  function aplicarPos(p) {
+    est.pos = p;
+    box.setAttribute('data-pos', p);
+    marca(opcoes, 'data-pos', p);
+    Som.play('blip');
+    legenda(p === 'cima'
+      ? T('Em cima, o Racco anda de ponta-cabeça. Nas laterais, que não cabem aqui, ele sobe pela parede.', 'On top, Racco walks upside down. On the sides, which don\'t fit here, he climbs the wall.')
+      : T('Embaixo, no lugar da barra de tarefas do Windows.', 'At the bottom, where the Windows taskbar used to be.'));
+    est.pulo = 3; posicionar();
+  }
+
+  cmds.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-tc]'); if (!b) return;
+    ACOES[b.getAttribute('data-tc')]();
+  });
+  if (opcoes) opcoes.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-tema],[data-pos]'); if (!b) return;
+    if (b.hasAttribute('data-tema')) aplicarTema(b.getAttribute('data-tema'));
+    else aplicarPos(b.getAttribute('data-pos'));
+  });
+
+  dock.addEventListener('click', function (e) {
+    var s = e.target.closest('.tc-slot');
+    if (s) {
+      var app = s.getAttribute('data-app');
+      if (app === 'iniciar') { ACOES.ambiente(); return; }
+      s.classList.remove('pula'); void s.offsetWidth; s.classList.add('pula');
+      Som.play('clic');
+      var selo = $('.tc-selo', s); if (selo) selo.remove();
+      $$('.tc-slot', dock).forEach(function (x) { x.removeAttribute('data-ativo'); });
+      s.setAttribute('data-aberto', ''); s.setAttribute('data-ativo', '');
+      legenda(T('Clicar abre o app ou traz a janela; com a janela na frente, minimiza. O indicador embaixo mostra o que está aberto.', 'Clicking opens the app or brings the window up; if it\'s already in front, it minimizes. The indicator below shows what\'s open.'));
+      return;
+    }
+    if (e.target.closest('.tc-amb')) { ACOES.ambiente(); return; }
+    if (e.target.closest('.tc-claude')) { ACOES.uso(); return; }
+    if (e.target.closest('.tc-git')) { ACOES.pr(); return; }
+    if (e.target.closest('.tc-clima')) {
+      est.chuva = !est.chuva; Som.play(est.chuva ? 'pss' : 'blip');
+      if (est.chuva) falar(T('Chuva às 16h', 'Rain at 4 PM'), '#2563eb', T('peguei o guarda-chuva', 'got my umbrella'), 3500);
+      legenda(T('O clima vem do Senna. Com chuva prevista, o Racco abre o guarda-chuva.', 'The weather comes from Senna. When rain is coming, Racco opens his umbrella.'));
+      return;
+    }
+    if (e.target.closest('.tc-player')) {
+      est.musica = !est.musica; Som.play('nota'); montar();
+      legenda(est.musica ? T('Com música tocando, o Racco dança. O player controla o que estiver tocando no Windows.', 'With music playing, Racco dances. The player controls whatever is playing on Windows.') : T('Música pausada.', 'Music paused.'));
+      return;
+    }
+    if (e.target.closest('.tc-rel')) {
+      var d = new Date();
+      Som.play('blip'); falar(d.toLocaleDateString(EN ? 'en-US' : 'pt-BR', { weekday: 'long', day: 'numeric', month: 'long' }), '#1b1512', '', 3000);
+    }
+  });
+  dock.addEventListener('wheel', function (e) {
+    if (!e.target.closest('.tc-slot[data-app="iniciar"]')) return;
+    e.preventDefault(); ACOES.ambiente();
+  }, { passive: false });
+
+  function cliqueRacco() {
+    if (est.alerta) {
+      est.alerta = false; est.apontar = null; bal.hidden = true; Som.play('blip');
+      legenda(T('No app, clicar nele traz a janela que pediu permissão para a frente.', 'In the app, clicking him brings the window that asked for permission to the front.'));
+      return;
+    }
+    if (est.placa) { ACOES.reuniao(); return; }
+    Som.play('oi'); usoHtml();
+    legenda(T('Clicar no Racco abre o painel do Banditboard. Aqui ele só fala o uso.', 'Clicking Racco opens the Banditboard dashboard. Here he just says the usage.'));
+  }
+  cv.addEventListener('click', cliqueRacco);
+  cv.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); cliqueRacco(); } });
+
+  function tique() {
+    est.passo++;
+    if (est.pulo > 0) est.pulo--;
+    if (!bal.hidden && Date.now() > est.balaoAte && !est.alerta) bal.hidden = true;
+    var f = faixa(), max = f.max - f.min;
+    if (est.apontar != null) {
+      var destino = Math.max(0, Math.min(max, est.apontar));
+      if (Math.abs(destino - est.x) > 4) { var dir = destino > est.x ? 1 : -1; est.x += dir * 5; est.olhar = dir; }
+      else if (bal.hidden) { est.olhar = 0; falar(T('Precisa de você', 'Needs you'), '#c77a12', T('Claude Code · clique para ir até lá', 'Claude Code · click to go there'), 60000); }
+    } else if (est.balaoAte > Date.now() || est.placa || est.musica || lento) {
+      est.olhar = 0;
+    } else if (est.pausa > 0) {
+      est.pausa--;
+      if (est.pausa % 25 === 0) est.olhar = [-1, 0, 1][Math.floor(Math.random() * 3)];
+    } else if (Math.abs(est.alvo - est.x) <= 2) {
+      est.pausa = Math.floor(rnd(20, 70)); est.alvo = rnd(0, max);
+    } else {
+      var d2 = est.alvo > est.x ? 1 : -1; est.x += d2 * 2; est.olhar = d2;
+    }
+    if (est.passo % 10 === 0) relogio();
+    desenhar(); posicionar();
+  }
+
+  montar();
+  est.alvo = rnd(0, 200);
+  desenhar(); posicionar();
+  var visivel = false;
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { visivel = es[0].isIntersecting; }).observe(box);
+  else visivel = true;
+  setInterval(function () { if (visivel && !document.hidden) tique(); }, 100);
+  window.addEventListener('resize', function () { posicionar(); });
 })();
 
 })();

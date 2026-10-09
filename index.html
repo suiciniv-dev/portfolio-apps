@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vinícius Pires da Silva · suiciniv.dev</title>
-<meta name="description" content="Vinícius Pires da Silva, desenvolvedor C# e .NET, Pleno III na Símix. Uma mesa em pixel art com os projetos que eu construí: Banditboard, Senna, ControlSensors HUD e o Símix Ponto.">
+<meta name="description" content="Vinícius Pires da Silva, desenvolvedor C# e .NET, Pleno III na Símix. Uma mesa em pixel art com os projetos que eu construí: Banditboard, Senna, Toca, ControlSensors HUD e o Símix Ponto.">
 <meta name="theme-color" content="#120f17">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://suiciniv-dev-apps.pages.dev/">
@@ -81,7 +81,7 @@
 
         <div class="scene-frame">
           <div class="scene" id="scene">
-            <canvas id="mesaCanvas" width="320" height="180" role="img" aria-label="A minha mesa em pixel art: um celular velho com o Racco na tela, o monitor com o Senna, um segundo monitor com o HUD de sensores, um notebook com o portal da Símix, um quadro de recados, duas prateleiras com a McLaren do Senna, três Funko Pop, um bloco de grama, uma poção, uma miniatura de Mercedes e um chapéu de mago, a Mimi e o Lúcifer, meus gatos, andando pela mesa e pela janela, o Fred debaixo da mesa e eu de costas na cadeira."></canvas>
+            <canvas id="mesaCanvas" width="320" height="180" role="img" aria-label="A minha mesa em pixel art: um celular velho com o Racco na tela, o monitor com o Senna e a Toca, o meu dock, na base da tela, um segundo monitor com o HUD de sensores, um notebook com o portal da Símix, um quadro de recados, duas prateleiras com a McLaren do Senna, três Funko Pop, um bloco de grama, uma poção, uma miniatura de Mercedes e um chapéu de mago, a Mimi e o Lúcifer, meus gatos, andando pela mesa e pela janela, o Fred debaixo da mesa e eu de costas na cadeira."></canvas>
             <div class="hots" id="hots"></div>
             <div class="scene-tip" id="sceneTip" hidden></div>
             <div class="scene-balao" id="sceneBalao" hidden></div>
@@ -98,6 +98,7 @@
         <div class="legend" id="legend" aria-label="Objetos da mesa">
           <button type="button" data-obj="banditboard">Banditboard</button>
           <button type="button" data-obj="senna">Senna</button>
+          <button type="button" data-obj="toca">Toca</button>
           <button type="button" data-obj="hud">ControlSensors HUD</button>
           <button type="button" data-obj="app">Símix Ponto</button>
           <button type="button" data-obj="cloud">Símix Ponto Cloud</button>
@@ -119,7 +120,7 @@
           <span class="sec-num">01</span>
           <div>
             <h2>Em cima da mesa</h2>
-            <p>Cinco coisas que eu construí e uso. Três nasceram no meu tempo livre; duas são da Símix, onde eu trabalho.</p>
+            <p>Seis coisas que eu construí e uso. Quatro nasceram no meu tempo livre; duas são da Símix, onde eu trabalho.</p>
           </div>
         </header>
 
@@ -181,6 +182,46 @@
           <div class="quest-demo quest-full">
             <div class="sw" id="sennaWin" role="region" aria-label="Simulação do Senna"></div>
             <p class="demo-cap">Uma simulação do Senna, com dados de exemplo. Arraste os nós do mapa, troque de tela na barra lateral e desligue avisos nos ajustes: o dia passa e ele só fala o que você deixou.</p>
+          </div>
+        </article>
+
+        <article class="quest quest-wide" id="toca">
+          <div class="quest-body">
+            <div class="quest-head">
+              <canvas class="quest-ico" data-ico="toca" aria-hidden="true"></canvas>
+              <div>
+                <h3>Toca</h3>
+                <p class="sub">O dock do meu Windows · C# e WinUI 3</p>
+              </div>
+              <span class="tag tag-me">Projeto pessoal</span>
+            </div>
+            <p><b>A casa do Racco.</b> Um dock de vidro no lugar da barra de tarefas, com miniaturas ao vivo das janelas e os selos do Teams e do Discord. O Racco do Banditboard mora em cima: anda pela barra, fala o uso do Claude Code quando ele muda, corre até a janela que está pedindo permissão e segura a plaquinha da próxima reunião.</p>
+            <p>Ela não busca nada sozinha. O Banditboard manda o uso e as sessões do Claude Code; o Senna manda clima, GitHub, agenda e avisos, e o Racco entrega tudo no lugar das notificações do Windows. Tem tema de Halloween com fantasminhas, busca no Alt+Espaço, e o dock vai para qualquer borda da tela.</p>
+          </div>
+          <div class="quest-body quest-side">
+            <ul class="chips"><li>C#</li><li>.NET 10</li><li>WinUI 3</li><li>Win32 · DWM</li><li>Pixel art</li></ul>
+            <p class="note"><b>Sem download.</b> Feita para a minha máquina, junto com o Banditboard e o Senna. Está aqui como construção, não como produto.</p>
+          </div>
+          <div class="quest-demo quest-full">
+            <div class="tc" id="tocaDemo" role="region" aria-label="Simulação da Toca"></div>
+            <p class="demo-cap" id="tocaFala">Uma simulação da Toca, com dados de exemplo. Peça as coisas para o Racco nos botões abaixo, mexa no dock, troque o tema ou clique nele.</p>
+            <div class="cmds" id="tocaCmds">
+              <button type="button" class="cmd" data-tc="uso">uso do Claude</button>
+              <button type="button" class="cmd" data-tc="pr">PR para revisar</button>
+              <button type="button" class="cmd" data-tc="reuniao">reunião em 10 min</button>
+              <button type="button" class="cmd" data-tc="permissao">Claude pedindo permissão</button>
+              <button type="button" class="cmd" data-tc="ambiente">trocar de ambiente</button>
+            </div>
+            <div class="cmds tc-opcoes" id="tocaOpcoes">
+              <span class="tc-rot">tema</span>
+              <button type="button" class="cmd" data-tema="vidro" data-ativo="1">vidro</button>
+              <button type="button" class="cmd" data-tema="halloween">Halloween</button>
+              <button type="button" class="cmd" data-tema="natal">Natal</button>
+              <button type="button" class="cmd" data-tema="pixel">pixel</button>
+              <span class="tc-rot">posição</span>
+              <button type="button" class="cmd" data-pos="baixo" data-ativo="1">embaixo</button>
+              <button type="button" class="cmd" data-pos="cima">em cima</button>
+            </div>
           </div>
         </article>
 
