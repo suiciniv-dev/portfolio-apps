@@ -2,7 +2,7 @@
 
 Portfólio de Vinícius Pires da Silva, desenvolvedor C# e .NET: a minha mesa em pixel art, onde cada aparelho é um projeto.
 
-**No ar:** https://suiciniv-dev-apps.pages.dev/ (português) e https://suiciniv-dev-apps.pages.dev/en/ (inglês)
+**No ar:** https://suiciniv.dev/ (português) e https://suiciniv.dev/en/ (inglês)
 
 ![Prévia do portfólio](assets/preview.jpg)
 
