@@ -520,6 +520,375 @@ function gta() {
   setTimeout(function () { el.classList.add('sai'); setTimeout(function () { el.remove(); }, 600); }, 5200);
 }
 
+var Quarto = (function () {
+  var NH = 7, BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+  function cor(h) { return [parseInt(h.substr(1, 2), 16), parseInt(h.substr(3, 2), 16), parseInt(h.substr(5, 2), 16)]; }
+  function brilha(h) { var c = cor(h); c.push(1); return c; }
+  function fr(x) { return x - Math.floor(x); }
+  function mix(c1, c2, p) { return [c1[0] + (c2[0] - c1[0]) * p, c1[1] + (c2[1] - c1[1]) * p, c1[2] + (c2[2] - c1[2]) * p]; }
+  function luzMix(c1, c2, p) { var c = mix(c1, c2, p); c.push(1); return c; }
+  function sorte(i, j) { var h = Math.sin(i * 127.1 + j * 311.7) * 43758.5453; return h - Math.floor(h); }
+  function perto(s, t, cs, ct, r, asp) { var dx = (s - cs) * (asp || 1), dy = t - ct; return dx * dx + dy * dy < r * r; }
+
+  var C = {
+    parede: cor('#463c60'), borda: cor('#5a4c72'), tampa: cor('#2a2338'),
+    piso: cor('#b7b3b0'), piso2: cor('#aaa6a2'), junta: cor('#8b8784'), laje: cor('#2b2534'), laje2: cor('#211c29'),
+    tapete: cor('#4a2f5c'), tapete2: cor('#8a64a2'), cab: cor('#d8c6a3'), cab2: cor('#b5a280'),
+    colchao: cor('#2a2530'), manta: cor('#7a7690'), manta2: cor('#67637d'), trav: cor('#ecebe6'), trav2: cor('#cfcdc6'),
+    criado: cor('#30283a'), criado2: cor('#221c29'), puxador: cor('#c9a26b'), cupula: cor('#d8d0c2'), pe: cor('#3a3440'),
+    rack: cor('#221d27'), rack2: cor('#2e2834'), moldura: cor('#0b0b0f'), tvoff: cor('#1a1a22'),
+    ps5: cor('#ececf0'), ps5p: cor('#1b1b20'), mesa: cor('#2c2532'), mesa2: cor('#3a3242'), gaveta: cor('#1c1722'),
+    mon: cor('#0d0d12'), quadro: cor('#120e16'), janela: cor('#cfcad6'), ar: cor('#e8e9ee'), ar2: cor('#a9abb5'),
+    cam: cor('#e6e6ea'), lente: cor('#16161c'), vaso: cor('#b8643f'), vaso2: cor('#96502f'), folha: cor('#5fae3b'), folha2: cor('#3f8a2a')
+  };
+  var POSTER = ['#24183a', '#3a1f4e', '#5a2658', '#7f2f60', '#a83c62', '#cf5560', '#e8705c', '#f2925f'].map(cor);
+  var CODIGO = ['#7aa2f7', '#c3e88d', '#f78c6c', '#89ddff', '#c792ea', '#ffcb6b'].map(brilha);
+  var FUNDO_MON = brilha('#0b0f18');
+  var LINHAS = [[0, .55], [.12, .7], [.12, .38], [.24, .6], [.12, .45], [0, .25]];
+  var TILES_TV = ['#e5484d', '#f5c04a', '#3fc7a0', '#5cd3ff', '#8a2bff'].map(cor);
+
+  var est = {
+    cab: { on: true, cor: '#ffc98a', brilho: .75 },
+    led: { on: true, cor: '#8a2bff', brilho: .5 },
+    tv: 'off', ps5: false, ar: false, temp: 23, ceu: 'noite', cena: 'casa', mexido: false
+  };
+  var anim = { cab: .75, led: .5, tv: 0, ps5: 0, ar: 0, sol: 0, cabC: cor('#ffc98a'), ledC: cor('#8a2bff') };
+  var ultimo = 0;
+  function atualiza() {
+    var agora = performance.now(), dt = Math.min(.3, (agora - ultimo) / 1000);
+    ultimo = agora;
+    var p = lento ? 1 : 1 - Math.exp(-dt * 6);
+    anim.cab += ((est.cab.on ? est.cab.brilho : 0) - anim.cab) * p;
+    anim.led += ((est.led.on ? est.led.brilho : 0) - anim.led) * p;
+    anim.tv += ((est.tv !== 'off' ? 1 : 0) - anim.tv) * p;
+    anim.ps5 += ((est.ps5 ? 1 : 0) - anim.ps5) * p;
+    anim.ar += ((est.ar ? 1 : 0) - anim.ar) * p;
+    anim.sol += ((est.ceu === 'tarde' ? 1 : 0) - anim.sol) * p;
+    anim.cabC = mix(anim.cabC, cor(est.cab.cor), p);
+    anim.ledC = mix(anim.ledC, cor(est.led.cor), p);
+  }
+
+  function piso(s, t, P) {
+    var lin = Math.floor(P[1] * 2), j = fr((P[0] + (lin % 2) * 1.3) / 2.6);
+    if (fr(P[1] * 2) < .1 || j < .035) return C.junta;
+    return lin % 3 === 1 ? C.piso2 : C.piso;
+  }
+  function tapete(s, t) {
+    if (s < .08 || s > .92 || t < .07 || t > .93) return C.tapete2;
+    return (Math.floor(s * 6) + Math.floor(t * 8)) % 2 && s > .2 && s < .8 && t > .2 && t < .8 ? mix(C.tapete, C.tapete2, .3) : C.tapete;
+  }
+  function quadro(s, t) {
+    if (s < .07 || s > .93 || t < .06 || t > .94) return C.quadro;
+    if (t > .3 && perto(s, t, .5, .42, .16, .8)) return [255, 210, 122];
+    if (t < .3) return t > .26 ? [242, 146, 95] : [27, 22, 34];
+    return POSTER[Math.max(0, Math.min(7, Math.floor((1 - (t - .3) / .64) * 8)))];
+  }
+  function corTv(tm) {
+    if (est.tv === 'ps5') return [.28, .45, 1];
+    if (est.tv === 'filme') { var f = .85 + .15 * Math.sin(tm * 7) * Math.sin(tm * 3.1); return [f, .62 * f, .42 * f]; }
+    return [.6, .55, .95];
+  }
+  function tela(s, t, P, tm) {
+    var u = 1 - s;
+    if (u < .035 || u > .965 || t < .08 || t > .92) return C.moldura;
+    if (anim.tv < .04) return C.tvoff;
+    var c, tt = (t - .08) / .84, uu = (u - .035) / .93;
+    if (est.tv === 'ps5') {
+      c = mix(cor('#03113a'), cor('#0d2f86'), tt);
+      if (tt > .4 && tt < .66 && uu > .07 && uu < .3) c = [232, 238, 248];
+      else if (tt > .43 && tt < .63) { var k = (uu - .34) / .13; if (k > 0 && k < 5 && fr(k) < .75) c = [74, 106, 200]; }
+      if (tt > .78 && tt < .86 && uu > .07 && uu < .2) c = [210, 220, 245];
+      if (sorte(Math.floor(uu * 30), Math.floor(tt * 14 + tm * 2)) > .985) c = [160, 190, 255];
+    } else if (est.tv === 'filme') {
+      if (tt < .13 || tt > .87) c = [0, 0, 0];
+      else if (tt > .42) {
+        c = mix(cor('#f29a5a'), cor('#5a2a6a'), (tt - .42) / .45);
+        if (perto(uu, tt, .68, .55, .11, 1.6)) c = [255, 210, 122];
+      } else {
+        c = [26, 18, 32];
+        if (tt > .25 && tt < .3 && fr(uu * 5 + tm * .6) < .4) c = [242, 146, 95];
+      }
+    } else {
+      c = mix(cor('#1b1f3f'), cor('#3a2a5e'), tt);
+      if (tt > .3 && tt < .55) { var q = (uu - .07) / .175; if (q > 0 && q < 5 && fr(q) < .8) c = TILES_TV[Math.floor(q)]; }
+      if (tt > .7 && tt < .8 && uu > .07 && uu < .42) c = [216, 219, 232];
+    }
+    return luzMix(C.tvoff, c, anim.tv);
+  }
+  function monitor(s, t) {
+    var u = 1 - s;
+    if (u < .05 || u > .95 || t < .08 || t > .92) return C.mon;
+    var tt = (t - .08) / .84, uu = (u - .05) / .9, lin = Math.floor((1 - tt) * 6);
+    if (lin > 5 || fr((1 - tt) * 6) > .55) return FUNDO_MON;
+    var L = LINHAS[lin];
+    return uu > L[0] && uu < L[0] + L[1] ? CODIGO[lin] : FUNDO_MON;
+  }
+  function ps5Frente(s, t) {
+    if (s > .4 && s < .6) return C.ps5p;
+    if (anim.ps5 > .05 && t > .12 && ((s > .35 && s <= .4) || (s >= .6 && s < .65))) return luzMix(C.ps5, [74, 140, 255], anim.ps5);
+    return C.ps5;
+  }
+  function arFrente(s, t) {
+    if (t < .3) return C.ar2;
+    if (s > .86 && s < .92 && t > .5 && t < .78) return anim.ar > .5 ? brilha('#4ade80') : C.ar2;
+    return C.ar;
+  }
+  function camFrente(s, t, P, tm) {
+    if (perto(s, t, .45, .5, .22)) return C.lente;
+    if (s > .74 && s < .9 && t > .55 && t < .85 && fr(tm / 1.4) < .5) return brilha('#ff3b3b');
+    return C.cam;
+  }
+  function janela(s, t, P, tm) {
+    if (s < .06 || s > .94 || t < .07 || t > .93 || Math.abs(s - .5) < .025) return C.janela;
+    var ss = (s - .06) / .88, tt = (t - .07) / .86, sol = anim.sol;
+    var c = mix(mix(cor('#0a1230'), cor('#1c2a5c'), 1 - tt), mix(cor('#7a3a8a'), cor('#ff9a52'), 1 - tt), sol);
+    var predio = .14 + sorte(Math.floor(ss * 7), 3) * .2;
+    if (tt < predio) {
+      c = mix(cor('#0b0f22'), cor('#3a1f3a'), sol);
+      if (sorte(Math.floor(ss * 22), Math.floor(tt * 16)) > .78) c = [255, 210, 122];
+    } else if (sol < .5) {
+      if (perto(ss, tt, .78, .76, .07, 1.3)) c = [243, 233, 198];
+      else if (sorte(Math.floor(ss * 18), Math.floor(tt * 12)) > .93 && fr(tm * .3 + ss) > .15) c = [246, 241, 208];
+    } else if (perto(ss, tt, .3, .3, .16, 1.3)) c = [255, 210, 122];
+    c.push(1);
+    return c;
+  }
+  function cabeceira(s, t) {
+    if (t > .9) return mix(C.cab, [255, 255, 255], .12);
+    return fr(s * 7) < .12 ? C.cab2 : C.cab;
+  }
+  function manta(s, t) { return fr(t * 3 + .2) < .09 ? C.manta2 : C.manta; }
+  function cupula(s, t) {
+    if (anim.cab < .03) return C.cupula;
+    return luzMix(mix(C.cupula, [0, 0, 0], .55), mix(anim.cabC, [255, 255, 255], .45 - t * .25), Math.min(1, anim.cab * 1.4));
+  }
+  function criado(s, t) {
+    if (t > .46 && t < .55) return C.criado2;
+    if (s > .44 && s < .56 && t > .68 && t < .8) return C.puxador;
+    return C.criado;
+  }
+  function rack(s, t) {
+    if (t < .14 || Math.abs(s - .5) < .02) return C.rack;
+    if ((s > .2 && s < .26) || (s > .74 && s < .8)) return t > .5 && t < .62 ? C.puxador : C.rack2;
+    return C.rack2;
+  }
+  function gavetas(s, t) {
+    if ((t > .3 && t < .35) || (t > .63 && t < .68)) return C.gaveta;
+    if (s > .42 && s < .58 && ((t > .45 && t < .52) || (t > .8 && t < .87))) return C.puxador;
+    return C.mesa;
+  }
+  function folhas(s, t) { return (Math.floor(s * 4) + Math.floor(t * 3)) % 2 ? C.folha2 : C.folha; }
+
+  function pc(id, a0, a1, b0, b1, z0, z1, f, x) {
+    var p = { id: id, a: [a0, a1], b: [b0, b1], z: [z0, z1], f: f };
+    if (x) for (var k in x) p[k] = x[k];
+    return p;
+  }
+  var PECAS = [
+    pc('', -.3, 8, -.3, 8, -.45, 0, { t: piso, e: C.laje, d: C.laje2 }, { chao: 1 }),
+    pc('', -.3, 8, -.3, 0, 0, NH, { t: C.borda, e: C.parede, d: C.tampa }, { parede: 1 }),
+    pc('', -.3, 0, 0, 8, 0, NH, { t: C.borda, e: C.tampa, d: C.parede }, { parede: 1 }),
+    pc('', 4.9, 7.6, 2.6, 6.6, 0, .05, { t: tapete }),
+    pc('mesa', 0, .05, 5.9, 7.5, 4.2, 6.1, { d: quadro }),
+    pc('janela', 5, 7.3, 0, .08, 2.6, 5.2, { e: janela }),
+    pc('ar', 4.9, 7.4, 0, .55, 5.65, 6.45, { t: C.ar, e: arFrente, d: C.ar2 }),
+    pc('cam', 7.45, 7.8, 0, .35, 6.15, 6.5, { t: C.cam, e: camFrente, d: C.ar2 }),
+    pc('tv', 0, .22, 1.9, 4.9, 3, 5, { t: C.moldura, e: C.moldura, d: tela }),
+    pc('cab', .35, 1.6, .1, 1.2, 0, 1.35, { t: C.criado, e: C.criado2, d: criado }),
+    pc('cab', .86, 1.08, .55, .77, 1.35, 1.95, { t: C.pe, e: C.pe, d: C.pe }),
+    pc('cab', .72, 1.22, .41, .91, 1.95, 2.5, { t: cupula, e: cupula, d: cupula }),
+    pc('', 0, 1, 1.7, 5.1, 0, 1, { t: C.rack2, e: C.rack, d: rack }),
+    pc('ps5', .25, .75, 4.3, 4.62, 1, 2.75, { t: C.ps5, e: C.ps5, d: ps5Frente }),
+    pc('cama', 1.9, 4.7, 0, .35, 0, 3, { t: C.cab2, e: cabeceira, d: C.cab2 }),
+    pc('cama', 1.9, 4.7, .35, 4.4, 0, .7, { t: C.colchao, e: C.colchao, d: C.colchao }),
+    pc('cama', 1.95, 4.65, .35, 4.35, .7, 1.3, { t: manta, e: C.manta2, d: C.manta2 }),
+    pc('cama', 2.1, 3.2, .5, 1.25, 1.3, 1.65, { t: C.trav, e: C.trav2, d: C.trav2 }),
+    pc('cama', 3.4, 4.5, .5, 1.25, 1.3, 1.65, { t: C.trav, e: C.trav2, d: C.trav2 }),
+    pc('mesa', 0, 1.5, 7, 7.85, 0, 1.9, { t: C.mesa, e: C.gaveta, d: gavetas }),
+    pc('mesa', 1.28, 1.45, 5.65, 5.82, 0, 1.9, { t: C.mesa, e: C.gaveta, d: C.mesa }),
+    pc('mesa', 0, 1.55, 5.6, 7.9, 1.9, 2.12, { t: C.mesa2, e: C.mesa, d: C.mesa }),
+    pc('mesa', .25, .55, 6.6, 6.8, 2.12, 2.4, { t: C.mon, e: C.mon, d: C.mon }),
+    pc('mesa', .12, .3, 5.95, 7.45, 2.4, 3.55, { t: C.mon, e: C.mon, d: monitor }),
+    pc('', 7.15, 7.75, .25, .85, 0, .7, { t: C.vaso2, e: C.vaso, d: C.vaso2 }),
+    pc('', 7, 7.9, .1, 1, .7, 1.8, { t: folhas, e: folhas, d: folhas })
+  ];
+  var M = { parede: cor('#5e5080'), borda: cor('#a493c8'), tampa: cor('#3a3052'), piso: cor('#aaa298'), manta: cor('#9088c4'), manta2: cor('#6c6398'), manta3: cor('#5d5588') };
+  var MINI = [
+    pc('', -.5, 6, -.5, 6, -1, 0, { t: M.piso, e: C.laje, d: C.laje2 }, { chao: 1 }),
+    pc('', -.5, 6, -.5, 0, 0, 8, { t: M.borda, e: M.parede, d: M.tampa }, { parede: 1 }),
+    pc('', -.5, 0, 0, 6, 0, 8, { t: M.borda, e: M.tampa, d: M.parede }, { parede: 1 }),
+    pc('janela', 3.5, 5.5, 0, .1, 3.5, 6.5, { e: janela }),
+    pc('tv', 0, .2, 2, 5, 3, 5.5, { t: C.moldura, e: C.moldura, d: tela }),
+    pc('', 0, 1, 2, 5, 0, 1, { t: C.rack2, e: C.rack, d: C.rack2 }),
+    pc('cab', .5, 1.5, 0, 1, 0, 1, { t: C.criado, e: C.criado2, d: C.criado }),
+    pc('cab', .5, 1.5, 0, 1, 1, 2, { t: cupula, e: cupula, d: cupula }),
+    pc('cama', 2, 5, 0, .5, 0, 2, { t: C.cab2, e: C.cab, d: C.cab2 }),
+    pc('cama', 2, 5, .5, 3.5, 0, 1, { t: M.manta, e: M.manta2, d: M.manta3 }),
+    pc('cama', 2.5, 4.5, .5, 1.3, 1, 1.8, { t: C.trav, e: C.trav2, d: C.trav2 })
+  ];
+
+  function luzes(apagado, tm, mini) {
+    var L = [{ p: mini ? [4.5, .8, 5] : [6.15, .9, 3.9], c: mix([.42, .52, 1], [1, .62, .34], anim.sol), f: .5 + anim.sol * .8, r: 3.2 }];
+    if (apagado) return L;
+    if (anim.cab > .01) L.push({ p: mini ? [1, .6, 1.6] : [.97, .66, 2.3], c: [anim.cabC[0] / 255, anim.cabC[1] / 255, anim.cabC[2] / 255], f: 3.2 * anim.cab, r: 2.8 });
+    if (anim.led > .01) L.push({ p: mini ? [.12, 3.5, 4.3] : [.12, 3.4, 4], c: [anim.ledC[0] / 255, anim.ledC[1] / 255, anim.ledC[2] / 255], f: 3 * anim.led, r: 1.9 });
+    if (anim.tv > .01) L.push({ p: mini ? [1.2, 3.5, 4.3] : [1.4, 3.4, 4], c: corTv(tm), f: 1.2 * anim.tv, r: 2.5 });
+    if (anim.ps5 > .01 && !mini) L.push({ p: [.95, 4.46, 1.9], c: [.3, .5, 1], f: .5 * anim.ps5, r: .8 });
+    if (!mini) L.push({ p: [.9, 6.7, 2.9], c: [.45, .7, 1], f: .45, r: 1.3 });
+    return L;
+  }
+
+  var mont = null;
+  function palco(cv, k, opt) {
+    opt = opt || {};
+    var mini = !!opt.mini, PS = mini ? MINI : PECAS, N = mini ? 6 : 8, E = mini ? .5 : .3, Z = mini ? 8 : NH, LJ = mini ? 1 : .45;
+    var W = Math.ceil(4 * k * (N + E)) + 2, H = Math.ceil(k * (2 * N + 2 * E + Z + LJ)) + 2, X0 = W / 2, Y0 = 1 + k * (2 * E + Z);
+    cv.width = W; cv.height = H;
+    var ctx = cv.getContext('2d'), img = ctx.createImageData(W, H), buf = img.data, ids = new Int16Array(W * H);
+    function proj(a, b, z) { return [X0 + 2 * k * (a - b), Y0 + k * (a + b) - k * z]; }
+    function face(o, u, v, n, tex, L, amb, tm, idx) {
+      var p0 = proj(o[0], o[1], o[2]);
+      var su0 = 2 * k * (u[0] - u[1]), su1 = k * (u[0] + u[1]) - k * u[2];
+      var sv0 = 2 * k * (v[0] - v[1]), sv1 = k * (v[0] + v[1]) - k * v[2];
+      var det = su0 * sv1 - sv0 * su1;
+      if (Math.abs(det) < 1e-6) return;
+      var xs = [p0[0], p0[0] + su0, p0[0] + sv0, p0[0] + su0 + sv0], ys = [p0[1], p0[1] + su1, p0[1] + sv1, p0[1] + su1 + sv1];
+      var x0 = Math.max(0, Math.floor(Math.min.apply(null, xs))), x1 = Math.min(W - 1, Math.ceil(Math.max.apply(null, xs)));
+      var y0 = Math.max(0, Math.floor(Math.min.apply(null, ys))), y1 = Math.min(H - 1, Math.ceil(Math.max.apply(null, ys)));
+      var fator = n[2] ? 1 : n[0] ? .9 : .76, fn = typeof tex === 'function';
+      for (var py = y0; py <= y1; py++) for (var px = x0; px <= x1; px++) {
+        var cx = px + .5 - p0[0], cy = py + .5 - p0[1];
+        var s = (cx * sv1 - cy * sv0) / det, t = (su0 * cy - su1 * cx) / det;
+        if (s < -1e-4 || s > 1.0001 || t < -1e-4 || t > 1.0001) continue;
+        var P = [o[0] + s * u[0] + t * v[0], o[1] + s * u[1] + t * v[1], o[2] + s * u[2] + t * v[2]];
+        var c = fn ? tex(s, t, P, tm) : tex, i4 = (py * W + px) * 4, r, g, b;
+        if (c[3]) { r = c[0]; g = c[1]; b = c[2]; }
+        else {
+          var lr = amb * fator, lg = lr, lb = lr;
+          for (var l = 0; l < L.length; l++) {
+            var Li = L[l], dx = Li.p[0] - P[0], dy = Li.p[1] - P[1], dz = Li.p[2] - P[2], d2 = dx * dx + dy * dy + dz * dz + .02;
+            var dot = (n[0] * dx + n[1] * dy + n[2] * dz) / Math.sqrt(d2);
+            var w = (.25 + .75 * (dot > 0 ? dot : 0)) * Li.f / (1 + d2 / (Li.r * Li.r));
+            lr += Li.c[0] * w; lg += Li.c[1] * w; lb += Li.c[2] * w;
+          }
+          if (opt.liso) { lr = Math.round(lr * 6) / 6; lg = Math.round(lg * 6) / 6; lb = Math.round(lb * 6) / 6; }
+          else {
+            var q = (BAYER[(px & 3) + (py & 3) * 4] + .5) / 16;
+            lr = Math.floor(lr * 9 + q) / 9; lg = Math.floor(lg * 9 + q) / 9; lb = Math.floor(lb * 9 + q) / 9;
+          }
+          r = c[0] * lr; g = c[1] * lg; b = c[2] * lb;
+        }
+        buf[i4] = r; buf[i4 + 1] = g; buf[i4 + 2] = b; buf[i4 + 3] = 255;
+        ids[py * W + px] = idx;
+      }
+    }
+    function ponto(a, b, z, c, al) {
+      var p = proj(a, b, z), x = Math.floor(p[0]), y = Math.floor(p[1]);
+      if (x < 0 || y < 0 || x >= W || y >= H) return;
+      var i4 = (y * W + x) * 4;
+      buf[i4] += (c[0] - buf[i4]) * al; buf[i4 + 1] += (c[1] - buf[i4 + 1]) * al; buf[i4 + 2] += (c[2] - buf[i4 + 2]) * al;
+    }
+    function desenha(o) {
+      o = o || {};
+      atualiza();
+      var tm = performance.now() / 1000, L = luzes(o.apagado, tm, mini), amb = (mini ? .42 : .24) + anim.sol * .14;
+      if (mont && tm - mont > PECAS.length * .11 + .4) mont = null;
+      buf.fill(0); ids.fill(-1);
+      PS.forEach(function (pe, idx) {
+        var a = pe.a, b = pe.b, z = pe.z, f = pe.f;
+        if (mont && !o.pronto) {
+          var p = Math.max(0, Math.min(1, (tm - mont - idx * .11) / .3));
+          if (p <= 0) return;
+          var e = 1 - (1 - p) * (1 - p);
+          if (pe.parede) z = [z[0], z[1] * e];
+          else if (!pe.chao) z = [z[0] + (1 - e) * 4, z[1] + (1 - e) * 4];
+        }
+        if (f.t) face([a[0], b[0], z[1]], [a[1] - a[0], 0, 0], [0, b[1] - b[0], 0], [0, 0, 1], f.t, L, amb, tm, idx);
+        if (f.e) face([a[0], b[1], z[0]], [a[1] - a[0], 0, 0], [0, 0, z[1] - z[0]], [0, 1, 0], f.e, L, amb, tm, idx);
+        if (f.d) face([a[1], b[0], z[0]], [0, b[1] - b[0], 0], [0, 0, z[1] - z[0]], [1, 0, 0], f.d, L, amb, tm, idx);
+      });
+      if (anim.ar > .05 && !mont && !mini) for (var i = 0; i < 8; i++) {
+        var ph = fr(tm * .6 + i / 8);
+        ponto(5.25 + (i % 4) * .58, .7 + ph * 1.4, 5.5 - ph * 1.9, [196, 236, 255], (1 - ph) * .75 * anim.ar);
+      }
+      ctx.putImageData(img, 0, 0);
+    }
+    function id(px, py) {
+      px = Math.floor(px); py = Math.floor(py);
+      if (px < 0 || py < 0 || px >= W || py >= H) return '';
+      var i = ids[py * W + px];
+      return i < 0 ? '' : PS[i].id;
+    }
+    return { desenha: desenha, id: id, proj: proj, W: W, H: H };
+  }
+
+  function setLuz(alvo, on, c, b) {
+    (alvo === 'todas' ? [est.cab, est.led] : [est[alvo]]).forEach(function (l) {
+      if (on != null) l.on = on;
+      if (c) l.cor = c;
+      if (b != null) l.brilho = b;
+    });
+  }
+  var CENAS = {
+    casa: [['', function () { setLuz('cab', true, '#ffc98a', .75); setLuz('led', true, '#8a2bff', .5); est.tv = 'off'; est.ps5 = false; }]],
+    jogar: [
+      [T('luzes em azul, a 30%', 'lights blue, at 30%'), function () { setLuz('todas', true, '#2c49ff', .3); }],
+      [T('acordando o PS5', 'waking the PS5'), function () { est.ps5 = true; }],
+      [T('TV na entrada do PS5', 'TV on the PS5 input'), function () { est.tv = 'ps5'; }]
+    ],
+    filme: [
+      [T('ligando a TV', 'turning on the TV'), function () { est.tv = 'filme'; }],
+      [T('luz âmbar bem baixa', 'very low amber light'), function () { setLuz('todas', true, '#ffa41b', .12); }]
+    ],
+    dormir: [
+      [T('desligando a TV', 'turning off the TV'), function () { est.tv = 'off'; est.ps5 = false; }],
+      [T('apagando as luzes', 'turning off the lights'), function () { setLuz('todas', false); }],
+      [T('ar a 23°, se estiver ligado', 'AC to 23°, if it is on'), function () { if (est.ar) est.temp = 23; }]
+    ]
+  };
+  var rodando = 0;
+  function rodar(nome, aoPasso, imediato) {
+    var passos = CENAS[nome]; if (!passos) return;
+    var meu = ++rodando, i = 0;
+    est.cena = nome;
+    if (imediato || lento) {
+      passos.forEach(function (p) { p[1](); });
+      if (aoPasso) aoPasso(passos.length, passos.length, null);
+      return;
+    }
+    (function prox() {
+      if (meu !== rodando) return;
+      if (i >= passos.length) { if (aoPasso) aoPasso(i, i, null); return; }
+      var p = passos[i++];
+      p[1]();
+      if (aoPasso) aoPasso(i, passos.length, p[0]);
+      setTimeout(prox, 560);
+    })();
+  }
+  var ORDEM = ['casa', 'jogar', 'filme'];
+  function proxima() { rodar(ORDEM[(ORDEM.indexOf(est.cena) + 1) % ORDEM.length], null, true); }
+  function brilho() {
+    var cab = anim.cab, led = anim.led * .8, tv = anim.tv * .5;
+    if (cab >= led && cab >= tv) return { i: cab, c: anim.cabC };
+    if (led >= tv) return { i: led, c: anim.ledC };
+    var c = corTv(0);
+    return { i: tv, c: [c[0] * 255, c[1] * 255, c[2] * 255] };
+  }
+  function animando() {
+    if (mont || est.tv !== 'off' || est.ar) return true;
+    var perto = function (a, b) { return Math.abs(a - b) < .004; };
+    if (!perto(anim.cab, est.cab.on ? est.cab.brilho : 0) || !perto(anim.led, est.led.on ? est.led.brilho : 0)) return true;
+    if (!perto(anim.tv, 0) || !perto(anim.ar, 0) || !perto(anim.ps5, est.ps5 ? 1 : 0) || !perto(anim.sol, est.ceu === 'tarde' ? 1 : 0)) return true;
+    var c1 = cor(est.cab.cor), c2 = cor(est.led.cor);
+    for (var i = 0; i < 3; i++) if (Math.abs(anim.cabC[i] - c1[i]) > 1 || Math.abs(anim.ledC[i] - c2[i]) > 1) return true;
+    return false;
+  }
+  return {
+    est: est, palco: palco, rodar: rodar, para: function () { rodando++; }, proxima: proxima, setLuz: setLuz, brilho: brilho, animando: animando,
+    montar: function () { if (!lento) mont = performance.now() / 1000; }, montando: function () { return !!mont; }
+  };
+})();
+
 var Cena = (function () {
   var cv = $('#mesaCanvas'); if (!cv) return null;
   var W = 320, H = 180;
@@ -541,7 +910,7 @@ var Cena = (function () {
     f1: 0, mimi: 0, lucifer: 0, fred: 0, coracoes: [],
     boot: $('#intro') && !$('#intro').hidden ? -1 : null
   };
-  var ATRASO = { senna: 150, hud: 420, cel: 650, note: 820, lamp: 1000, pc: 1150, racco: 1500 };
+  var ATRASO = { senna: 150, hud: 420, cel: 650, note: 820, lamp: 1000, pc: 1150, smartoca: 1300, racco: 1500 };
   function liga(k) {
     if (st.boot === null) return true;
     if (st.boot < 0) return false;
@@ -871,6 +1240,16 @@ var Cena = (function () {
     for (var kx = 0; kx < 17; kx++) { P(x - 1 + kx * 2, y + 26, '#4c4e58'); P(x + kx * 2, y + 27, '#4c4e58'); }
     R(x + 13, y + 28, 10, 1, '#4c4e58');
     R(x - 3, y + 30, 43, 1, '#24252b');
+  }
+
+  var MAQ = document.createElement('canvas'), maqR = null;
+  function maquete() {
+    if (!maqR) maqR = Quarto.palco(MAQ, 1, { mini: true, liso: true });
+    maqR.desenha({ apagado: !liga('smartoca') });
+    var x = 290, y = 76;
+    R(x - 1, y + 23, 30, 2, '#7a4f37'); R(x - 1, y + 23, 30, 1, '#93623f'); R(x - 1, y + 25, 30, 1, '#4a2f22');
+    R(x + 3, y + 26, 2, 3, '#3a2a20'); R(x + 22, y + 26, 2, 3, '#3a2a20');
+    g.drawImage(MAQ, x, y + 2);
   }
 
   function mesa() {
@@ -1397,6 +1776,8 @@ var Cena = (function () {
     if (liga('cel')) { hole(77, 106, 20, .8); hole(52, 106, 16, .7); }
     if (liga('note')) hole(267, 103, 30, .85);
     if (liga('pc')) hole(292, 158, 22, .55);
+    var qb = Quarto.brilho();
+    if (liga('smartoca') && qb.i > .05) hole(304, 88, 18, .5 + .4 * Math.min(1, qb.i));
     hole(44, 44, 42, ph === 'dia' ? .9 : .45);
     if (lamp) { hole(32, 104, 50, .95); hole(48, 118, 36, .7); }
     hole(194, 168, 26, .45);
@@ -1409,6 +1790,7 @@ var Cena = (function () {
     if (liga('note')) glow(267, 103, 26, 'rgba(120,170,255,.07)');
     if (lamp) glow(32, 104, 48, 'rgba(255,190,110,.13)');
     if (st.rgb === 0 && liga('pc')) glow(292, 158, 24, 'hsla(' + ((st.f * 12) % 360) + ',90%,60%,.12)');
+    if (liga('smartoca') && qb.i > .05) glow(304, 86, 22, 'rgba(' + Math.round(qb.c[0]) + ',' + Math.round(qb.c[1]) + ',' + Math.round(qb.c[2]) + ',' + (.16 * Math.min(1, qb.i)).toFixed(3) + ')');
     g.globalCompositeOperation = 'source-over';
   }
 
@@ -1445,6 +1827,7 @@ var Cena = (function () {
     hud: { r: [205, 60, 30, 62] },
     lata: { r: [237, 109, 8, 13] },
     cloud: { r: [245, 91, 45, 31] },
+    smartoca: { r: [290, 76, 29, 30] },
     fone: { r: [290, 106, 21, 15] },
     pc: { r: [258, 140, 40, 37] },
     frodo: { r: [153, 16, 10, 14] },
@@ -1462,17 +1845,17 @@ var Cena = (function () {
     bloco: T('Bloco de grama', 'Grass block'), pocao: T('Poção de vida', 'Health potion'), mini: 'Mercedes C180',
     chapeu: T('Chapéu de mago', 'Wizard hat'), planta: T('Planta', 'Plant'), cortica: T('Recados', 'Notes'),
     lampada: T('Luminária', 'Desk lamp'), app: 'Símix Ponto', banditboard: 'Banditboard', senna: 'Senna', toca: 'Toca',
-    hud: 'ControlSensors HUD', lata: T('Energético', 'Energy drink'), cloud: 'Símix Ponto Cloud',
+    hud: 'ControlSensors HUD', lata: T('Energético', 'Energy drink'), cloud: 'Símix Ponto Cloud', smartoca: 'Smartoca',
     fone: T('Fone', 'Headphones'), pc: 'PC', vini: T('Eu', 'Me'), racco: 'Racco',
     frodo: 'Frodo', fsenna: 'Ayrton Senna', bottas: 'Valtteri Bottas', f1: 'McLaren MP4/4',
     lucifer: T('Lúcifer', 'Lucifer'), mimi: 'Mimi', fred: 'Fred'
   };
-  var PROJ = { banditboard: 'banditboard', senna: 'senna', toca: 'toca', hud: 'hud', app: 'app', cloud: 'ponto-cloud' };
+  var PROJ = { banditboard: 'banditboard', senna: 'senna', toca: 'toca', smartoca: 'smartoca', hud: 'hud', app: 'app', cloud: 'ponto-cloud' };
 
   function draw() {
     var f = st.f, ph = fase(canoas().h);
     parede(ph); janela(ph, f); if (GATOS.lucifer.modo === 'janela') { lucifer(f); olhosLucifer(f); } poster(f); cortica(f); prateleiraAlta(f); estante(f);
-    mesa(); fred(f); luminaria(); celApp(f); celBandit(f); monitorSenna(f); monitorHud(f); notebook(f);
+    mesa(); fred(f); luminaria(); celApp(f); celBandit(f); monitorSenna(f); monitorHud(f); notebook(f); maquete();
     tapete(); lata(f); fone(); pc(f);
     desenhaRacco(f);
     desenhaGato('mimi', f); desenhaGato('lucifer', f); coracoes();
@@ -1552,6 +1935,7 @@ var Cena = (function () {
       else if (Math.round(tr.x) === tr.alvo) { tr.pausa = Math.floor(rnd(6, 30)); tr.alvo = Math.floor(rnd(0, 25)); }
       else { tr.dir = tr.alvo > tr.x ? 1 : -1; tr.x += tr.dir; }
     }
+    if (f % 100 === 40 && !lento && !Quarto.est.mexido && liga('smartoca')) Quarto.proxima();
     gatoUpdate('mimi'); gatoUpdate('lucifer');
     OBJ.mimi.r = rectGato('mimi'); OBJ.lucifer.r = rectGato('lucifer');
   }
@@ -1633,6 +2017,7 @@ var Cena = (function () {
       Som.play('blip');
       if (id === 'senna') { st.toast = 60; st.toastX = 40; }
       if (id === 'toca') tocaRacco().fala = 40;
+      if (id === 'smartoca') Quarto.proxima();
       if (id === 'app') st.appOk = 16;
       if (id === 'cloud') st.novo = 30;
       vai(PROJ[id]);
@@ -1809,6 +2194,7 @@ var Cena = (function () {
 
   function icone(alvo, r) {
     if (r === 'toca') { iconeToca(alvo); return; }
+    if (r === 'smartoca') { Quarto.palco(alvo, 2, { mini: true, liso: true }).desenha({ pronto: true }); return; }
     var off = document.createElement('canvas'); off.width = W; off.height = H;
     var salvo = g, boot = st.boot;
     g = off.getContext('2d'); st.boot = null;
@@ -3309,7 +3695,7 @@ window.__cena = Cena;
   var C = {
     ajuda: function () { p(T('comandos: sobre · projetos · contato · email · cv · github · linkedin · whatsapp · clima · hora · segredos · racco · limpar', 'commands: about · projects · contact · email · resume · github · linkedin · whatsapp · weather · time · secrets · racco · clear')); },
     sobre: function () { p(T('Vinícius Pires da Silva. Desenvolvedor C# e .NET, Pleno III na Símix, em Canoas, RS. Começou no suporte em 2020 e aprendeu sozinho.', 'Vinícius Pires da Silva. C# and .NET developer, mid-level III at Símix, in Canoas, Brazil. Started in support in 2020 and is self-taught.')); },
-    projetos: function () { p([link('#banditboard', 'banditboard/'), link('#senna', 'senna/'), link('#toca', 'toca/'), link('#hud', 'controlsensors/'), link('#app', 'simix-ponto/'), link('#ponto-cloud', 'simix-ponto-cloud/')].join('  ')); },
+    projetos: function () { p([link('#banditboard', 'banditboard/'), link('#senna', 'senna/'), link('#toca', 'toca/'), link('#smartoca', 'smartoca/'), link('#hud', 'controlsensors/'), link('#app', 'simix-ponto/'), link('#ponto-cloud', 'simix-ponto-cloud/')].join('  ')); },
     contato: function () { p('e-mail: ' + link('mailto:' + EMAIL, EMAIL) + '\nwhatsapp: ' + link('https://wa.me/5551982515375', '+55 51 98251-5375') + '\nlinkedin: ' + link('https://www.linkedin.com/in/viniciuspiresdasilva/', 'in/viniciuspiresdasilva')); },
     email: function () { if (navigator.clipboard) navigator.clipboard.writeText(EMAIL).then(function () { p(T('Copiei o e-mail: ', 'Copied the email: ') + EMAIL); }, function () { p(EMAIL); }); else p(EMAIL); },
     cv: function () { p(link('/assets/Curriculo-Vinicius-Pires-da-Silva.pdf', T('Currículo em PDF ↓', 'Résumé in Portuguese ↓')) + '  ' + link('/assets/Resume-Vinicius-Pires-da-Silva.pdf', 'Résumé in English ↓')); },
@@ -3768,6 +4154,342 @@ window.__cena = Cena;
   else visivel = true;
   setInterval(function () { if (visivel && !document.hidden) tique(); }, 100);
   window.addEventListener('resize', function () { posicionar(); });
+})();
+
+(function () {
+  var box = $('#smartocaDemo'), cmds = $('#smartocaCmds'), falaEl = $('#smartocaFala');
+  if (!box) return;
+  var Q = Quarto, est = Q.est;
+  function svg(d) { return '<svg viewBox="0 0 24 24" aria-hidden="true">' + d + '</svg>'; }
+  var ICO = {
+    casa: svg('<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/>'),
+    jogar: svg('<path d="M7.5 6h9a4.5 4.5 0 0 1 4.5 4.5v3.3a2.7 2.7 0 0 1-4.9 1.6L15 14H9l-1.1 1.4A2.7 2.7 0 0 1 3 13.8v-3.3A4.5 4.5 0 0 1 7.5 6z"/><path d="M7 9.5v3M5.5 11h3M15.5 10h.01M17.5 12h.01"/>'),
+    filme: svg('<path d="M4 9h16v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="m4 9-.6-2.9a1 1 0 0 1 .8-1.2l13.7-2.4a1 1 0 0 1 1.2.8L19.6 6zM8.2 4.3l2 3.6M13.2 3.4l2 3.6"/>'),
+    lua: svg('<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>'),
+    pwr: svg('<path d="M12 3v8"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0"/>'),
+    tv: svg('<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 20h8"/>'),
+    ar: svg('<rect x="3" y="5" width="18" height="7" rx="2"/><path d="M7 15.5c0 1.5-1 2.5-1 4M12 15.5v4M17 15.5c0 1.5 1 2.5 1 4"/>'),
+    luz: svg('<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>')
+  };
+  var VISTAS = [
+    ['geral', T('Geral', 'Overview'), null],
+    ['cama', T('Cama', 'Bed'), [3.3, 2.2, 1.2, 1.9]],
+    ['mesa', T('Mesa', 'Desk'), [.6, 6.6, 3.4, 2]],
+    ['janela', T('Janela', 'Window'), [6.1, .4, 4.3, 2.3]]
+  ];
+  var CORES = [
+    ['#ffc98a', T('Branco quente', 'Warm white')], ['#eef4ff', T('Branco frio', 'Cool white')], ['#ffa41b', T('Âmbar', 'Amber')],
+    ['#ff2b2b', T('Vermelho', 'Red')], ['#ff6fb0', T('Rosa', 'Pink')], ['#8a2bff', T('Roxo', 'Purple')],
+    ['#2c49ff', T('Azul', 'Blue')], ['#2ee6f0', T('Ciano', 'Cyan')], ['#2fe04a', T('Verde', 'Green')]
+  ];
+  var CENAS = {
+    jogar: [T('Jogar', 'Play'), ICO.jogar, T('PS5 na TV e luz azul baixa', 'PS5 on the TV, low blue light'),
+      T('Jogar acorda o PS5, troca a TV para ele e deixa a luz azul e baixa. Passo que já está no estado pedido é pulado.', 'Play wakes the PS5, switches the TV to it and sets a low blue light. Steps already in the requested state are skipped.')],
+    filme: [T('Filme', 'Movie'), ICO.filme, T('TV ligada e luz âmbar bem baixa', 'TV on, very low amber light'),
+      T('Filme liga a TV e deixa a luz âmbar bem baixa. Rodar outra cena no meio cancela a anterior.', 'Movie turns on the TV and sets a very low amber light. Running another scene midway cancels the previous one.')],
+    dormir: [T('Dormir', 'Sleep'), ICO.lua, T('Apaga tudo e o ar vai a 23°', 'Everything off, AC to 23°'),
+      T('Dormir desliga a TV e apaga as luzes; o ar, se estiver ligado, vai a 23°.', 'Sleep turns off the TV and the lights; the AC, if it is on, goes to 23°.')]
+  };
+  var NOMES = {
+    cab: T('Cabeceira', 'Bedside lamp'), tv: 'TV', ps5: 'PS5', ar: T('Ar-condicionado', 'Air conditioner'),
+    cam: T('Câmera', 'Camera'), cama: T('Cama', 'Bed'), mesa: T('Mesa', 'Desk'), janela: T('Janela', 'Window')
+  };
+  var ui = { alvo: 'todas', vista: 'geral', autos: { noite: true, sol: true }, cenaTxt: '', sig: '' };
+
+  box.innerHTML =
+    '<div class="sm-bar"><span class="sm-logo">' + ICO.casa + '</span><b>Smartoca</b><span class="sm-sp"></span><span class="sm-ctl" aria-hidden="true"><i></i><i></i><i></i></span></div>' +
+    '<div class="sm-app">' +
+      '<div class="sm-palco">' +
+        '<div class="sm-topo"><span class="sm-status"><i></i><b>' + T('Quarto', 'Bedroom') + '</b><span>' + T('na rede de casa', 'on the home network') + '</span></span></div>' +
+        '<div class="sm-vista"><canvas class="sm-quarto" role="img" aria-label="' + T('O quarto de exemplo em 3D, em pixel art', 'The sample bedroom in 3D, in pixel art') + '"></canvas></div>' +
+        '<div class="sm-dica" hidden></div>' +
+        '<div class="sm-aviso" aria-live="polite"></div>' +
+        '<div class="sm-cam" hidden><canvas></canvas><span><i></i>CAM 1 · <b></b></span></div>' +
+        '<div class="sm-abas" role="group" aria-label="' + T('Vistas', 'Views') + '">' + VISTAS.map(function (v) {
+          return '<button type="button" data-vista="' + v[0] + '" aria-pressed="' + (v[0] === 'geral') + '">' + v[1] + '</button>';
+        }).join('') + '</div>' +
+      '</div>' +
+      '<div class="sm-lado">' +
+        '<section class="sm-card"><header class="sm-ch"><b>' + T('Cenas', 'Scenes') + '</b><small class="sm-cst"></small></header>' +
+          '<div class="sm-cenas">' + Object.keys(CENAS).map(function (k) {
+            var c = CENAS[k];
+            return '<button type="button" data-cena="' + k + '"><i>' + c[1] + '</i><b>' + c[0] + '</b><small>' + c[2] + '</small></button>';
+          }).join('') + '</div>' +
+          '<ul class="sm-autos">' +
+            '<li><span><b>' + T('Boa noite', 'Good night') + '</b><small>' + T('23:30 · dias úteis · Dormir', '11:30 PM · weekdays · Sleep') + '</small></span><button type="button" class="sm-sw" role="switch" data-auto="noite" aria-checked="true" aria-label="' + T('Automação Boa noite', 'Good night automation') + '"></button></li>' +
+            '<li><span><b>' + T('Pôr do sol', 'Sunset') + '</b><small>' + T('15 min antes · cabeceira', '15 min before · bedside lamp') + '</small></span><button type="button" class="sm-sw" role="switch" data-auto="sol" aria-checked="true" aria-label="' + T('Automação Pôr do sol', 'Sunset automation') + '"></button></li>' +
+          '</ul></section>' +
+        '<section class="sm-card"><header class="sm-ch"><b>' + T('Luzes', 'Lights') + '</b><small class="sm-lst"></small><button type="button" class="sm-pwr" aria-pressed="true" aria-label="' + T('Ligar ou desligar', 'Turn on or off') + '">' + ICO.pwr + '</button></header>' +
+          '<div class="sm-seg" role="radiogroup" aria-label="' + T('Qual luz', 'Which light') + '">' +
+            '<button type="button" role="radio" data-alvo="todas">' + T('Todas', 'All') + '</button>' +
+            '<button type="button" role="radio" data-alvo="cab">' + T('Cabeceira', 'Bedside') + '</button>' +
+            '<button type="button" role="radio" data-alvo="led">TV</button></div>' +
+          '<div class="sm-cores">' + CORES.map(function (c) {
+            return '<button type="button" data-cor="' + c[0] + '" style="--c:' + c[0] + '" aria-label="' + c[1] + '" title="' + c[1] + '"></button>';
+          }).join('') + '</div>' +
+          '<label class="sm-brilho"><span>' + T('Brilho', 'Brightness') + '</span><input type="range" min="5" max="100" step="5"><output></output></label>' +
+        '</section>' +
+        '<section class="sm-card sm-aps">' +
+          '<button type="button" class="sm-ap" data-ap="tv"><i>' + ICO.tv + '</i><b>TV</b><small></small></button>' +
+          '<button type="button" class="sm-ap" data-ap="ps5"><i>' + ICO.jogar + '</i><b>PS5</b><small></small></button>' +
+          '<div class="sm-ap sm-ap-ar" data-ap-ar><button type="button" class="sm-ar-liga" data-ap="ar"><i>' + ICO.ar + '</i><b>' + T('Ar', 'AC') + '</b><small></small></button>' +
+            '<span class="sm-temp"><button type="button" data-t="-1" aria-label="' + T('Diminuir a temperatura', 'Lower the temperature') + '">−</button><b></b><button type="button" data-t="1" aria-label="' + T('Aumentar a temperatura', 'Raise the temperature') + '">+</button></span></div>' +
+        '</section>' +
+      '</div>' +
+    '</div>';
+
+  var cv = $('.sm-quarto', box), vistaEl = $('.sm-vista', box), palcoEl = $('.sm-palco', box), dicaEl = $('.sm-dica', box), avisoEl = $('.sm-aviso', box);
+  var camEl = $('.sm-cam', box), camCv = $('canvas', camEl), camHora = $('b', camEl), cst = $('.sm-cst', box), lst = $('.sm-lst', box);
+  var pwr = $('.sm-pwr', box), slider = $('.sm-brilho input', box), saida = $('.sm-brilho output', box);
+  var R = Q.palco(cv, 7);
+
+  function legenda(t) { if (falaEl) falaEl.textContent = t; }
+  function mexeu() { est.mexido = true; Q.para(); est.cena = null; ui.cenaTxt = ''; }
+  function luzesDoAlvo() { return ui.alvo === 'todas' ? [est.cab, est.led] : [est[ui.alvo]]; }
+  function txtTv() { return est.tv === 'off' ? T('desligada', 'off') : est.tv === 'ps5' ? T('no PS5', 'on the PS5') : est.tv === 'filme' ? T('passando um filme', 'playing a movie') : T('ligada', 'on'); }
+  function txtAr() { return est.ar ? T('Frio · ', 'Cool · ') + est.temp + '°' : T('desligado', 'off'); }
+  var avisoT = null;
+  function aviso(html, ms, tom) {
+    avisoEl.innerHTML = html;
+    avisoEl.setAttribute('data-tom', tom || '');
+    avisoEl.classList.add('on');
+    clearTimeout(avisoT);
+    avisoT = setTimeout(function () { avisoEl.classList.remove('on'); }, ms || 3200);
+  }
+
+  function pinta() {
+    var ls = luzesDoAlvo(), on = ls.some(function (l) { return l.on; }), ref = ls[0];
+    var sig = JSON.stringify([est, ui.alvo, ui.vista, ui.autos, ui.cenaTxt]);
+    if (sig === ui.sig) return;
+    ui.sig = sig;
+    $$('.sm-cenas button', box).forEach(function (b) { if (b.getAttribute('data-cena') === est.cena) b.setAttribute('data-ativo', ''); else b.removeAttribute('data-ativo'); });
+    cst.textContent = ui.cenaTxt || T('toque para rodar', 'tap to run');
+    $$('.sm-sw', box).forEach(function (b) { b.setAttribute('aria-checked', String(ui.autos[b.getAttribute('data-auto')])); });
+    var acesas = [est.cab, est.led].filter(function (l) { return l.on; }).length;
+    lst.textContent = acesas ? (acesas === 2 ? T('2 acesas', '2 on') : T('1 acesa', '1 on')) : T('apagadas', 'off');
+    pwr.setAttribute('aria-pressed', String(on));
+    $$('.sm-seg button', box).forEach(function (b) { b.setAttribute('aria-checked', String(b.getAttribute('data-alvo') === ui.alvo)); });
+    $$('.sm-cores button', box).forEach(function (b) {
+      var c = b.getAttribute('data-cor'), ativa = ls.every(function (l) { return l.on && l.cor === c; });
+      if (ativa) b.setAttribute('data-ativo', ''); else b.removeAttribute('data-ativo');
+    });
+    if (document.activeElement !== slider) slider.value = Math.round(ref.brilho * 100);
+    saida.textContent = Math.round(ref.brilho * 100) + '%';
+    var tv = $('[data-ap="tv"]', box), ps = $('[data-ap="ps5"]', box), ar = $('[data-ap-ar]', box);
+    tv.toggleAttribute('data-on', est.tv !== 'off'); $('small', tv).textContent = txtTv();
+    ps.toggleAttribute('data-on', est.ps5); $('small', ps).textContent = est.ps5 ? T('ligado', 'on') : T('em repouso', 'rest mode');
+    ar.toggleAttribute('data-on', est.ar); $('small', ar).textContent = est.ar ? T('ligado, no frio', 'on, cooling') : T('desligado', 'off');
+    $('.sm-temp b', ar).textContent = est.temp + '°';
+    $$('.sm-abas button', box).forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-vista') === ui.vista)); });
+  }
+
+  function ajusta() {
+    var bw = vistaEl.clientWidth, bh = vistaEl.clientHeight;
+    if (!bw || !bh) return;
+    var s = Math.min(bw / R.W, bh / R.H);
+    cv.style.width = Math.floor(R.W * s) + 'px';
+    cv.style.height = Math.floor(R.H * s) + 'px';
+    aplicaVista();
+  }
+  function aplicaVista() {
+    var v = VISTAS.filter(function (x) { return x[0] === ui.vista; })[0], f = v[2];
+    if (!f) { cv.style.transform = ''; return; }
+    var p = R.proj(f[0], f[1], f[2]), w = cv.offsetWidth, h = cv.offsetHeight;
+    var dx = (p[0] / R.W - .5) * w, dy = (p[1] / R.H - .5) * h;
+    cv.style.transform = 'scale(' + f[3] + ') translate(' + (-dx).toFixed(1) + 'px,' + (-dy).toFixed(1) + 'px)';
+  }
+  function vista(id, falar) {
+    ui.vista = ui.vista === id && id !== 'geral' ? 'geral' : id;
+    aplicaVista(); pinta();
+    Som.play('blip');
+    if (falar !== false) legenda(ui.vista === 'geral'
+      ? T('A vista Geral mostra o quarto inteiro. No app, dá para girar e aproximar com o mouse ou com os dedos.', 'The Overview shows the whole room. In the app you can orbit and zoom with the mouse or your fingers.')
+      : T('As vistas aproximam cada canto do quarto, como no app. Clique de novo para voltar à Geral.', 'Views zoom into each corner of the room, like in the app. Click again to go back to the Overview.'));
+  }
+
+  function rodaCena(id, txt) {
+    var c = CENAS[id];
+    est.mexido = true;
+    Som.play('nota');
+    Q.rodar(id, function (i, n, passo) {
+      ui.cenaTxt = c[0] + ' · ' + (passo ? passo + '…' : T('pronto', 'done'));
+      if (passo) Som.play('clic');
+      pinta();
+    });
+    legenda(txt || c[3]);
+  }
+  function alternaLuz(qual) {
+    mexeu();
+    var l = est[qual];
+    l.on = !l.on;
+    Som.play(l.on ? 'liga' : 'clic');
+    pinta();
+  }
+  function tv() {
+    mexeu();
+    est.tv = est.tv === 'off' ? 'casa' : 'off';
+    Som.play(est.tv === 'off' ? 'clic' : 'liga');
+    legenda(T('A TV é uma LG com webOS, pareada uma vez pela rede. Para ligar com ela em espera, o Smartoca manda um Wake-on-LAN.', 'The TV is an LG running webOS, paired once over the network. To turn it on from standby, Smartoca sends a Wake-on-LAN packet.'));
+    pinta();
+  }
+  function ps5() {
+    mexeu();
+    est.ps5 = !est.ps5;
+    if (est.ps5) est.tv = 'ps5';
+    else if (est.tv === 'ps5') est.tv = 'casa';
+    Som.play(est.ps5 ? 'liga' : 'clic');
+    legenda(T('Acordar o PS5 liga a TV e troca para a entrada dele, e o HDMI acorda o console. O estado vem da descoberta do próprio PS5 na rede.', 'Waking the PS5 turns on the TV and switches to its input, and HDMI wakes the console. Its state comes from the PS5\'s own discovery on the network.'));
+    pinta();
+  }
+  function ar(delta) {
+    mexeu();
+    if (delta) { est.temp = Math.max(16, Math.min(30, est.temp + delta)); est.ar = true; Som.play('tecla'); }
+    else { est.ar = !est.ar; Som.play(est.ar ? 'liga' : 'clic'); }
+    legenda(T('O ar não tem controle local, então o Smartoca opera o app dele num Android do quarto, pela rede, e toca nos botões até chegar no estado pedido.', 'The AC has no local control, so Smartoca drives its app on an Android phone in the room, over the network, tapping the buttons until it reaches the requested state.'));
+    pinta();
+  }
+  var camT = null;
+  function camera() {
+    Som.play('blip');
+    camEl.hidden = !camEl.hidden;
+    clearTimeout(camT);
+    if (!camEl.hidden) camT = setTimeout(function () { camEl.hidden = true; }, 8000);
+    legenda(T('As câmeras vêm do DVR pela rede, em RTSP, e viram imagem com o ffmpeg. Esta aqui mostra o próprio quarto de exemplo.', 'The cameras come from the DVR over the network, via RTSP, turned into images with ffmpeg. This one shows the sample room itself.'));
+  }
+
+  function age(id) {
+    if (id === 'cab') { alternaLuz('cab'); legenda(T('A cabeceira é uma lâmpada Tuya. Depois de configurada, o Smartoca fala com ela direto pela rede de casa, sem passar pela nuvem.', 'The bedside lamp is a Tuya bulb. Once set up, Smartoca talks to it directly over the home network, without going through the cloud.')); }
+    else if (id === 'tv') tv();
+    else if (id === 'ps5') ps5();
+    else if (id === 'ar') ar(0);
+    else if (id === 'cam') camera();
+    else if (id === 'cama' || id === 'mesa' || id === 'janela') vista(id);
+  }
+  function alvoEm(e) {
+    var r = cv.getBoundingClientRect();
+    if (!r.width) return '';
+    return R.id((e.clientX - r.left) / r.width * R.W, (e.clientY - r.top) / r.height * R.H);
+  }
+  function estadoDe(id) {
+    if (id === 'cab') return est.cab.on ? T('acesa', 'on') + ' · ' + Math.round(est.cab.brilho * 100) + '%' : T('apagada', 'off');
+    if (id === 'tv') return txtTv();
+    if (id === 'ps5') return est.ps5 ? T('ligado', 'on') : T('em repouso', 'rest mode');
+    if (id === 'ar') return txtAr();
+    if (id === 'cam') return T('clique para ver', 'click to view');
+    return ui.vista === id ? T('clique para voltar', 'click to go back') : T('clique para aproximar', 'click to zoom in');
+  }
+  cv.addEventListener('pointermove', function (e) {
+    var id = alvoEm(e);
+    cv.classList.toggle('mao', !!id);
+    if (!id || e.pointerType !== 'mouse') { dicaEl.hidden = true; return; }
+    var r = palcoEl.getBoundingClientRect();
+    dicaEl.innerHTML = '<b>' + NOMES[id] + '</b><small>' + estadoDe(id) + '</small>';
+    dicaEl.style.left = (e.clientX - r.left) + 'px';
+    dicaEl.style.top = (e.clientY - r.top) + 'px';
+    dicaEl.hidden = false;
+  });
+  cv.addEventListener('pointerleave', function () { dicaEl.hidden = true; cv.classList.remove('mao'); });
+  cv.addEventListener('click', function (e) {
+    var id = alvoEm(e);
+    if (id) { age(id); dicaEl.hidden = true; }
+  });
+  camEl.addEventListener('click', function () { camEl.hidden = true; });
+
+  box.addEventListener('click', function (e) {
+    var b;
+    if ((b = e.target.closest('[data-vista]'))) { vista(b.getAttribute('data-vista')); return; }
+    if ((b = e.target.closest('[data-cena]'))) { rodaCena(b.getAttribute('data-cena')); return; }
+    if ((b = e.target.closest('[data-auto]'))) {
+      var k = b.getAttribute('data-auto');
+      ui.autos[k] = !ui.autos[k];
+      Som.play('clic'); pinta();
+      legenda(T('Uma automação roda uma cena num horário ou no nascer e no pôr do sol, nos dias escolhidos, enquanto o Smartoca estiver ligado.', 'An automation runs a scene at a set time or at sunrise and sunset, on the chosen days, while Smartoca is running.'));
+      return;
+    }
+    if ((b = e.target.closest('[data-alvo]'))) { ui.alvo = b.getAttribute('data-alvo'); Som.play('clic'); pinta(); return; }
+    if ((b = e.target.closest('[data-cor]'))) {
+      mexeu();
+      var c = b.getAttribute('data-cor');
+      luzesDoAlvo().forEach(function (l) { l.on = true; l.cor = c; });
+      Som.play('blip'); pinta();
+      legenda(T('As cores são as mesmas do app. A cabeceira e a luz da TV podem ter cores diferentes ou mudar juntas em Todas.', 'Same colors as the app. The bedside lamp and the TV light can have different colors or change together under All.'));
+      return;
+    }
+    if (e.target.closest('.sm-pwr')) {
+      mexeu();
+      var ls = luzesDoAlvo(), liga = !ls.some(function (l) { return l.on; });
+      ls.forEach(function (l) { l.on = liga; });
+      Som.play(liga ? 'liga' : 'clic'); pinta();
+      return;
+    }
+    if ((b = e.target.closest('[data-t]'))) { ar(+b.getAttribute('data-t')); return; }
+    if ((b = e.target.closest('[data-ap]'))) {
+      var ap = b.getAttribute('data-ap');
+      if (ap === 'tv') tv(); else if (ap === 'ps5') ps5(); else ar(0);
+    }
+  });
+  slider.addEventListener('input', function () {
+    mexeu();
+    var v = +slider.value / 100;
+    luzesDoAlvo().forEach(function (l) { l.on = true; l.brilho = v; });
+    saida.textContent = slider.value + '%';
+    pinta();
+  });
+
+  var ACOES = {
+    sol: function () {
+      if (!ui.autos.sol) { Som.play('erro'); legenda(T('A automação Pôr do sol está desligada no painel. Ligue a chave dela para ver.', 'The Sunset automation is off in the panel. Turn its switch on to see it.')); return; }
+      mexeu();
+      est.ceu = 'tarde';
+      Som.play('blip');
+      aviso(ICO.luz + '<span><b>' + T('Pôr do sol', 'Sunset') + '</b>' + T('acendendo a cabeceira', 'turning on the bedside lamp') + '</span>');
+      setTimeout(function () { est.cab.on = true; est.cab.cor = '#ffc98a'; est.cab.brilho = .7; Som.play('liga'); pinta(); }, lento ? 0 : 900);
+      legenda(T('Uma automação pode rodar no nascer ou no pôr do sol, com minutos antes ou depois. Esta acende a cabeceira em branco quente quando escurece.', 'An automation can run at sunrise or sunset, with minutes before or after. This one turns on the bedside lamp in warm white as it gets dark.'));
+      pinta();
+    },
+    noite: function () {
+      if (!ui.autos.noite) { Som.play('erro'); legenda(T('A automação Boa noite está desligada no painel. Ligue a chave dela para ver.', 'The Good night automation is off in the panel. Turn its switch on to see it.')); return; }
+      est.ceu = 'noite';
+      aviso(ICO.lua + '<span><b>' + T('23:30 · Boa noite', '11:30 PM · Good night') + '</b>' + T('rodando a cena Dormir', 'running the Sleep scene') + '</span>', 0, 'cena');
+      rodaCena('dormir', T('A automação Boa noite roda a cena Dormir às 23:30 nos dias úteis, enquanto o Smartoca estiver ligado.', 'The Good night automation runs the Sleep scene at 11:30 PM on weekdays, while Smartoca is running.'));
+    },
+    siri: function () {
+      aviso('<span class="sm-siri" aria-hidden="true"></span><span><b>Siri</b>' + T('“Smartoca Jogar”', '“Smartoca Play”') + '</span>');
+      rodaCena('jogar', T('No iPhone, as cenas viram atalhos: a Siri, o app Atalhos e o widget rodam qualquer uma delas.', 'On iPhone, scenes become shortcuts: Siri, the Shortcuts app and the widget can run any of them.'));
+    },
+    ia: function () {
+      Q.montar();
+      ui.vista = 'geral'; aplicaVista();
+      Som.play('conq');
+      aviso(ICO.casa + '<span><b>' + T('Criar com IA', 'Create with AI') + '</b>' + T('planta 3D montada', '3D floor plan built') + '</span>', 3600);
+      legenda(T('O Criar com IA gera um prompt. Você manda junto com fotos e medidas do cômodo para a IA que preferir, cola a resposta e a planta 3D sai pronta para ajustar no editor.', 'Create with AI generates a prompt. You send it with photos and measurements of the room to the AI of your choice, paste the answer and the 3D floor plan comes out ready to tweak in the editor.'));
+      pinta();
+    }
+  };
+  if (cmds) cmds.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-sm]'); if (!b) return;
+    ACOES[b.getAttribute('data-sm')]();
+  });
+
+  var camCtx = camCv.getContext('2d'), quadros = 0;
+  function tique(forca) {
+    if (!forca && !Q.animando() && ++quadros % 6) { pinta(); return; }
+    R.desenha();
+    if (!camEl.hidden) {
+      if (camCv.width !== cv.width) { camCv.width = cv.width; camCv.height = cv.height; }
+      camCtx.drawImage(cv, 0, 0);
+      var d = new Date();
+      camHora.textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+    }
+    pinta();
+  }
+
+  var visivel = false;
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { visivel = es[0].isIntersecting; if (visivel) { ajusta(); tique(true); } }).observe(box);
+  else visivel = true;
+  window.addEventListener('resize', ajusta);
+  ajusta(); tique(true);
+  setInterval(function () { if (visivel && !document.hidden) tique(); }, lento ? 500 : 90);
 })();
 
 })();

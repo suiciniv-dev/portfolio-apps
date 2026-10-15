@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vinícius Pires da Silva · suiciniv.dev</title>
-<meta name="description" content="Vinícius Pires da Silva, C# and .NET developer at Símix. A pixel art desk with the projects I built: Banditboard, Senna, Toca, ControlSensors HUD and Símix Ponto.">
+<meta name="description" content="Vinícius Pires da Silva, C# and .NET developer at Símix. A pixel art desk with the projects I built: Banditboard, Senna, Toca, Smartoca, ControlSensors HUD and Símix Ponto.">
 <meta name="theme-color" content="#120f17">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://suiciniv.dev/en/">
@@ -81,7 +81,7 @@
 
         <div class="scene-frame">
           <div class="scene" id="scene">
-            <canvas id="mesaCanvas" width="320" height="180" role="img" aria-label="My desk in pixel art: an old phone with Racco on screen, the monitor with Senna and Toca, my dock, at the bottom of the screen, a second monitor with the sensor HUD, a laptop with the Símix portal, a corkboard, two shelves with Senna's McLaren, three Funko Pops, a grass block, a potion, a Mercedes miniature and a wizard hat, Mimi and Lucifer, my cats, walking around the desk and the window, Fred the dog under the desk and me in the chair, seen from behind."></canvas>
+            <canvas id="mesaCanvas" width="320" height="180" role="img" aria-label="My desk in pixel art: an old phone with Racco on screen, the monitor with Senna and Toca, my dock, at the bottom of the screen, a second monitor with the sensor HUD, a laptop with the Símix portal, the Smartoca model, my bedroom in 3D with color-changing lights, on a shelf, a corkboard, two shelves with Senna's McLaren, three Funko Pops, a grass block, a potion, a Mercedes miniature and a wizard hat, Mimi and Lucifer, my cats, walking around the desk and the window, Fred the dog under the desk and me in the chair, seen from behind."></canvas>
             <div class="hots" id="hots"></div>
             <div class="scene-tip" id="sceneTip" hidden></div>
             <div class="scene-balao" id="sceneBalao" hidden></div>
@@ -99,6 +99,7 @@
           <button type="button" data-obj="banditboard">Banditboard</button>
           <button type="button" data-obj="senna">Senna</button>
           <button type="button" data-obj="toca">Toca</button>
+          <button type="button" data-obj="smartoca">Smartoca</button>
           <button type="button" data-obj="hud">ControlSensors HUD</button>
           <button type="button" data-obj="app">Símix Ponto</button>
           <button type="button" data-obj="cloud">Símix Ponto Cloud</button>
@@ -120,7 +121,7 @@
           <span class="sec-num">01</span>
           <div>
             <h2>On the desk</h2>
-            <p>Six things I built and use. Four were born in my free time; two are from Símix, where I work.</p>
+            <p>Seven things I built and use. Five were born in my free time; two are from Símix, where I work.</p>
           </div>
         </header>
 
@@ -221,6 +222,38 @@
               <span class="tc-rot">position</span>
               <button type="button" class="cmd" data-pos="baixo" data-ativo="1">bottom</button>
               <button type="button" class="cmd" data-pos="cima">top</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="quest quest-wide" id="smartoca">
+          <div class="quest-body">
+            <div class="quest-head">
+              <canvas class="quest-ico" data-ico="smartoca" aria-hidden="true"></canvas>
+              <div>
+                <h3>Smartoca</h3>
+                <p class="sub">Smart home in 3D · Windows and iPhone</p>
+              </div>
+              <span class="tag tag-me">Side project</span>
+            </div>
+            <p><b>The bedroom in 3D.</b> The house becomes a 3D floor plan that I edit myself, with rooms, doors, windows, furniture and lights, and every device sits in its real spot. From there I change the bulb colors, switch plugs and wall switches, the TV and the PS5, watch the DVR cameras and control the air conditioner, all over the home network and, whenever the device allows it, without going through the cloud.</p>
+            <p>On Windows it's C# with WinUI 3; on iPhone, SwiftUI, with Siri, Shortcuts and a widget. The 3D is the same on both, and a QR code on the PC screen moves the whole house over to the iPhone. It has scenes like Play, Movie and Sleep, automations by time and by sunset, Smart Life style device setup with Bluetooth discovery, and Create with AI, which generates a prompt to turn photos and measurements of a room into a 3D floor plan.</p>
+          </div>
+          <div class="quest-body quest-side">
+            <ul class="chips"><li>C#</li><li>.NET 10</li><li>WinUI 3</li><li>SwiftUI</li><li>three.js</li><li>Local network</li></ul>
+            <div class="links">
+              <a class="btn btn-main" href="https://smartoca.suiciniv.dev/" target="_blank" rel="noopener noreferrer">Explore Smartoca <span aria-hidden="true">↗</span></a>
+            </div>
+            <p class="note"><b>Download coming soon.</b> For now it runs my bedroom, on Windows and iPhone. The Android version comes later.</p>
+          </div>
+          <div class="quest-demo quest-full">
+            <div class="sm" id="smartocaDemo" role="region" aria-label="Smartoca simulation"></div>
+            <p class="demo-cap" id="smartocaFala">A Smartoca simulation with a sample bedroom. Click the devices in the room or use the panel: change the light colors, run a scene and switch views. Whatever you change here also shows up on the model on the desk, up top.</p>
+            <div class="cmds" id="smartocaCmds">
+              <button type="button" class="cmd" data-sm="sol">sunset</button>
+              <button type="button" class="cmd" data-sm="noite">11:30 PM on a weekday</button>
+              <button type="button" class="cmd" data-sm="siri">Siri, Smartoca Play</button>
+              <button type="button" class="cmd" data-sm="ia">create with AI</button>
             </div>
           </div>
         </article>
