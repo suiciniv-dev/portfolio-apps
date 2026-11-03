@@ -121,170 +121,11 @@
           <span class="sec-num">01</span>
           <div>
             <h2>Em cima da mesa</h2>
-            <p>Sete coisas que eu construí e uso. Cinco nasceram no meu tempo livre; duas são da Símix, onde eu trabalho.</p>
+            <p>Sete coisas que eu construí e uso. Duas são da Símix, onde eu trabalho; as outras cinco nasceram no meu tempo livre, da mais nova para a mais antiga.</p>
           </div>
         </header>
 
-        <article class="quest" id="banditboard">
-          <div class="quest-body">
-            <div class="quest-head">
-              <canvas class="quest-ico" data-ico="banditboard" aria-hidden="true"></canvas>
-              <div>
-                <h3>Banditboard</h3>
-                <p class="sub">Limites do Claude Code e do Antigravity · Android, iPhone, Watch, Windows e Mac</p>
-              </div>
-              <span class="tag tag-me">Projeto pessoal</span>
-            </div>
-            <p>Começou num celular Android esquecido na gaveta, que virou um painel sempre ligado na mesa: quanto já foi da sessão de 5 horas e da semana, quando libera e se algum modelo está instável. Hoje também roda no iPhone e no Apple Watch, e vira widget no Windows e no Mac. Cada modelo é o Racco, um guaxinim em pixel art que dorme, sua e estoura conforme o limite chega.</p>
-            <p>Kotlin com Jetpack Compose no Android e Compose Desktop no Windows. O uso vem do próprio Claude Code no PC, por um hook que roda o <code>/usage</code>, sem token no celular; a chave de pareamento fica cifrada com AES-256-GCM e Android Keystore. Código aberto, com site e documentação em português e inglês.</p>
-            <ul class="chips"><li>Kotlin</li><li>Jetpack Compose</li><li>Compose Desktop</li><li>Swift</li><li>AES-GCM · Keystore</li><li>Pixel art</li></ul>
-            <div class="links">
-              <a class="btn btn-main" href="https://banditboard.suiciniv.dev/" target="_blank" rel="noopener noreferrer">Conhecer e baixar <span aria-hidden="true">↗</span></a>
-              <a class="btn btn-ghost" href="https://github.com/suiciniv-dev/banditboard" target="_blank" rel="noopener noreferrer">Ver código <span aria-hidden="true">↗</span></a>
-            </div>
-            <p class="fine">grátis e de código aberto (MIT) · projeto pessoal, sem vínculo com a Anthropic</p>
-          </div>
-          <div class="quest-demo">
-            <div class="phone" role="img" aria-label="Tela do Banditboard: sessão e semana em cima e os quatro Raccos com a barra de cada modelo">
-              <div class="screen">
-                <div id="cbRows"></div>
-                <div class="cb-sep"></div>
-                <div class="cb-mascots" id="cbMascots"></div>
-              </div>
-            </div>
-            <p class="demo-cap" id="cbFala">&nbsp;</p>
-            <div class="cmds" id="cbCenas">
-              <button type="button" class="cmd" data-cena="normal" data-ativo="1">dia normal</button>
-              <button type="button" class="cmd" data-cena="dormindo">sessão zerada</button>
-              <button type="button" class="cmd" data-cena="suando">semana em 88%</button>
-              <button type="button" class="cmd" data-cena="vermelho">semana em 97%</button>
-              <button type="button" class="cmd" data-cena="esgotado">limite em 100%</button>
-              <button type="button" class="cmd" data-cena="fable">só o Fable no limite</button>
-            </div>
-          </div>
-        </article>
-
-        <article class="quest quest-wide" id="senna">
-          <div class="quest-body">
-            <div class="quest-head">
-              <canvas class="quest-ico" data-ico="senna" aria-hidden="true"></canvas>
-              <div>
-                <h3>Senna</h3>
-                <p class="sub">O assistente do meu Windows · C# e WinUI 3</p>
-              </div>
-              <span class="tag tag-me">Projeto pessoal</span>
-            </div>
-            <p><b>Trabalha calado.</b> Feito em C# com WinUI 3, mostra um painel do dia e manda avisos do Windows quando chega PR para revisar, issue nova, merge, reunião, lembrete, chuva ou limite do Claude. E guarda a memória: o Claude Code grava ali as decisões, os motivos e onde parou, e lê tudo de volta na sessão seguinte.</p>
-          </div>
-          <div class="quest-body quest-side">
-            <ul class="chips"><li>C#</li><li>.NET 10</li><li>WinUI 3</li><li>SQLite</li><li>API local</li></ul>
-            <p class="note"><b>Sem download.</b> Foi feito para uma máquina só, a minha. Está aqui como construção, não como produto.</p>
-          </div>
-          <div class="quest-demo quest-full">
-            <div class="sw" id="sennaWin" role="region" aria-label="Simulação do Senna"></div>
-            <p class="demo-cap">Uma simulação do Senna, com dados de exemplo. Arraste os nós do mapa, troque de tela na barra lateral e desligue avisos nos ajustes: o dia passa e ele só fala o que você deixou.</p>
-          </div>
-        </article>
-
-        <article class="quest quest-wide" id="toca">
-          <div class="quest-body">
-            <div class="quest-head">
-              <canvas class="quest-ico" data-ico="toca" aria-hidden="true"></canvas>
-              <div>
-                <h3>Toca</h3>
-                <p class="sub">Um dock para o Windows · C# e WinUI 3</p>
-              </div>
-              <span class="tag tag-me">Projeto pessoal</span>
-            </div>
-            <p><b>A casa do Racco.</b> Um dock que substitui a barra de tarefas de verdade: recebe os ícones de segundo plano, abre um Iniciar próprio na tecla Windows, mostra uma Ilha no alto da tela com a música, o pomodoro e a reunião chegando, e tem widgets vivos, os seus por script e dez estilos de ícone. O Racco do Banditboard mora em cima: anda pela barra, avisa o que importa e corre até a janela que está pedindo permissão.</p>
-            <p>Na minha máquina ela conversa com o Banditboard e o Senna, que mandam o uso do Claude Code, clima, GitHub e agenda. Para os outros PCs ela virou produto: 7 dias grátis e uma licença de R$ 9,90, paga por Pix ou cartão no Mercado Pago. Um Worker do Cloudflare gera a chave assinada, e a própria Toca confere a assinatura sem internet.</p>
-          </div>
-          <div class="quest-body quest-side">
-            <ul class="chips"><li>C#</li><li>.NET 10</li><li>WinUI 3</li><li>Win32 · DWM</li><li>Cloudflare Workers</li><li>Pixel art</li></ul>
-            <p class="note"><b>Para baixar:</b> <a href="https://toca.suiciniv.dev">toca.suiciniv.dev</a>, com a Toca desenhada e funcionando no navegador. Windows 10 e 11.</p>
-          </div>
-          <div class="quest-demo quest-full">
-            <div class="tc" id="tocaDemo" role="region" aria-label="Simulação da Toca"></div>
-            <p class="demo-cap" id="tocaFala">Uma simulação da Toca, com dados de exemplo. Peça as coisas para o Racco nos botões abaixo, mexa no dock, troque o tema ou clique nele.</p>
-            <div class="cmds" id="tocaCmds">
-              <button type="button" class="cmd" data-tc="uso">uso do Claude</button>
-              <button type="button" class="cmd" data-tc="pr">PR para revisar</button>
-              <button type="button" class="cmd" data-tc="reuniao">reunião em 10 min</button>
-              <button type="button" class="cmd" data-tc="permissao">Claude pedindo permissão</button>
-              <button type="button" class="cmd" data-tc="ambiente">trocar de ambiente</button>
-            </div>
-            <div class="cmds tc-opcoes" id="tocaOpcoes">
-              <span class="tc-rot">tema</span>
-              <button type="button" class="cmd" data-tema="vidro" data-ativo="1">vidro</button>
-              <button type="button" class="cmd" data-tema="halloween">Halloween</button>
-              <button type="button" class="cmd" data-tema="natal">Natal</button>
-              <button type="button" class="cmd" data-tema="pixel">pixel</button>
-              <span class="tc-rot">posição</span>
-              <button type="button" class="cmd" data-pos="baixo" data-ativo="1">embaixo</button>
-              <button type="button" class="cmd" data-pos="cima">em cima</button>
-            </div>
-          </div>
-        </article>
-
-        <article class="quest quest-wide" id="smartoca">
-          <div class="quest-body">
-            <div class="quest-head">
-              <canvas class="quest-ico" data-ico="smartoca" aria-hidden="true"></canvas>
-              <div>
-                <h3>Smartoca</h3>
-                <p class="sub">Casa inteligente em 3D · Windows e celular</p>
-              </div>
-              <span class="tag tag-me">Projeto pessoal</span>
-            </div>
-            <p><b>O quarto em 3D.</b> A casa vira uma planta 3D que eu mesmo edito, com cômodos, portas, janelas, móveis e luzes, e cada aparelho fica no lugar dele. Dali eu mudo a cor das lâmpadas, ligo tomadas e interruptores, a TV e o PS5, vejo as câmeras do DVR e mexo no ar-condicionado, tudo pela rede de casa e, sempre que o aparelho deixa, sem passar pela nuvem.</p>
-            <p>No Windows é C# com WinUI 3; no iPhone, SwiftUI, com Siri, Atalhos e widget. O 3D é o mesmo nos dois, e um QR na tela do PC passa a casa inteira para o celular. Tem cenas como Jogar, Filme e Dormir, automações por horário e pelo pôr do sol, cadastro de aparelhos no estilo do Smart Life, com busca por Bluetooth, e o Criar com IA, que gera um prompt para transformar fotos e medidas do cômodo numa planta 3D.</p>
-          </div>
-          <div class="quest-body quest-side">
-            <ul class="chips"><li>C#</li><li>.NET 10</li><li>WinUI 3</li><li>SwiftUI</li><li>three.js</li><li>Rede local</li></ul>
-            <div class="links">
-              <a class="btn btn-main" href="https://smartoca.suiciniv.dev/" target="_blank" rel="noopener noreferrer">Conhecer o Smartoca <span aria-hidden="true">↗</span></a>
-            </div>
-            <p class="note"><b>Download em breve.</b> Por enquanto ele cuida do meu quarto, no Windows e no iPhone. A versão para Android vem depois.</p>
-          </div>
-          <div class="quest-demo quest-full">
-            <div class="sm" id="smartocaDemo" role="region" aria-label="Simulação do Smartoca"></div>
-            <p class="demo-cap" id="smartocaFala">Uma simulação do Smartoca, com um quarto de exemplo. Clique nos aparelhos do quarto ou use o painel: mude a cor das luzes, rode uma cena e troque de vista. O que você mexer aqui aparece também na maquete da mesa, lá em cima.</p>
-            <div class="cmds" id="smartocaCmds">
-              <button type="button" class="cmd" data-sm="sol">pôr do sol</button>
-              <button type="button" class="cmd" data-sm="noite">23:30 num dia útil</button>
-              <button type="button" class="cmd" data-sm="siri">Siri, Smartoca Jogar</button>
-              <button type="button" class="cmd" data-sm="ia">criar com IA</button>
-            </div>
-          </div>
-        </article>
-
-        <article class="quest" id="hud">
-          <div class="quest-body">
-            <div class="quest-head">
-              <canvas class="quest-ico" data-ico="hud" aria-hidden="true"></canvas>
-              <div>
-                <h3>ControlSensors HUD</h3>
-                <p class="sub">HUD de sensores · Windows</p>
-              </div>
-              <span class="tag tag-me">Código aberto</span>
-            </div>
-            <p>Um HUD de monitoramento em tempo real para telas secundárias e gabinetes: CPU, GPU, memória, armazenamento, clima e áudio, direto do Windows. É o que fica no monitor do lado enquanto eu trabalho.</p>
-            <ul class="chips"><li>C#</li><li>WPF</li><li>.NET</li><li>Windows</li><li>Sensores de hardware</li></ul>
-            <div class="links">
-              <a class="btn btn-main" href="https://github.com/suiciniv-dev/ControlSensors/releases/latest" target="_blank" rel="noopener noreferrer">Baixar <span aria-hidden="true">↓</span></a>
-              <a class="btn btn-ghost" href="https://github.com/suiciniv-dev/ControlSensors" target="_blank" rel="noopener noreferrer">Ver código <span aria-hidden="true">↗</span></a>
-            </div>
-            <p class="fine">Windows 10 e 11 · grátis e de código aberto</p>
-          </div>
-          <div class="quest-demo">
-            <div class="hud-box" role="img" aria-label="Painel do ControlSensors com CPU, GPU, memória, disco, clima e áudio">
-              <div class="hud-bar"><span>ControlSensors.exe</span><span id="hudStatus">boot</span></div>
-              <div class="hud-term" id="hudTerm"></div>
-              <div class="hud-grid" id="hudGrid" hidden></div>
-            </div>
-            <div class="cmds"><button type="button" class="cmd" id="hudReboot">reiniciar</button></div>
-          </div>
-        </article>
+        <p class="grupo grupo-work">Na Símix, onde eu trabalho</p>
 
         <article class="quest quest-work" id="app">
           <div class="quest-body">
@@ -378,6 +219,169 @@
           <div class="quest-demo quest-full">
             <div class="cw" id="cloudWin" role="region" aria-label="Simulação do portal Símix Ponto Cloud"></div>
             <p class="demo-cap">Uma simulação do portal, com empresas e pessoas inventadas. Troque de empresa no topo, navegue pelo menu e recolha os cartões. O ponto que você bater no app ali em cima chega aqui.</p>
+          </div>
+        </article>
+
+        <p class="grupo grupo-me">No meu tempo livre</p>
+
+        <article class="quest quest-wide" id="smartoca">
+          <div class="quest-body">
+            <div class="quest-head">
+              <canvas class="quest-ico" data-ico="smartoca" aria-hidden="true"></canvas>
+              <div>
+                <h3>Smartoca</h3>
+                <p class="sub">Casa inteligente em 3D · Windows e celular</p>
+              </div>
+              <span class="tag tag-me">Projeto pessoal</span>
+            </div>
+            <p><b>O quarto em 3D.</b> A casa vira uma planta 3D que eu mesmo edito, com cômodos, portas, janelas, móveis e luzes, e cada aparelho fica no lugar dele. Dali eu mudo a cor das lâmpadas, ligo tomadas e interruptores, a TV e o PS5, vejo as câmeras do DVR e mexo no ar-condicionado, tudo pela rede de casa e, sempre que o aparelho deixa, sem passar pela nuvem.</p>
+            <p>No Windows é C# com WinUI 3; no iPhone, SwiftUI, com Siri, Atalhos e widget. O 3D é o mesmo nos dois, e um QR na tela do PC passa a casa inteira para o celular. Tem cenas como Jogar, Filme e Dormir, automações por horário e pelo pôr do sol, cadastro de aparelhos no estilo do Smart Life, com busca por Bluetooth, e o Criar com IA, que gera um prompt para transformar fotos e medidas do cômodo numa planta 3D.</p>
+          </div>
+          <div class="quest-body quest-side">
+            <ul class="chips"><li>C#</li><li>.NET 10</li><li>WinUI 3</li><li>SwiftUI</li><li>three.js</li><li>Rede local</li></ul>
+            <div class="links">
+              <a class="btn btn-main" href="https://smartoca.suiciniv.dev/" target="_blank" rel="noopener noreferrer">Conhecer o Smartoca <span aria-hidden="true">↗</span></a>
+            </div>
+            <p class="note"><b>Download em breve.</b> Por enquanto ele cuida do meu quarto, no Windows e no iPhone. A versão para Android vem depois.</p>
+          </div>
+          <div class="quest-demo quest-full">
+            <div class="sm" id="smartocaDemo" role="region" aria-label="Simulação do Smartoca"></div>
+            <p class="demo-cap" id="smartocaFala">Uma simulação do Smartoca, com um quarto de exemplo. Clique nos aparelhos do quarto ou use o painel: mude a cor das luzes, rode uma cena e troque de vista. O que você mexer aqui aparece também na maquete da mesa, lá em cima.</p>
+            <div class="cmds" id="smartocaCmds">
+              <button type="button" class="cmd" data-sm="sol">pôr do sol</button>
+              <button type="button" class="cmd" data-sm="noite">23:30 num dia útil</button>
+              <button type="button" class="cmd" data-sm="siri">Siri, Smartoca Jogar</button>
+              <button type="button" class="cmd" data-sm="ia">criar com IA</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="quest quest-wide" id="toca">
+          <div class="quest-body">
+            <div class="quest-head">
+              <canvas class="quest-ico" data-ico="toca" aria-hidden="true"></canvas>
+              <div>
+                <h3>Toca</h3>
+                <p class="sub">Um dock para o Windows · C# e WinUI 3</p>
+              </div>
+              <span class="tag tag-me">Projeto pessoal</span>
+            </div>
+            <p><b>A casa do Racco.</b> Um dock que substitui a barra de tarefas de verdade: recebe os ícones de segundo plano, abre um Iniciar próprio na tecla Windows, mostra uma Ilha no alto da tela com a música, o pomodoro e a reunião chegando, e tem widgets vivos, os seus por script e dez estilos de ícone. O Racco do Banditboard mora em cima: anda pela barra, avisa o que importa e corre até a janela que está pedindo permissão.</p>
+            <p>Na minha máquina ela conversa com o Banditboard e o Senna, que mandam o uso do Claude Code, clima, GitHub e agenda. Para os outros PCs ela virou produto: 7 dias grátis e uma licença de R$ 24,90, paga por Pix ou cartão no Mercado Pago. Um Worker do Cloudflare gera a chave assinada, e a própria Toca confere a assinatura sem internet.</p>
+          </div>
+          <div class="quest-body quest-side">
+            <ul class="chips"><li>C#</li><li>.NET 10</li><li>WinUI 3</li><li>Win32 · DWM</li><li>Cloudflare Workers</li><li>Pixel art</li></ul>
+            <p class="note"><b>Para baixar:</b> <a href="https://toca.suiciniv.dev">toca.suiciniv.dev</a>, com a Toca desenhada e funcionando no navegador. Windows 10 e 11.</p>
+          </div>
+          <div class="quest-demo quest-full">
+            <div class="tc" id="tocaDemo" role="region" aria-label="Simulação da Toca"></div>
+            <p class="demo-cap" id="tocaFala">Uma simulação da Toca, com dados de exemplo. Peça as coisas para o Racco nos botões abaixo, mexa no dock, troque o tema ou clique nele.</p>
+            <div class="cmds" id="tocaCmds">
+              <button type="button" class="cmd" data-tc="uso">uso do Claude</button>
+              <button type="button" class="cmd" data-tc="pr">PR para revisar</button>
+              <button type="button" class="cmd" data-tc="reuniao">reunião em 10 min</button>
+              <button type="button" class="cmd" data-tc="permissao">Claude pedindo permissão</button>
+              <button type="button" class="cmd" data-tc="ambiente">trocar de ambiente</button>
+            </div>
+            <div class="cmds tc-opcoes" id="tocaOpcoes">
+              <span class="tc-rot">tema</span>
+              <button type="button" class="cmd" data-tema="vidro" data-ativo="1">vidro</button>
+              <button type="button" class="cmd" data-tema="halloween">Halloween</button>
+              <button type="button" class="cmd" data-tema="natal">Natal</button>
+              <button type="button" class="cmd" data-tema="pixel">pixel</button>
+              <span class="tc-rot">posição</span>
+              <button type="button" class="cmd" data-pos="baixo" data-ativo="1">embaixo</button>
+              <button type="button" class="cmd" data-pos="cima">em cima</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="quest quest-wide" id="senna">
+          <div class="quest-body">
+            <div class="quest-head">
+              <canvas class="quest-ico" data-ico="senna" aria-hidden="true"></canvas>
+              <div>
+                <h3>Senna</h3>
+                <p class="sub">O assistente do meu Windows · C# e WinUI 3</p>
+              </div>
+              <span class="tag tag-me">Projeto pessoal</span>
+            </div>
+            <p><b>Trabalha calado.</b> Feito em C# com WinUI 3, mostra um painel do dia e manda avisos do Windows quando chega PR para revisar, issue nova, merge, reunião, lembrete, chuva ou limite do Claude. E guarda a memória: o Claude Code grava ali as decisões, os motivos e onde parou, e lê tudo de volta na sessão seguinte.</p>
+          </div>
+          <div class="quest-body quest-side">
+            <ul class="chips"><li>C#</li><li>.NET 10</li><li>WinUI 3</li><li>SQLite</li><li>API local</li></ul>
+            <p class="note"><b>Sem download.</b> Foi feito para uma máquina só, a minha. Está aqui como construção, não como produto.</p>
+          </div>
+          <div class="quest-demo quest-full">
+            <div class="sw" id="sennaWin" role="region" aria-label="Simulação do Senna"></div>
+            <p class="demo-cap">Uma simulação do Senna, com dados de exemplo. Arraste os nós do mapa, troque de tela na barra lateral e desligue avisos nos ajustes: o dia passa e ele só fala o que você deixou.</p>
+          </div>
+        </article>
+
+        <article class="quest" id="banditboard">
+          <div class="quest-body">
+            <div class="quest-head">
+              <canvas class="quest-ico" data-ico="banditboard" aria-hidden="true"></canvas>
+              <div>
+                <h3>Banditboard</h3>
+                <p class="sub">Limites do Claude Code e do Antigravity · Android, iPhone, Watch, Windows e Mac</p>
+              </div>
+              <span class="tag tag-me">Projeto pessoal</span>
+            </div>
+            <p>Começou num celular Android esquecido na gaveta, que virou um painel sempre ligado na mesa: quanto já foi da sessão de 5 horas e da semana, quando libera e se algum modelo está instável. Hoje também roda no iPhone e no Apple Watch, e vira widget no Windows e no Mac. Cada modelo é o Racco, um guaxinim em pixel art que dorme, sua e estoura conforme o limite chega.</p>
+            <p>Kotlin com Jetpack Compose no Android e Compose Desktop no Windows. O uso vem do próprio Claude Code no PC, por um hook que roda o <code>/usage</code>, sem token no celular; a chave de pareamento fica cifrada com AES-256-GCM e Android Keystore. Código aberto, com site e documentação em português e inglês.</p>
+            <ul class="chips"><li>Kotlin</li><li>Jetpack Compose</li><li>Compose Desktop</li><li>Swift</li><li>AES-GCM · Keystore</li><li>Pixel art</li></ul>
+            <div class="links">
+              <a class="btn btn-main" href="https://banditboard.suiciniv.dev/" target="_blank" rel="noopener noreferrer">Conhecer e baixar <span aria-hidden="true">↗</span></a>
+              <a class="btn btn-ghost" href="https://github.com/suiciniv-dev/banditboard" target="_blank" rel="noopener noreferrer">Ver código <span aria-hidden="true">↗</span></a>
+            </div>
+            <p class="fine">grátis e de código aberto (MIT) · projeto pessoal, sem vínculo com a Anthropic</p>
+          </div>
+          <div class="quest-demo">
+            <div class="phone" role="img" aria-label="Tela do Banditboard: sessão e semana em cima e os quatro Raccos com a barra de cada modelo">
+              <div class="screen">
+                <div id="cbRows"></div>
+                <div class="cb-sep"></div>
+                <div class="cb-mascots" id="cbMascots"></div>
+              </div>
+            </div>
+            <p class="demo-cap" id="cbFala">&nbsp;</p>
+            <div class="cmds" id="cbCenas">
+              <button type="button" class="cmd" data-cena="normal" data-ativo="1">dia normal</button>
+              <button type="button" class="cmd" data-cena="dormindo">sessão zerada</button>
+              <button type="button" class="cmd" data-cena="suando">semana em 88%</button>
+              <button type="button" class="cmd" data-cena="vermelho">semana em 97%</button>
+              <button type="button" class="cmd" data-cena="esgotado">limite em 100%</button>
+              <button type="button" class="cmd" data-cena="fable">só o Fable no limite</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="quest" id="hud">
+          <div class="quest-body">
+            <div class="quest-head">
+              <canvas class="quest-ico" data-ico="hud" aria-hidden="true"></canvas>
+              <div>
+                <h3>ControlSensors HUD</h3>
+                <p class="sub">HUD de sensores · Windows</p>
+              </div>
+              <span class="tag tag-me">Código aberto</span>
+            </div>
+            <p>Um HUD de monitoramento em tempo real para telas secundárias e gabinetes: CPU, GPU, memória, armazenamento, clima e áudio, direto do Windows. É o que fica no monitor do lado enquanto eu trabalho.</p>
+            <ul class="chips"><li>C#</li><li>WPF</li><li>.NET</li><li>Windows</li><li>Sensores de hardware</li></ul>
+            <div class="links">
+              <a class="btn btn-main" href="https://github.com/suiciniv-dev/ControlSensors/releases/latest" target="_blank" rel="noopener noreferrer">Baixar <span aria-hidden="true">↓</span></a>
+              <a class="btn btn-ghost" href="https://github.com/suiciniv-dev/ControlSensors" target="_blank" rel="noopener noreferrer">Ver código <span aria-hidden="true">↗</span></a>
+            </div>
+            <p class="fine">Windows 10 e 11 · grátis e de código aberto</p>
+          </div>
+          <div class="quest-demo">
+            <div class="hud-box" role="img" aria-label="Painel do ControlSensors com CPU, GPU, memória, disco, clima e áudio">
+              <div class="hud-bar"><span>ControlSensors.exe</span><span id="hudStatus">boot</span></div>
+              <div class="hud-term" id="hudTerm"></div>
+              <div class="hud-grid" id="hudGrid" hidden></div>
+            </div>
+            <div class="cmds"><button type="button" class="cmd" id="hudReboot">reiniciar</button></div>
           </div>
         </article>
       </div>
@@ -474,6 +478,8 @@
               <tr class="he"><td>08/2026</td><td>22:40 <i>livre</i></td><td>ControlSensors HUD</td><td>Tempo livre: um HUD de sensores, de código aberto.</td></tr>
               <tr class="he"><td>09/2026</td><td>23:15 <i>livre</i></td><td>Banditboard</td><td>Tempo livre: o celular da gaveta virou painel. Agora tem até iPhone e Apple Watch.</td></tr>
               <tr class="he"><td>09/2026</td><td>00:30 <i>livre</i></td><td>Senna v2</td><td>Tempo livre: de Python para C#, e de 682 MB para leve.</td></tr>
+              <tr class="he"><td>10/2026</td><td>21:50 <i>livre</i></td><td>Toca</td><td>Tempo livre: um dock para o Windows, com o Racco morando nele. Hoje está à venda.</td></tr>
+              <tr class="he"><td>10/2026</td><td>22:20 <i>livre</i></td><td>Smartoca</td><td>Tempo livre: o meu quarto em 3D, no PC e no celular.</td></tr>
             </tbody>
           </table>
           <div class="paper-foot">

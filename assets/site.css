@@ -171,6 +171,10 @@ h1{font-size:clamp(40px,5.6vw,66px);letter-spacing:-.01em;margin:8px 0 4px;text-
 .tag{font:400 19px/1 var(--px);padding:6px 9px;margin:2px;white-space:nowrap}
 .tag-me{color:var(--hud);box-shadow:0 0 0 2px rgba(92,242,160,.35)}
 .tag-work{color:var(--sky);box-shadow:0 0 0 2px rgba(108,198,255,.35)}
+.grupo{display:flex;align-items:center;gap:14px;margin:4px 3px 22px;font:400 28px/1 var(--px)}
+.grupo::after{content:"";flex:1;height:3px;background:currentColor;opacity:.3}
+.grupo-work{color:var(--sky)}
+.grupo-me{color:var(--hud);margin-top:30px}
 .feats{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
 .feats li{position:relative;padding-left:22px;color:var(--soft);font-size:15px}
 .feats li::before{content:"";position:absolute;left:4px;top:.6em;width:8px;height:8px;background:var(--coral)}

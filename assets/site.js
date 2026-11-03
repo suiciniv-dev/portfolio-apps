@@ -2182,14 +2182,27 @@ var Cena = (function () {
   });
 
   function iconeToca(c) {
-    c.width = 30; c.height = 24;
+    c.width = 24; c.height = 24;
     var x = c.getContext('2d');
-    function q(a, b, w, h, cor) { x.fillStyle = cor; x.fillRect(a, b, w, h); }
-    q(1, 18, 28, 6, '#2c3550'); q(0, 19, 1, 4, '#2c3550'); q(29, 19, 1, 4, '#2c3550');
-    q(1, 18, 28, 1, '#7d8bb0');
-    ['#3d9bff', '#3fc7a0', '#2f80ed', '#6c63ff', '#f5c04a'].forEach(function (cor, i) { q(3 + i * 5, 20, 3, 3, cor); });
-    q(16, 23, 3, 1, '#60cdff');
-    racco(x, 7, 4, { acc: ['GLASSES'] });
+    function noT(px, py) {
+      if (py >= 4 && py <= 10) {
+        var ini = py === 4 || py === 10 ? 6 : py === 5 || py === 9 ? 4 : 3;
+        if (px < ini || px > 23 - ini) return false;
+        return !(py >= 6 && py <= 8 && (px === 7 || px === 8 || px === 15 || px === 16));
+      }
+      if (py >= 11 && py <= 18) return py === 18 ? px >= 10 && px <= 13 : px >= 9 && px <= 14;
+      return false;
+    }
+    for (var py = 0; py < 24; py++) {
+      for (var px = 0; px < 24; px++) {
+        if (Math.pow(Math.abs(px - 11.5) / 12, 5) + Math.pow(Math.abs(py - 11.5) / 12, 5) > 1) continue;
+        var t = py / 23, luz = py < 3 ? 0.14 : 0, sombra = !noT(px, py) && noT(px, py - 1) ? 0.18 : 0;
+        var r = 138 + (47 - 138) * t, g = 123 + (140 - 123) * t, b = 255;
+        r += (255 - r) * luz - r * sombra; g += (255 - g) * luz - g * sombra; b += (255 - b) * luz - b * sombra;
+        x.fillStyle = noT(px, py) ? (py >= 15 ? '#eeeaff' : '#ffffff') : 'rgb(' + Math.round(r) + ',' + Math.round(g) + ',' + Math.round(b) + ')';
+        x.fillRect(px, py, 1, 1);
+      }
+    }
   }
 
   function icone(alvo, r) {
@@ -3695,7 +3708,7 @@ window.__cena = Cena;
   var C = {
     ajuda: function () { p(T('comandos: sobre · projetos · contato · email · cv · github · linkedin · whatsapp · clima · hora · segredos · racco · limpar', 'commands: about · projects · contact · email · resume · github · linkedin · whatsapp · weather · time · secrets · racco · clear')); },
     sobre: function () { p(T('Vinícius Pires da Silva. Desenvolvedor C# e .NET, Pleno III na Símix, em Canoas, RS. Começou no suporte em 2020 e aprendeu sozinho.', 'Vinícius Pires da Silva. C# and .NET developer, mid-level III at Símix, in Canoas, Brazil. Started in support in 2020 and is self-taught.')); },
-    projetos: function () { p([link('#banditboard', 'banditboard/'), link('#senna', 'senna/'), link('#toca', 'toca/'), link('#smartoca', 'smartoca/'), link('#hud', 'controlsensors/'), link('#app', 'simix-ponto/'), link('#ponto-cloud', 'simix-ponto-cloud/')].join('  ')); },
+    projetos: function () { p([link('#app', 'simix-ponto/'), link('#ponto-cloud', 'simix-ponto-cloud/'), link('#smartoca', 'smartoca/'), link('#toca', 'toca/'), link('#senna', 'senna/'), link('#banditboard', 'banditboard/'), link('#hud', 'controlsensors/')].join('  ')); },
     contato: function () { p('e-mail: ' + link('mailto:' + EMAIL, EMAIL) + '\nwhatsapp: ' + link('https://wa.me/5551982515375', '+55 51 98251-5375') + '\nlinkedin: ' + link('https://www.linkedin.com/in/viniciuspiresdasilva/', 'in/viniciuspiresdasilva')); },
     email: function () { if (navigator.clipboard) navigator.clipboard.writeText(EMAIL).then(function () { p(T('Copiei o e-mail: ', 'Copied the email: ') + EMAIL); }, function () { p(EMAIL); }); else p(EMAIL); },
     cv: function () { p(link('/assets/Curriculo-Vinicius-Pires-da-Silva.pdf', T('Currículo em PDF ↓', 'Résumé in Portuguese ↓')) + '  ' + link('/assets/Resume-Vinicius-Pires-da-Silva.pdf', 'Résumé in English ↓')); },
