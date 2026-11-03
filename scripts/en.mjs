@@ -1,7 +1,11 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { createHash } from "node:crypto";
 
 const PT = new URL("../index.html", import.meta.url);
 const EN = new URL("../en/index.html", import.meta.url);
+
+const versao = (arquivo) => createHash("sha1").update(readFileSync(new URL(`../assets/${arquivo}`, import.meta.url))).digest("hex").slice(0, 10);
+const comVersao = (html) => html.replace(/\/assets\/(site\.(?:js|css))(?:\?v=\w+)?"/g, (_, nome) => `/assets/${nome}?v=${versao(nome)}"`);
 
 const T = [
   ['<html lang="pt-BR">', '<html lang="en">'],
@@ -197,7 +201,9 @@ const T = [
   ['id="conqReset">zerar o progresso</button>', 'id="conqReset">reset progress</button>']
 ];
 
-let html = readFileSync(PT, "utf8");
+const original = readFileSync(PT, "utf8");
+let html = comVersao(original);
+if (html !== original) writeFileSync(PT, html);
 const faltou = [];
 for (const [pt, en, todas] of T) {
   if (!html.includes(pt)) { faltou.push(pt); continue; }
