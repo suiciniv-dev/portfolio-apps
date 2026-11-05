@@ -905,7 +905,7 @@ var Cena = (function () {
     latas: 0, vapor: 0, notas: [], farol: 0, poster: 0,
     hesoyam: false, parada: 0,
     r: { x: 120, dir: 1, alvo: 120, pausa: 30, look: 0, wave: 0 },
-    hud: [42, 51, 63, 38], spark: [], code: [], linha: null, toast: 0, toastX: 40,
+    hud: [42, 51, 63, 38], spark: [], nx: {}, toast: 0, toastX: 40,
     appOk: 0, aviao: -1, novo: 0, postit: null, postitVolta: 0, recado: 0,
     f1: 0, mimi: 0, lucifer: 0, fred: 0, coracoes: [],
     boot: $('#intro') && !$('#intro').hidden ? -1 : null
@@ -1335,6 +1335,54 @@ var Cena = (function () {
     }
   }
 
+  var NX_CICLO = 320, NX_TURNO = 250;
+  var NX_COR = ['#f0a860', '#f2f0ec', '#7bcb9f', '#8f8a84'];
+  function nexoraPasso(f) {
+    var n = st.nx, k = f % NX_CICLO;
+    if (n.f === f) return;
+    n.f = f;
+    if (!n.cols) n.cols = [[{}], [{ ent: f - 190 }, { ent: f - 30 }], [{}], [{}]];
+    var c = n.cols;
+    if (k === 60) c[2].unshift(c[1].shift());
+    if (k === 130) { var a = c[0].shift(); a.ent = f; c[1].push(a); }
+    if (k === 200) c[0].push(c[1].shift());
+    if (k === 250) c[3].unshift(c[2].pop());
+    if (k === 262) c[3].pop();
+    if (k === 290) c[1].push({ ent: f });
+  }
+  function nexoraMini(wx, wy, f) {
+    nexoraPasso(f);
+    R(wx, wy, 54, 41, '#181716');
+    R(wx, wy, 54, 4, '#121110');
+    R(wx + 1, wy + 1, 2, 2, '#e9e6f2');
+    R(wx + 6, wy + 1, 13, 2, '#262320');
+    R(wx + 45, wy + 1, 8, 2, '#f2f0ec');
+    R(wx, wy + 4, 4, 37, '#121110');
+    [8, 12, 16, 20].forEach(function (d, i) { R(wx + 1, wy + d, 2, 2, i === 0 ? '#bdb4da' : '#4a4642'); });
+    var cols = st.nx.cols;
+    for (var c = 0; c < 4; c++) {
+      var cx = wx + 6 + c * 12, cy = wy + 6;
+      R(cx, cy, 11, 34, '#1f1d1b');
+      P(cx + 1, cy + 1, NX_COR[c]); R(cx + 3, cy + 1, 5, 1, '#5c5852');
+      cols[c].forEach(function (cartao, i) {
+        var tx = cx + 1, ty = cy + 4 + i * 7;
+        if (cartao.x === undefined) { cartao.x = tx; cartao.y = ty; }
+        cartao.x += (tx - cartao.x) * .35; cartao.y += (ty - cartao.y) * .35;
+        var px = Math.round(cartao.x), py = Math.round(cartao.y);
+        if (c === 0 && (f >> 2) % 2) R(px - 1, py - 1, 11, 8, '#f0a860');
+        R(px, py, 9, 6, '#2c2926');
+        R(px + 1, py + 1, 6, 1, c === 3 ? '#8f8a84' : '#d9d4cc');
+        R(px + 1, py + 3, 4, 1, '#5c5852');
+        if (c === 1) {
+          var prog = Math.max(0, Math.min(1, (f - cartao.ent) / NX_TURNO));
+          R(px + 1, py + 4, 7, 1, '#3d3935'); R(px + 1, py + 4, Math.max(1, Math.round(7 * prog)), 1, '#f2f0ec');
+        }
+        if (c === 0) R(px + 6, py + 3, 2, 1, '#f0a860');
+        if (c === 2) R(px + 6, py + 3, 2, 1, '#7bcb9f');
+      });
+    }
+  }
+
   function monitorSenna(f) {
     var x = 98, y = 58;
     R(x, y, 102, 56, '#0f0e13'); R(x + 1, y + 1, 100, 54, '#1b1a22');
@@ -1348,24 +1396,7 @@ var Cena = (function () {
     }
     R(sx, sy, sw, 25, '#131d36'); R(sx, sy + 25, sw, 24, '#0e1528');
     for (var d = 0; d < sw; d += 2) P(sx + d + ((sy + 25) % 2), sy + 24, '#0e1528');
-    R(x + 5, y + 5, 54, 41, '#0b0f18');
-    R(x + 5, y + 5, 54, 3, '#262c3c'); P(x + 7, y + 6, '#ff6257'); P(x + 9, y + 6, '#ffc857'); P(x + 11, y + 6, '#5cf2a0');
-    R(x + 6, y + 9, 3, 36, '#10141f');
-    var cores = ['#7aa2f7', '#c3e88d', '#f78c6c', '#89ddff', '#c792ea', '#ffcb6b', '#5c6370'];
-    var linhas = st.code;
-    for (var i = 0; i < linhas.length; i++) {
-      var ly = y + 10 + i * 3, lx = x + 11 + linhas[i].ind * 2;
-      P(x + 7, ly, '#2a3144');
-      linhas[i].seg.forEach(function (s) { R(lx, ly, s[0], 1, cores[s[1]]); lx += s[0] + 1; });
-    }
-    if (st.linha) {
-      var ly2 = y + 10 + linhas.length * 3, lx2 = x + 11 + st.linha.ind * 2, rest = st.linha.dig;
-      st.linha.seg.forEach(function (s) {
-        if (rest <= 0) return;
-        var w = Math.min(s[0], rest); R(lx2, ly2, w, 1, cores[s[1]]); lx2 += w + (w === s[0] ? 1 : 0); rest -= s[0];
-      });
-      if ((f >> 2) % 2) R(lx2, ly2 - 1, 1, 3, '#e6e6e6');
-    }
+    nexoraMini(x + 5, y + 5, f);
     var px = x + 62, my = y + 20, cx = px + 17;
     R(px, y + 5, 35, 33, '#14110f');
     R(px, y + 5, 35, 7, '#1b1714'); R(px, y + 12, 35, 1, '#2f2722');
@@ -1823,6 +1854,7 @@ var Cena = (function () {
     app: { r: [44, 92, 16, 31] },
     banditboard: { r: [66, 90, 22, 33] },
     senna: { r: [98, 58, 102, 64] },
+    nexora: { r: [103, 63, 31, 27] },
     toca: { r: [101, 97, 35, 13] },
     hud: { r: [205, 60, 30, 62] },
     lata: { r: [237, 109, 8, 13] },
@@ -1844,13 +1876,13 @@ var Cena = (function () {
     janela: T('Lá fora, em Canoas', 'Outside, in Canoas'), poster: 'Mercedes C180', livros: T('Estante', 'Bookshelf'),
     bloco: T('Bloco de grama', 'Grass block'), pocao: T('Poção de vida', 'Health potion'), mini: 'Mercedes C180',
     chapeu: T('Chapéu de mago', 'Wizard hat'), planta: T('Planta', 'Plant'), cortica: T('Recados', 'Notes'),
-    lampada: T('Luminária', 'Desk lamp'), app: 'Símix Ponto', banditboard: 'Banditboard', senna: 'Senna', toca: 'Toca',
+    lampada: T('Luminária', 'Desk lamp'), app: 'Símix Ponto', banditboard: 'Banditboard', senna: 'Senna', nexora: 'Nexora', toca: 'Toca',
     hud: 'ControlSensors HUD', lata: T('Energético', 'Energy drink'), cloud: 'Símix Ponto Cloud', smartoca: 'Smartoca',
     fone: T('Fone', 'Headphones'), pc: 'PC', vini: T('Eu', 'Me'), racco: 'Racco',
     frodo: 'Frodo', fsenna: 'Ayrton Senna', bottas: 'Valtteri Bottas', f1: 'McLaren MP4/4',
     lucifer: T('Lúcifer', 'Lucifer'), mimi: 'Mimi', fred: 'Fred'
   };
-  var PROJ = { banditboard: 'banditboard', senna: 'senna', toca: 'toca', smartoca: 'smartoca', hud: 'hud', app: 'app', cloud: 'ponto-cloud' };
+  var PROJ = { banditboard: 'banditboard', senna: 'senna', nexora: 'nexora', toca: 'toca', smartoca: 'smartoca', hud: 'hud', app: 'app', cloud: 'ponto-cloud' };
 
   function draw() {
     var f = st.f, ph = fase(canoas().h);
@@ -1866,24 +1898,9 @@ var Cena = (function () {
     if (alvo && OBJ[alvo]) formigas(OBJ[alvo].r, f);
   }
 
-  var CODE_SEG = [
-    function () { return { ind: 0, seg: [[6, 4], [8, 0], [5, 1]] }; },
-    function () { return { ind: 1, seg: [[5, 0], [9, 3], [3, 6]] }; },
-    function () { return { ind: 1, seg: [[3, 4], [7, 3], [4, 2], [6, 1]] }; },
-    function () { return { ind: 2, seg: [[4, 0], [10, 3], [5, 2]] }; },
-    function () { return { ind: 2, seg: [[8, 6]] }; },
-    function () { return { ind: 1, seg: [[6, 4], [5, 5], [7, 3]] }; },
-    function () { return { ind: 2, seg: [[5, 0], [6, 1], [3, 2]] }; },
-    function () { return { ind: 0, seg: [[2, 6]] }; }
-  ];
-  for (var c0 = 0; c0 < 9; c0++) st.code.push(CODE_SEG[c0 % CODE_SEG.length]());
-
   function update() {
     st.f++;
     var f = st.f;
-    if (!st.linha) { st.linha = CODE_SEG[Math.floor(Math.random() * CODE_SEG.length)](); st.linha.dig = 0; st.linha.tot = st.linha.seg.reduce(function (a, s) { return a + s[0]; }, 0); }
-    st.linha.dig += 1;
-    if (st.linha.dig > st.linha.tot + 4) { st.code.push(st.linha); st.linha = null; if (st.code.length > 10) st.code.shift(); }
     if (f % 6 === 0) {
       st.hud = st.hud.map(function (v, i) { return Math.max(18, Math.min(i === 2 ? 72 : 92, v + rnd(-6, 6))); });
       st.spark.push(st.hud[0]); st.spark.shift();
@@ -2205,7 +2222,25 @@ var Cena = (function () {
     }
   }
 
+  function iconeNexora(c) {
+    c.width = 24; c.height = 24;
+    var x = c.getContext('2d');
+    var N = ['XX....XX', 'XXX...XX', 'XXXX..XX', 'XX.XX.XX', 'XX..XXXX', 'XX...XXX', 'XX....XX', 'XX....XX'];
+    function noN(px, py) { var lx = px - 8, ly = py - 8; return ly >= 0 && ly < 8 && lx >= 0 && lx < 8 && N[ly][lx] === 'X'; }
+    for (var py = 0; py < 24; py++) {
+      for (var px = 0; px < 24; px++) {
+        if (Math.pow(Math.abs(px - 11.5) / 12, 5) + Math.pow(Math.abs(py - 11.5) / 12, 5) > 1) continue;
+        var t = py / 23, luz = py < 3 ? 0.1 : 0, sombra = !noN(px, py) && noN(px, py - 1) ? 0.3 : 0;
+        var r = 74 + (29 - 74) * t, g = 69 + (27 - 69) * t, b = 83 + (34 - 83) * t;
+        r += (255 - r) * luz - r * sombra; g += (255 - g) * luz - g * sombra; b += (255 - b) * luz - b * sombra;
+        x.fillStyle = noN(px, py) ? (py >= 12 ? '#eeeaf5' : '#ffffff') : 'rgb(' + Math.round(r) + ',' + Math.round(g) + ',' + Math.round(b) + ')';
+        x.fillRect(px, py, 1, 1);
+      }
+    }
+  }
+
   function icone(alvo, r) {
+    if (r === 'nexora') { iconeNexora(alvo); return; }
     if (r === 'toca') { iconeToca(alvo); return; }
     if (r === 'smartoca') { Quarto.palco(alvo, 2, { mini: true, liso: true }).desenha({ pronto: true }); return; }
     var off = document.createElement('canvas'); off.width = W; off.height = H;
@@ -3708,7 +3743,7 @@ window.__cena = Cena;
   var C = {
     ajuda: function () { p(T('comandos: sobre · projetos · contato · email · cv · github · linkedin · whatsapp · clima · hora · segredos · racco · limpar', 'commands: about · projects · contact · email · resume · github · linkedin · whatsapp · weather · time · secrets · racco · clear')); },
     sobre: function () { p(T('Vinícius Pires da Silva. Desenvolvedor C# e .NET, Pleno III na Símix, em Canoas, RS. Começou no suporte em 2020 e aprendeu sozinho.', 'Vinícius Pires da Silva. C# and .NET developer, mid-level III at Símix, in Canoas, Brazil. Started in support in 2020 and is self-taught.')); },
-    projetos: function () { p([link('#app', 'simix-ponto/'), link('#ponto-cloud', 'simix-ponto-cloud/'), link('#smartoca', 'smartoca/'), link('#toca', 'toca/'), link('#senna', 'senna/'), link('#banditboard', 'banditboard/'), link('#hud', 'controlsensors/')].join('  ')); },
+    projetos: function () { p([link('#app', 'simix-ponto/'), link('#ponto-cloud', 'simix-ponto-cloud/'), link('#nexora', 'nexora/'), link('#smartoca', 'smartoca/'), link('#toca', 'toca/'), link('#senna', 'senna/'), link('#banditboard', 'banditboard/'), link('#hud', 'controlsensors/')].join('  ')); },
     contato: function () { p('e-mail: ' + link('mailto:' + EMAIL, EMAIL) + '\nwhatsapp: ' + link('https://wa.me/5551982515375', '+55 51 98251-5375') + '\nlinkedin: ' + link('https://www.linkedin.com/in/viniciuspiresdasilva/', 'in/viniciuspiresdasilva')); },
     email: function () { if (navigator.clipboard) navigator.clipboard.writeText(EMAIL).then(function () { p(T('Copiei o e-mail: ', 'Copied the email: ') + EMAIL); }, function () { p(EMAIL); }); else p(EMAIL); },
     cv: function () { p(link('/assets/Curriculo-Vinicius-Pires-da-Silva.pdf', T('Currículo em PDF ↓', 'Résumé in Portuguese ↓')) + '  ' + link('/assets/Resume-Vinicius-Pires-da-Silva.pdf', 'Résumé in English ↓')); },
@@ -4505,4 +4540,122 @@ window.__cena = Cena;
   setInterval(function () { if (visivel && !document.hidden) tique(); }, lento ? 500 : 90);
 })();
 
+(function () {
+  var box = $('#nexoraDemo'), cmds = $('#nexoraCmds'), falaEl = $('#nexoraFala');
+  if (!box || !cmds) return;
+  var COLS = [
+    { id: 'precisa', nome: T('Precisa de você', 'Needs you'), cor: 'var(--nx-laranja)' },
+    { id: 'trabalhando', nome: T('Trabalhando', 'Working'), cor: 'var(--nx-texto)' },
+    { id: 'prontas', nome: T('Prontas', 'Ready'), cor: 'var(--nx-verde)' },
+    { id: 'paradas', nome: T('Paradas', 'Idle'), cor: 'var(--nx-fraco)' }
+  ];
+  var TAREFAS = [
+    [T('Cupom no checkout', 'Checkout coupon'), 'loja', 'cupom-checkout', T('Lendo CupomService.cs', 'Reading CouponService.cs')],
+    [T('Login com Google', 'Google sign-in'), 'portal', 'login-google', T('Editando LoginController.cs', 'Editing LoginController.cs')],
+    [T('Relatório de vendas', 'Sales report'), 'painel', 'relatorio-vendas', T('Rodando dotnet test', 'Running dotnet test')],
+    [T('Frete grátis', 'Free shipping'), 'loja', 'frete-gratis', T('Buscando "Frete" em 6 arquivos', 'Searching "Shipping" in 6 files')],
+    [T('Tela de perfil', 'Profile screen'), 'app', 'tela-perfil', T('Criando PerfilPage.xaml', 'Creating ProfilePage.xaml')],
+    [T('Exportar CSV', 'CSV export'), 'painel', 'exportar-csv', T('Escrevendo os testes', 'Writing the tests')],
+    [T('Notificações push', 'Push notifications'), 'app', 'push', T('Lendo a issue #57', 'Reading issue #57')]
+  ];
+  var PEDIDOS = [['Bash', 'dotnet ef database update'], ['Bash', 'npm run build'], [T('Editar', 'Edit'), 'appsettings.json'], ['Bash', 'git push origin HEAD']];
+  var TEMAS = ['padrao', 'dracula', 'alucard', 'claude'];
+  var NOMES_TEMA = { padrao: T('Padrão', 'Default'), dracula: 'Dracula', alucard: 'Alucard', claude: 'Claude Code' };
+  var seq = 0, proxTarefa = 4, proxPedido = 1, tema = 0, ultimoPedido = Date.now(), visivel = false;
+  function sessao(t, col, extra) { var s = { id: ++seq, t: t, col: col, prog: 0, pedido: 0 }; for (var k in extra) s[k] = extra[k]; return s; }
+  var sess = [sessao(0, 'precisa', { pedido: 0 }), sessao(1, 'trabalhando', { prog: .55 }), sessao(2, 'trabalhando', { prog: .15 }), sessao(3, 'prontas'), sessao(5, 'paradas')];
+  function legenda(t) { if (falaEl) falaEl.textContent = t; }
+  function tarefa(s) { return TAREFAS[s.t % TAREFAS.length]; }
+
+  box.innerHTML =
+    '<div class="nx-topo"><span class="nx-logo" aria-hidden="true">N</span><span class="nx-busca" aria-hidden="true">' + T('Procurar conversas e projetos', 'Search conversations and projects') + '</span>' +
+    '<span class="nx-plano" aria-hidden="true"><span>5h · 12%<u><b style="width:12%"></b></u></span><span>' + T('Semana', 'Week') + ' · 35%<u><b style="width:35%"></b></u></span></span>' +
+    '<button type="button" class="nx-nova" data-acao="nova">+ ' + T('Nova sessão', 'New session') + '</button></div>' +
+    '<div class="nx-trilho" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="nx-quadro"></div>';
+  var quadro = $('.nx-quadro', box);
+
+  function cartao(s) {
+    var t = tarefa(s), h = '<div class="nx-cartao' + (s.novo ? ' entra' : '') + '" data-s="' + s.id + '" data-col="' + s.col + '">' +
+      '<div class="nx-ct"><span class="nx-av">' + t[1].slice(0, 2).toUpperCase() + '</span><b>' + t[0] + '</b></div>' +
+      '<div class="nx-co">' + t[1] + ' · ' + t[2] + '</div>';
+    if (s.col === 'trabalhando') h += '<div class="nx-ca">' + t[3] + '…</div><div class="nx-barra"><b style="width:' + Math.round(s.prog * 100) + '%"></b></div>';
+    if (s.col === 'precisa') {
+      var pd = PEDIDOS[s.pedido % PEDIDOS.length];
+      h += '<div class="nx-pede">' + T('Permitir ', 'Allow ') + pd[0] + '?<code>' + pd[1] + '</code></div>' +
+        '<div class="nx-bts"><button type="button" class="claro" data-acao="permitir">' + T('Permitir', 'Allow') + '</button><button type="button" data-acao="negar">' + T('Negar', 'Deny') + '</button></div>';
+    }
+    if (s.col === 'prontas') h += '<div class="nx-ca">' + T('Pronta · testes passando', 'Ready · tests passing') + '</div><div class="nx-bts"><button type="button" data-acao="abrir">' + T('Abrir', 'Open') + '</button></div>';
+    if (s.col === 'paradas') h += '<div class="nx-ca">' + T('Parada há 2 h', 'Idle for 2 h') + '</div>';
+    s.novo = false;
+    return h + '</div>';
+  }
+  function desenha() {
+    quadro.innerHTML = COLS.map(function (c) {
+      var lista = sess.filter(function (s) { return s.col === c.id; });
+      return '<div class="nx-col" style="--c:' + c.cor + '"><h5><i></i>' + c.nome + '<small>' + lista.length + '</small></h5>' + lista.map(cartao).join('') + '</div>';
+    }).join('');
+  }
+  function na(col) { return sess.filter(function (s) { return s.col === col; }); }
+  function mover(s, col) { sess.splice(sess.indexOf(s), 1); s.col = col; s.novo = true; sess.unshift(s); }
+  function arrumar() {
+    var prontas = na('prontas');
+    if (prontas.length > 2) mover(prontas[prontas.length - 1], 'paradas');
+    var paradas = na('paradas');
+    if (paradas.length > 2) sess.splice(sess.indexOf(paradas[paradas.length - 1]), 1);
+  }
+  function pronta(s) {
+    s.prog = 1; mover(s, 'prontas'); arrumar();
+    legenda(T('“' + tarefa(s)[0] + '” ficou pronta. O cartão vai para Prontas e o Nexora avisa, para eu revisar quando puder.', '“' + tarefa(s)[0] + '” is ready. The card moves to Ready and Nexora lets me know, so I can review it when I get to it.'));
+  }
+  function pede(s) {
+    s.pedido = proxPedido++; mover(s, 'precisa'); ultimoPedido = Date.now();
+    legenda(T('O Claude pediu permissão em “' + tarefa(s)[0] + '”. Dá para permitir ou negar no próprio cartão, sem abrir a conversa.', 'Claude asked for permission in “' + tarefa(s)[0] + '”. You can allow or deny it right on the card, without opening the conversation.'));
+  }
+  function nova() {
+    var s = sessao(proxTarefa++, 'trabalhando', { novo: true }); sess.unshift(s);
+    if (na('trabalhando').length > 3) pronta(na('trabalhando')[3]);
+    legenda(T('Sessão nova em “' + tarefa(s)[0] + '”, no próprio worktree, com a branch dela e a porta certa para rodar o projeto.', 'New session for “' + tarefa(s)[0] + '”, in its own worktree, with its own branch and the right port to run the project.'));
+  }
+  function acao(nome, alvo) {
+    var s = alvo ? sess.filter(function (x) { return x.id === +alvo.getAttribute('data-s'); })[0] : null;
+    if (nome === 'nova') nova();
+    else if (nome === 'permitir' && s) { mover(s, 'trabalhando'); legenda(T('Permitido. A sessão volta a trabalhar de onde parou.', 'Allowed. The session picks up where it stopped.')); }
+    else if (nome === 'negar' && s) { mover(s, 'trabalhando'); legenda(T('Negado. O Claude recebe a resposta e procura outro caminho.', 'Denied. Claude gets the answer and looks for another way.')); }
+    else if (nome === 'abrir' && s) { legenda(T('Abrir leva para a conversa de “' + tarefa(s)[0] + '”, com o raciocínio, o modelo de cada turno, o terminal e os arquivos que a sessão mexeu.', 'Open takes you to the “' + tarefa(s)[0] + '” conversation, with the reasoning, the model of each turn, the terminal and the files the session touched.')); return; }
+    else if (nome === 'permissao') { var tr = na('trabalhando'); if (tr.length) pede(tr[0]); else { nova(); pede(na('trabalhando')[0]); } }
+    else if (nome === 'turno') { var tb = na('trabalhando'); if (tb.length) pronta(tb[tb.length - 1]); else { nova(); } }
+    else if (nome === 'tema') {
+      tema = (tema + 1) % TEMAS.length; box.setAttribute('data-tema', TEMAS[tema]);
+      legenda(T('Tema ' + NOMES_TEMA[TEMAS[tema]] + '. O Nexora tem 31, e 27 deles têm fundo animado que reage ao mouse.', NOMES_TEMA[TEMAS[tema]] + ' theme. Nexora has 31, and 27 of them have an animated background that reacts to the mouse.'));
+      return;
+    }
+    else return;
+    desenha();
+  }
+  box.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-acao]');
+    if (b) acao(b.getAttribute('data-acao'), b.closest('.nx-cartao'));
+  });
+  cmds.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-nx]');
+    if (b) acao(b.getAttribute('data-nx'));
+  });
+  function passo() {
+    if (!visivel || document.hidden) return;
+    var mudou = false;
+    na('trabalhando').forEach(function (s) {
+      s.prog = Math.min(1, s.prog + .01);
+      var b = quadro.querySelector('[data-s="' + s.id + '"] .nx-barra b');
+      if (b) b.style.width = Math.round(s.prog * 100) + '%';
+      if (s.prog >= 1) { pronta(s); mudou = true; }
+    });
+    if (!na('precisa').length && Date.now() - ultimoPedido > 14000 && na('trabalhando').length) { pede(na('trabalhando')[0]); mudou = true; }
+    if (!na('trabalhando').length && Date.now() - ultimoPedido > 6000) { nova(); mudou = true; }
+    if (mudou) desenha();
+  }
+  desenha();
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { visivel = es[0].isIntersecting; }).observe(box);
+  else visivel = true;
+  setInterval(passo, 250);
+})();
 })();

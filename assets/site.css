@@ -1038,3 +1038,46 @@ a.sw-toast:hover{background:#333;color:#fff}
   .sm-quarto.mao{cursor:url(cursor-mao.png) 7 1,pointer}
   .sm-brilho input{cursor:url(cursor-mao.png) 7 1,pointer}
 }
+
+.nx{--nx-fundo:#181716;--nx-lateral:#121110;--nx-sup:#24221f;--nx-sup2:#2e2b28;--nx-borda:rgba(255,255,255,.12);--nx-texto:#f2f0ec;--nx-suave:#c4c0b9;--nx-fraco:#8f8a84;--nx-acento:#f2f0ec;--nx-sobre:#161514;--nx-laranja:#f0a860;--nx-verde:#7bcb9f;--nx-marca:#948bae;
+  position:relative;width:100%;min-height:340px;display:grid;grid-template-columns:44px minmax(0,1fr);grid-template-rows:42px minmax(0,1fr);background:var(--nx-fundo);color:var(--nx-texto);
+  font:13px/1.4 "Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,sans-serif;text-align:left;overflow:hidden;user-select:none;-webkit-user-select:none;
+  box-shadow:0 0 0 2px var(--edge),0 20px 50px rgba(0,0,0,.45);transition:background-color .4s,color .4s}
+.nx[data-tema=dracula]{--nx-fundo:#282a36;--nx-lateral:#21222c;--nx-sup:#2f3140;--nx-sup2:#44475a;--nx-borda:#4b4e63;--nx-texto:#f8f8f2;--nx-suave:#b9bdd6;--nx-fraco:#8b93bf;--nx-acento:#bd93f9;--nx-sobre:#282a36;--nx-laranja:#ffb86c;--nx-verde:#50fa7b;--nx-marca:#bd93f9}
+.nx[data-tema=alucard]{--nx-fundo:#fffbeb;--nx-lateral:#f4eeda;--nx-sup:#f8f3e1;--nx-sup2:#e9e3cd;--nx-borda:#d8d0b4;--nx-texto:#1f1f1f;--nx-suave:#4f4b69;--nx-fraco:#6c6690;--nx-acento:#644ac9;--nx-sobre:#fffbeb;--nx-laranja:#a34d14;--nx-verde:#14710a;--nx-marca:#644ac9}
+.nx[data-tema=claude]{--nx-fundo:#110e0c;--nx-lateral:#161210;--nx-sup:#221e1c;--nx-sup2:#302c2a;--nx-borda:rgba(255,255,255,.12);--nx-texto:#ecebe7;--nx-suave:#c9c6bf;--nx-fraco:#9c998f;--nx-acento:#e08a64;--nx-sobre:#141312;--nx-laranja:#f0a860;--nx-verde:#6cc79a;--nx-marca:#e08a64}
+.nx-topo{grid-column:1/3;display:flex;align-items:center;gap:10px;padding:0 12px;background:var(--nx-lateral);border-bottom:1px solid var(--nx-borda);transition:background-color .4s}
+.nx-logo{width:24px;height:24px;border-radius:7px;background:linear-gradient(180deg,#4a4553,#1d1b22);color:#fff;font:700 13px/24px "Segoe UI",system-ui,sans-serif;text-align:center;flex:none}
+.nx-busca{flex:0 1 240px;height:26px;border-radius:7px;background:var(--nx-sup);border:1px solid var(--nx-borda);color:var(--nx-fraco);font-size:12px;display:flex;align-items:center;padding:0 9px;white-space:nowrap;overflow:hidden}
+.nx-plano{margin-left:auto;display:flex;gap:12px;font-size:11px;color:var(--nx-suave)}
+.nx-plano span{display:grid;gap:2px;width:84px;white-space:nowrap}.nx-plano u{display:block;height:3px;border-radius:2px;background:var(--nx-sup2)}.nx-plano b{display:block;height:100%;border-radius:2px;background:var(--nx-marca)}
+.nx button{font:600 12px "Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,sans-serif;cursor:pointer}
+.nx-nova{background:var(--nx-acento);color:var(--nx-sobre);border:0;border-radius:7px;padding:5px 11px;white-space:nowrap}
+.nx-trilho{background:var(--nx-lateral);border-right:1px solid var(--nx-borda);display:flex;flex-direction:column;align-items:center;gap:12px;padding-top:12px;transition:background-color .4s}
+.nx-trilho i{width:16px;height:16px;border-radius:5px;background:var(--nx-sup2)}.nx-trilho i:first-child{background:var(--nx-marca)}
+.nx-quadro{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:10px;padding:12px;overflow-x:auto;align-items:start}
+.nx-col{background:color-mix(in srgb,var(--nx-sup) 60%,transparent);border:1px solid var(--nx-borda);border-radius:11px;padding:9px;min-height:250px}
+.nx-col h5{margin:0 0 9px;font-size:12.5px;font-weight:600;display:flex;gap:7px;align-items:center;white-space:nowrap}
+.nx-col h5 i{width:8px;height:8px;border-radius:50%;background:var(--c);flex:none}
+.nx-col h5 small{margin-left:auto;font-size:11px;color:var(--nx-fraco);padding:0 7px;border-radius:9px;background:var(--nx-sup2)}
+.nx-cartao{background:var(--nx-sup2);border:1px solid var(--nx-borda);border-radius:9px;padding:8px 9px;margin-bottom:7px;transition:background-color .4s}
+.nx-cartao.entra{animation:nxEntra .35s ease-out}
+.nx-cartao[data-col=precisa]{border-color:var(--nx-laranja);animation:nxPisca 1.6s ease-in-out infinite}
+.nx-cartao[data-col=precisa].entra{animation:nxEntra .35s ease-out,nxPisca 1.6s ease-in-out .35s infinite}
+.nx-ct{display:flex;gap:7px;align-items:center;font-weight:600;min-width:0}
+.nx-ct b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.nx-av{width:20px;height:20px;border-radius:6px;background:linear-gradient(160deg,var(--nx-marca),#5b5470);color:#fff;font-size:9px;font-weight:700;display:grid;place-items:center;flex:none}
+.nx-co{font:11px/1.3 "Cascadia Mono",Consolas,ui-monospace,monospace;color:var(--nx-fraco);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nx-ca{color:var(--nx-suave);font-size:12px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nx-barra{height:4px;border-radius:2px;background:var(--nx-sup);margin-top:7px;overflow:hidden}
+.nx-barra b{display:block;height:100%;background:var(--nx-acento);border-radius:2px;transition:width .25s linear}
+.nx-pede{font-size:12px;margin-top:5px;color:var(--nx-suave)}
+.nx-pede code{font:11px "Cascadia Mono",Consolas,ui-monospace,monospace;color:var(--nx-texto);display:block;margin-top:3px;padding:3px 6px;border-radius:5px;background:var(--nx-fundo);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nx-bts{display:flex;gap:6px;margin-top:7px}
+.nx-bts button{border:1px solid var(--nx-borda);background:var(--nx-sup);color:var(--nx-texto);padding:4px 10px;border-radius:7px}
+.nx-bts button.claro{background:var(--nx-acento);color:var(--nx-sobre);border-color:transparent}
+.nx button:focus-visible{outline:2px solid var(--nx-marca);outline-offset:2px}
+@keyframes nxEntra{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+@keyframes nxPisca{50%{box-shadow:0 0 0 3px color-mix(in srgb,var(--nx-laranja) 35%,transparent)}}
+@media (max-width:640px){.nx{grid-template-columns:minmax(0,1fr)}.nx-trilho,.nx-busca,.nx-plano{display:none}.nx-topo{grid-column:1}.nx-nova{margin-left:auto}}
+@media (prefers-reduced-motion:reduce){.nx-cartao,.nx-cartao.entra,.nx-cartao[data-col=precisa]{animation:none}}

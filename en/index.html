@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vinícius Pires da Silva · suiciniv.dev</title>
-<meta name="description" content="Vinícius Pires da Silva, C# and .NET developer at Símix. A pixel art desk with the projects I built: Banditboard, Senna, Toca, Smartoca, ControlSensors HUD and Símix Ponto.">
+<meta name="description" content="Vinícius Pires da Silva, C# and .NET developer at Símix. A pixel art desk with the projects I built: Banditboard, Senna, Toca, Smartoca, Nexora, ControlSensors HUD and Símix Ponto.">
 <meta name="theme-color" content="#120f17">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://suiciniv.dev/en/">
@@ -28,7 +28,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jersey+10&family=VT323&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=eff0c43f30">
+<link rel="stylesheet" href="/assets/site.css?v=220c5f5ebe">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Vinícius Pires da Silva","jobTitle":"Software Developer","worksFor":{"@type":"Organization","name":"Símix Sistemas"},"address":{"@type":"PostalAddress","addressLocality":"Canoas","addressRegion":"RS","addressCountry":"BR"},"url":"https://suiciniv.dev/en/","sameAs":["https://github.com/suiciniv-dev","https://github.com/simix-viniciussilva","https://www.linkedin.com/in/viniciuspiresdasilva/"]}</script>
 </head>
 <body>
@@ -81,7 +81,7 @@
 
         <div class="scene-frame">
           <div class="scene" id="scene">
-            <canvas id="mesaCanvas" width="320" height="180" role="img" aria-label="My desk in pixel art: an old phone with Racco on screen, the monitor with Senna and Toca, my dock, at the bottom of the screen, a second monitor with the sensor HUD, a laptop with the Símix portal, the Smartoca model, my bedroom in 3D with color-changing lights, on a shelf, a corkboard, two shelves with Senna's McLaren, three Funko Pops, a grass block, a potion, a Mercedes miniature and a wizard hat, Mimi and Lucifer, my cats, walking around the desk and the window, Fred the dog under the desk and me in the chair, seen from behind."></canvas>
+            <canvas id="mesaCanvas" width="320" height="180" role="img" aria-label="My desk in pixel art: an old phone with Racco on screen, the monitor with Nexora, Senna and Toca, my dock, at the bottom of the screen, a second monitor with the sensor HUD, a laptop with the Símix portal, the Smartoca model, my bedroom in 3D with color-changing lights, on a shelf, a corkboard, two shelves with Senna's McLaren, three Funko Pops, a grass block, a potion, a Mercedes miniature and a wizard hat, Mimi and Lucifer, my cats, walking around the desk and the window, Fred the dog under the desk and me in the chair, seen from behind."></canvas>
             <div class="hots" id="hots"></div>
             <div class="scene-tip" id="sceneTip" hidden></div>
             <div class="scene-balao" id="sceneBalao" hidden></div>
@@ -97,6 +97,7 @@
 
         <div class="legend" id="legend" aria-label="Desk objects">
           <button type="button" data-obj="banditboard">Banditboard</button>
+          <button type="button" data-obj="nexora">Nexora</button>
           <button type="button" data-obj="senna">Senna</button>
           <button type="button" data-obj="toca">Toca</button>
           <button type="button" data-obj="smartoca">Smartoca</button>
@@ -121,7 +122,7 @@
           <span class="sec-num">01</span>
           <div>
             <h2>On the desk</h2>
-            <p>Seven things I built and use. Two are from Símix, where I work; the other five were born in my free time, newest first.</p>
+            <p>Eight things I built and use. Two are from Símix, where I work; the other six were born in my free time, newest first.</p>
           </div>
         </header>
 
@@ -223,6 +224,38 @@
         </article>
 
         <p class="grupo grupo-me">In my free time</p>
+
+        <article class="quest quest-wide" id="nexora">
+          <div class="quest-body">
+            <div class="quest-head">
+              <canvas class="quest-ico" data-ico="nexora" aria-hidden="true"></canvas>
+              <div>
+                <h3>Nexora</h3>
+                <p class="sub">Claude Code sessions in one place · C# and Avalonia</p>
+              </div>
+              <span class="tag tag-me">Side project</span>
+            </div>
+            <p><b>A board for Claude Code.</b> With three or four sessions working at once, the hard part is knowing which one stopped to wait for me. Nexora puts them all on one board, with Needs you, Working, Ready and Idle, and lets me allow, deny or reply without opening the conversation. Each session can get its own worktree, with the right branch and port, and the project's MCP servers start once for all of them.</p>
+            <p>The conversation shows Claude thinking, with the tokens climbing, and has model and effort in one menu, a message queue, a terminal, scheduled prompts and GitHub issues as a kanban. It uses each person's own Claude Code and account, runs on Windows and Mac and ships with 31 themes, 27 of them with an animated background. Idle, with 11 projects open, the app uses 320 MB; VS Code with the Claude Code extension, 3.1 GB.</p>
+          </div>
+          <div class="quest-body quest-side">
+            <ul class="chips"><li>C#</li><li>.NET 10</li><li>Avalonia</li><li>Claude Code</li><li>MCP</li><li>Windows and Mac</li></ul>
+            <div class="links">
+              <a class="btn btn-main" href="https://nexora.suiciniv.dev/" target="_blank" rel="noopener noreferrer">Explore Nexora <span aria-hidden="true">↗</span></a>
+            </div>
+            <p class="note"><b>Free.</b> Windows 10 and 11 and macOS 12 or newer, on Apple Silicon or Intel Macs. Requires Claude Code.</p>
+          </div>
+          <div class="quest-demo quest-full">
+            <div class="nx" id="nexoraDemo" data-tema="padrao" role="region" aria-label="Nexora simulation"></div>
+            <p class="demo-cap" id="nexoraFala">A simulation of Nexora, with sample sessions. They move across the board on their own: allow what Claude asks for, open a new session or switch the theme.</p>
+            <div class="cmds" id="nexoraCmds">
+              <button type="button" class="cmd" data-nx="nova">new session</button>
+              <button type="button" class="cmd" data-nx="permissao">Claude asking for permission</button>
+              <button type="button" class="cmd" data-nx="turno">finish a turn</button>
+              <button type="button" class="cmd" data-nx="tema">switch the theme</button>
+            </div>
+          </div>
+        </article>
 
         <article class="quest quest-wide" id="smartoca">
           <div class="quest-body">
@@ -480,6 +513,7 @@
               <tr class="he"><td>09/2026</td><td>00:30 <i>free</i></td><td>Senna v2</td><td>Free time: from Python to C#, and from 682 MB to lightweight.</td></tr>
               <tr class="he"><td>10/2026</td><td>21:50 <i>free</i></td><td>Toca</td><td>Free time: a dock for Windows, with Racco living in it. Now on sale.</td></tr>
               <tr class="he"><td>10/2026</td><td>22:20 <i>free</i></td><td>Smartoca</td><td>Free time: my room in 3D, on the PC and the phone.</td></tr>
+              <tr class="he"><td>10/2026</td><td>23:40 <i>free</i></td><td>Nexora</td><td>Free time: my Claude Code sessions on a single board, on Windows and Mac.</td></tr>
             </tbody>
           </table>
           <div class="paper-foot">
@@ -563,6 +597,6 @@
 
 <div class="toasts" id="toasts" aria-live="polite"></div>
 
-<script src="/assets/site.js?v=7f01bba018"></script>
+<script src="/assets/site.js?v=78ba014e2d"></script>
 </body>
 </html>
