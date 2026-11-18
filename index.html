@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vinícius Pires da Silva · suiciniv.dev</title>
 <meta name="description" content="Vinícius Pires da Silva, desenvolvedor C# e .NET, Pleno III na Símix. Uma mesa em pixel art com os projetos que eu construí: Banditboard, Senna, Toca, Smartoca, Nexora, ControlSensors HUD e o Símix Ponto.">
-<meta name="theme-color" content="#120f17">
+<meta name="theme-color" content="#080D1C">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://suiciniv.dev/">
 <meta property="og:title" content="Vinícius Pires da Silva · suiciniv.dev">
@@ -25,10 +25,12 @@
 <link rel="alternate" hreflang="en" href="https://suiciniv.dev/en/">
 <link rel="alternate" hreflang="x-default" href="https://suiciniv.dev/">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jersey+10&family=VT323&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=220c5f5ebe">
+<link rel="stylesheet" href="/assets/site.css?v=6e3bb873d4">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Vinícius Pires da Silva","jobTitle":"Desenvolvedor de Software Pleno III","worksFor":{"@type":"Organization","name":"Símix Sistemas"},"address":{"@type":"PostalAddress","addressLocality":"Canoas","addressRegion":"RS","addressCountry":"BR"},"url":"https://suiciniv.dev/","sameAs":["https://github.com/suiciniv-dev","https://github.com/simix-viniciussilva","https://www.linkedin.com/in/viniciuspiresdasilva/"]}</script>
 </head>
 <body>
@@ -49,7 +51,7 @@
   <header class="top">
     <div class="wrap top-in">
       <a class="brand" href="#topo" id="brand" aria-label="suiciniv.dev, voltar ao topo">
-        <canvas class="brand-racco" id="brandRacco" width="16" height="14" aria-hidden="true"></canvas>
+        <img class="brand-mark" src="/assets/marca.svg" width="30" height="30" alt="">
         <span class="brand-name" aria-hidden="true"><span id="brandNome">suiciniv</span><span class="brand-dev">.dev</span></span>
       </a>
       <nav class="nav" aria-label="Seções">
@@ -108,9 +110,9 @@
 
         <dl class="stats">
           <div><dt>6 anos</dt><dd>na Símix, do suporte a Pleno III</dd></div>
-          <div><dt>800+</dt><dd>pull requests aceitos</dd></div>
-          <div><dt>650+</dt><dd>revisões de código</dd></div>
-          <div><dt>2.300+</dt><dd>commits em produção</dd></div>
+          <div><dt>900+</dt><dd>pull requests aceitos</dd></div>
+          <div><dt>700+</dt><dd>revisões de código</dd></div>
+          <div><dt>2.500+</dt><dd>commits em produção</dd></div>
           <div><dt>2 lojas</dt><dd>Google Play e App Store</dd></div>
         </dl>
       </div>
@@ -231,26 +233,27 @@
               <canvas class="quest-ico" data-ico="nexora" aria-hidden="true"></canvas>
               <div>
                 <h3>Nexora</h3>
-                <p class="sub">Sessões do Claude Code num lugar só · C# e Avalonia</p>
+                <p class="sub">Agent Development Environment · C# e Avalonia</p>
               </div>
               <span class="tag tag-me">Projeto pessoal</span>
             </div>
-            <p><b>Um quadro para o Claude Code.</b> Com três ou quatro sessões trabalhando ao mesmo tempo, o difícil é saber qual parou esperando por mim. O Nexora junta todas num quadro, com Precisa de você, Trabalhando, Prontas e Paradas, e dá para permitir, negar ou responder sem abrir a conversa. Cada sessão pode ganhar o seu worktree, com a branch e a porta certas, e os MCPs do projeto sobem uma vez só para todas.</p>
-            <p>A conversa mostra o Claude pensando, com os tokens subindo, e tem modelo e esforço num menu, fila de mensagens, terminal, pedidos agendados e as issues do GitHub em kanban. Usa o Claude Code de cada um, com a própria conta, roda no Windows e no Mac e vem com 31 temas, 27 deles com fundo animado. Parado, com 11 projetos abertos, o app usa 320 MB; o VS Code com a extensão do Claude Code, 3,1 GB.</p>
+            <p><b>Vários agentes de código, um quadro só.</b> Com três ou quatro agentes trabalhando ao mesmo tempo, o difícil é saber qual parou esperando por mim. O Nexora é um ADE, um ambiente montado em volta dos agentes e não do editor: roda o Claude Code e o Codex pelos protocolos nativos e mais nove agentes pelo Agent Client Protocol (ACP), como o GitHub Copilot, o Cursor e o Gemini CLI, cada um com a própria conta. Todas as sessões caem num quadro ao vivo, com Precisa de você, Trabalhando, Prontas e Paradas, e dá para permitir, negar ou responder sem abrir a conversa.</p>
+            <p>Para o trabalho em paralelo, um agente orquestrador divide uma tarefa grande e abre outros agentes pelas ferramentas MCP do próprio Nexora, cada um na sua branch e no seu worktree, com a porta certa para rodar o projeto. Os servidores MCP do projeto sobem uma vez só para todas as sessões: com três sessões, 242 MB, contra 1,3 GB no VS Code. Tem ainda as issues do GitHub em kanban, revisão de PR, terminal, pedidos agendados e 12 temas. O código é aberto, com licença MIT.</p>
           </div>
           <div class="quest-body quest-side">
-            <ul class="chips"><li>C#</li><li>.NET 10</li><li>Avalonia</li><li>Claude Code</li><li>MCP</li><li>Windows e Mac</li></ul>
+            <ul class="chips"><li>C#</li><li>.NET 10</li><li>Avalonia</li><li>Claude Code</li><li>Codex</li><li>ACP</li><li>MCP</li><li>Windows e Mac</li></ul>
             <div class="links">
               <a class="btn btn-main" href="https://nexora.suiciniv.dev/" target="_blank" rel="noopener noreferrer">Conhecer o Nexora <span aria-hidden="true">↗</span></a>
+              <a class="btn btn-ghost" href="https://github.com/suiciniv-dev/nexora" target="_blank" rel="noopener noreferrer">Ver código <span aria-hidden="true">↗</span></a>
             </div>
-            <p class="note"><b>Grátis.</b> Windows 10 e 11 e macOS 12 ou mais novo, em Macs com Apple Silicon ou Intel. Precisa do Claude Code instalado.</p>
+            <p class="note"><b>Grátis e de código aberto.</b> Windows 10 e 11 e macOS 12 ou mais novo, em Macs com Apple Silicon ou Intel. Usa os agentes que você já tem, com o login de cada um.</p>
           </div>
           <div class="quest-demo quest-full">
-            <div class="nx" id="nexoraDemo" data-tema="padrao" role="region" aria-label="Simulação do Nexora"></div>
-            <p class="demo-cap" id="nexoraFala">Uma simulação do Nexora, com sessões de exemplo. Elas andam sozinhas pelo quadro: permita o que o Claude pedir, abra uma sessão nova ou troque o tema.</p>
+            <div class="nx" id="nexoraDemo" data-tema="midnight" role="region" aria-label="Simulação do Nexora"></div>
+            <p class="demo-cap" id="nexoraFala">Uma simulação do Nexora, com sessões de exemplo. Elas andam sozinhas pelo quadro: permita o que um agente pedir, abra uma sessão nova ou troque o tema.</p>
             <div class="cmds" id="nexoraCmds">
               <button type="button" class="cmd" data-nx="nova">nova sessão</button>
-              <button type="button" class="cmd" data-nx="permissao">Claude pedindo permissão</button>
+              <button type="button" class="cmd" data-nx="permissao">agente pedindo permissão</button>
               <button type="button" class="cmd" data-nx="turno">terminar um turno</button>
               <button type="button" class="cmd" data-nx="tema">trocar o tema</button>
             </div>
@@ -489,7 +492,7 @@
           <span class="sec-num">03</span>
           <div>
             <h2>Espelho de ponto</h2>
-            <p>Seis anos batendo ponto na mesma empresa, do suporte ao Pleno III. As linhas em coral são do meu tempo livre.</p>
+            <p>Seis anos batendo ponto na mesma empresa, do suporte ao Pleno III. As linhas em azul são do meu tempo livre.</p>
           </div>
         </header>
 
@@ -513,7 +516,7 @@
               <tr class="he"><td>09/2026</td><td>00:30 <i>livre</i></td><td>Senna v2</td><td>Tempo livre: de Python para C#, e de 682 MB para leve.</td></tr>
               <tr class="he"><td>10/2026</td><td>21:50 <i>livre</i></td><td>Toca</td><td>Tempo livre: um dock para o Windows, com o Racco morando nele. Hoje está à venda.</td></tr>
               <tr class="he"><td>10/2026</td><td>22:20 <i>livre</i></td><td>Smartoca</td><td>Tempo livre: o meu quarto em 3D, no PC e no celular.</td></tr>
-              <tr class="he"><td>10/2026</td><td>23:40 <i>livre</i></td><td>Nexora</td><td>Tempo livre: as minhas sessões do Claude Code num quadro só, no Windows e no Mac.</td></tr>
+              <tr class="he"><td>10/2026</td><td>23:40 <i>livre</i></td><td>Nexora</td><td>Tempo livre: os meus agentes de código num quadro só, no Windows e no Mac.</td></tr>
             </tbody>
           </table>
           <div class="paper-foot">
@@ -550,8 +553,8 @@
               <li><a href="https://github.com/suiciniv-dev" target="_blank" rel="noopener noreferrer">GitHub pessoal <span aria-hidden="true">↗</span></a></li>
               <li><a href="https://github.com/simix-viniciussilva" target="_blank" rel="noopener noreferrer">GitHub da Símix <span aria-hidden="true">↗</span></a></li>
               <li><a href="https://www.instagram.com/vini1piress/" target="_blank" rel="noopener noreferrer">Instagram <span aria-hidden="true">↗</span></a></li>
-              <li><a href="/assets/Curriculo-Vinicius-Pires-da-Silva.pdf" download>Currículo em PDF <span aria-hidden="true">↓</span></a></li>
-              <li><a href="/assets/Resume-Vinicius-Pires-da-Silva.pdf" download hreflang="en" lang="en">Résumé in English <span aria-hidden="true">↓</span></a></li>
+              <li><a href="/assets/Curriculo-Vinicius-Pires-da-Silva.pdf" download>Currículo em português <span aria-hidden="true">↓</span></a></li>
+              <li><a href="/assets/Resume-Vinicius-Pires-da-Silva.pdf" download hreflang="en">Currículo em inglês <span aria-hidden="true">↓</span></a></li>
             </ul>
           </div>
 
@@ -597,6 +600,6 @@
 
 <div class="toasts" id="toasts" aria-live="polite"></div>
 
-<script src="/assets/site.js?v=78ba014e2d"></script>
+<script src="/assets/site.js?v=4b38fb1394"></script>
 </body>
 </html>

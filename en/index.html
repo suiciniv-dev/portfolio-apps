@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vinícius Pires da Silva · suiciniv.dev</title>
 <meta name="description" content="Vinícius Pires da Silva, C# and .NET developer at Símix. A pixel art desk with the projects I built: Banditboard, Senna, Toca, Smartoca, Nexora, ControlSensors HUD and Símix Ponto.">
-<meta name="theme-color" content="#120f17">
+<meta name="theme-color" content="#080D1C">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://suiciniv.dev/en/">
 <meta property="og:title" content="Vinícius Pires da Silva · suiciniv.dev">
@@ -25,10 +25,12 @@
 <link rel="alternate" hreflang="en" href="https://suiciniv.dev/en/">
 <link rel="alternate" hreflang="x-default" href="https://suiciniv.dev/">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jersey+10&family=VT323&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=220c5f5ebe">
+<link rel="stylesheet" href="/assets/site.css?v=6e3bb873d4">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Vinícius Pires da Silva","jobTitle":"Software Developer","worksFor":{"@type":"Organization","name":"Símix Sistemas"},"address":{"@type":"PostalAddress","addressLocality":"Canoas","addressRegion":"RS","addressCountry":"BR"},"url":"https://suiciniv.dev/en/","sameAs":["https://github.com/suiciniv-dev","https://github.com/simix-viniciussilva","https://www.linkedin.com/in/viniciuspiresdasilva/"]}</script>
 </head>
 <body>
@@ -49,7 +51,7 @@
   <header class="top">
     <div class="wrap top-in">
       <a class="brand" href="#topo" id="brand" aria-label="suiciniv.dev, back to top">
-        <canvas class="brand-racco" id="brandRacco" width="16" height="14" aria-hidden="true"></canvas>
+        <img class="brand-mark" src="/assets/marca.svg" width="30" height="30" alt="">
         <span class="brand-name" aria-hidden="true"><span id="brandNome">suiciniv</span><span class="brand-dev">.dev</span></span>
       </a>
       <nav class="nav" aria-label="Sections">
@@ -108,9 +110,9 @@
 
         <dl class="stats">
           <div><dt>6 years</dt><dd>at Símix, from support to mid-level III</dd></div>
-          <div><dt>800+</dt><dd>pull requests merged</dd></div>
-          <div><dt>650+</dt><dd>code reviews</dd></div>
-          <div><dt>2,300+</dt><dd>commits in production</dd></div>
+          <div><dt>900+</dt><dd>pull requests merged</dd></div>
+          <div><dt>700+</dt><dd>code reviews</dd></div>
+          <div><dt>2,500+</dt><dd>commits in production</dd></div>
           <div><dt>2 stores</dt><dd>Google Play and App Store</dd></div>
         </dl>
       </div>
@@ -231,26 +233,27 @@
               <canvas class="quest-ico" data-ico="nexora" aria-hidden="true"></canvas>
               <div>
                 <h3>Nexora</h3>
-                <p class="sub">Claude Code sessions in one place · C# and Avalonia</p>
+                <p class="sub">Agent Development Environment · C# and Avalonia</p>
               </div>
               <span class="tag tag-me">Side project</span>
             </div>
-            <p><b>A board for Claude Code.</b> With three or four sessions working at once, the hard part is knowing which one stopped to wait for me. Nexora puts them all on one board, with Needs you, Working, Ready and Idle, and lets me allow, deny or reply without opening the conversation. Each session can get its own worktree, with the right branch and port, and the project's MCP servers start once for all of them.</p>
-            <p>The conversation shows Claude thinking, with the tokens climbing, and has model and effort in one menu, a message queue, a terminal, scheduled prompts and GitHub issues as a kanban. It uses each person's own Claude Code and account, runs on Windows and Mac and ships with 31 themes, 27 of them with an animated background. Idle, with 11 projects open, the app uses 320 MB; VS Code with the Claude Code extension, 3.1 GB.</p>
+            <p><b>Many coding agents, one board.</b> With three or four agents working at once, the hard part is knowing which one stopped to wait for me. Nexora is an ADE, an environment built around the agents instead of the editor: it runs Claude Code and Codex through their native protocols and nine more agents through the Agent Client Protocol (ACP), such as GitHub Copilot, Cursor and Gemini CLI, each with its own account. Every session lands on a live board, with Needs you, Working, Ready and Idle, and I can allow, deny or reply without opening the conversation.</p>
+            <p>For parallel work, an orchestrator agent splits a big task and opens other agents through Nexora's own MCP tools, each on its own branch and worktree, with the right port to run the project. The project's MCP servers start once for every session: with three sessions, 242 MB, against 1.3 GB in VS Code. It also has GitHub issues as a kanban, PR reviews, a terminal, scheduled prompts and 12 themes. The code is open source, under the MIT license.</p>
           </div>
           <div class="quest-body quest-side">
-            <ul class="chips"><li>C#</li><li>.NET 10</li><li>Avalonia</li><li>Claude Code</li><li>MCP</li><li>Windows and Mac</li></ul>
+            <ul class="chips"><li>C#</li><li>.NET 10</li><li>Avalonia</li><li>Claude Code</li><li>Codex</li><li>ACP</li><li>MCP</li><li>Windows and Mac</li></ul>
             <div class="links">
               <a class="btn btn-main" href="https://nexora.suiciniv.dev/" target="_blank" rel="noopener noreferrer">Explore Nexora <span aria-hidden="true">↗</span></a>
+              <a class="btn btn-ghost" href="https://github.com/suiciniv-dev/nexora" target="_blank" rel="noopener noreferrer">View code <span aria-hidden="true">↗</span></a>
             </div>
-            <p class="note"><b>Free.</b> Windows 10 and 11 and macOS 12 or newer, on Apple Silicon or Intel Macs. Requires Claude Code.</p>
+            <p class="note"><b>Free and open source.</b> Windows 10 and 11 and macOS 12 or newer, on Apple Silicon or Intel Macs. It uses the agents you already have, each with its own login.</p>
           </div>
           <div class="quest-demo quest-full">
-            <div class="nx" id="nexoraDemo" data-tema="padrao" role="region" aria-label="Nexora simulation"></div>
-            <p class="demo-cap" id="nexoraFala">A simulation of Nexora, with sample sessions. They move across the board on their own: allow what Claude asks for, open a new session or switch the theme.</p>
+            <div class="nx" id="nexoraDemo" data-tema="midnight" role="region" aria-label="Nexora simulation"></div>
+            <p class="demo-cap" id="nexoraFala">A simulation of Nexora, with sample sessions. They move across the board on their own: allow what an agent asks for, open a new session or switch the theme.</p>
             <div class="cmds" id="nexoraCmds">
               <button type="button" class="cmd" data-nx="nova">new session</button>
-              <button type="button" class="cmd" data-nx="permissao">Claude asking for permission</button>
+              <button type="button" class="cmd" data-nx="permissao">agent asking for permission</button>
               <button type="button" class="cmd" data-nx="turno">finish a turn</button>
               <button type="button" class="cmd" data-nx="tema">switch the theme</button>
             </div>
@@ -489,7 +492,7 @@
           <span class="sec-num">03</span>
           <div>
             <h2>Timesheet</h2>
-            <p>Six years clocking in at the same company, from support to mid-level III. Coral rows are from my free time.</p>
+            <p>Six years clocking in at the same company, from support to mid-level III. Blue rows are from my free time.</p>
           </div>
         </header>
 
@@ -513,7 +516,7 @@
               <tr class="he"><td>09/2026</td><td>00:30 <i>free</i></td><td>Senna v2</td><td>Free time: from Python to C#, and from 682 MB to lightweight.</td></tr>
               <tr class="he"><td>10/2026</td><td>21:50 <i>free</i></td><td>Toca</td><td>Free time: a dock for Windows, with Racco living in it. Now on sale.</td></tr>
               <tr class="he"><td>10/2026</td><td>22:20 <i>free</i></td><td>Smartoca</td><td>Free time: my room in 3D, on the PC and the phone.</td></tr>
-              <tr class="he"><td>10/2026</td><td>23:40 <i>free</i></td><td>Nexora</td><td>Free time: my Claude Code sessions on a single board, on Windows and Mac.</td></tr>
+              <tr class="he"><td>10/2026</td><td>23:40 <i>free</i></td><td>Nexora</td><td>Free time: my coding agents on a single board, on Windows and Mac.</td></tr>
             </tbody>
           </table>
           <div class="paper-foot">
@@ -550,7 +553,7 @@
               <li><a href="https://github.com/suiciniv-dev" target="_blank" rel="noopener noreferrer">Personal GitHub <span aria-hidden="true">↗</span></a></li>
               <li><a href="https://github.com/simix-viniciussilva" target="_blank" rel="noopener noreferrer">Símix GitHub <span aria-hidden="true">↗</span></a></li>
               <li><a href="https://www.instagram.com/vini1piress/" target="_blank" rel="noopener noreferrer">Instagram <span aria-hidden="true">↗</span></a></li>
-              <li><a href="/assets/Resume-Vinicius-Pires-da-Silva.pdf" download>Résumé (PDF) <span aria-hidden="true">↓</span></a></li>
+              <li><a href="/assets/Resume-Vinicius-Pires-da-Silva.pdf" download>Resume (PDF) <span aria-hidden="true">↓</span></a></li>
               <li><a href="/assets/Curriculo-Vinicius-Pires-da-Silva.pdf" download hreflang="pt-BR" lang="pt-BR">Currículo em português <span aria-hidden="true">↓</span></a></li>
             </ul>
           </div>
@@ -597,6 +600,6 @@
 
 <div class="toasts" id="toasts" aria-live="polite"></div>
 
-<script src="/assets/site.js?v=78ba014e2d"></script>
+<script src="/assets/site.js?v=4b38fb1394"></script>
 </body>
 </html>

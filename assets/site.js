@@ -394,11 +394,6 @@ function racco(c, x, y, o) {
 }
 
 (function () {
-  var b = $('#brandRacco'); if (!b) return;
-  racco(b.getContext('2d'), 0, -1, {});
-})();
-
-(function () {
   var nome = $('#brandNome'), brand = $('#brand');
   if (!nome || !brand) return;
   var s = 'suiciniv';
@@ -449,7 +444,7 @@ var sessao = {
     '.....XXX.....'
   ];
   function pinta(cor) { ico.clearRect(0, 0, 13, 13); ico.drawImage(spr(POW, { X: cor }), 0, 0); }
-  pinta('#ee7a5b');
+  pinta('#72A5FF');
   var feito = false;
   function fecha(ligou) {
     document.removeEventListener('keydown', tecla);
@@ -1336,7 +1331,7 @@ var Cena = (function () {
   }
 
   var NX_CICLO = 320, NX_TURNO = 250;
-  var NX_COR = ['#f0a860', '#f2f0ec', '#7bcb9f', '#8f8a84'];
+  var NX_COR = ['#F5A748', '#F1F5FF', '#4FD08A', '#8D9CBB'];
   function nexoraPasso(f) {
     var n = st.nx, k = f % NX_CICLO;
     if (n.f === f) return;
@@ -1352,33 +1347,33 @@ var Cena = (function () {
   }
   function nexoraMini(wx, wy, f) {
     nexoraPasso(f);
-    R(wx, wy, 54, 41, '#181716');
-    R(wx, wy, 54, 4, '#121110');
-    R(wx + 1, wy + 1, 2, 2, '#e9e6f2');
-    R(wx + 6, wy + 1, 13, 2, '#262320');
-    R(wx + 45, wy + 1, 8, 2, '#f2f0ec');
-    R(wx, wy + 4, 4, 37, '#121110');
-    [8, 12, 16, 20].forEach(function (d, i) { R(wx + 1, wy + d, 2, 2, i === 0 ? '#bdb4da' : '#4a4642'); });
+    R(wx, wy, 54, 41, '#0C1428');
+    R(wx, wy, 54, 4, '#080D1C');
+    R(wx + 1, wy + 1, 2, 2, '#2C8EE8');
+    R(wx + 6, wy + 1, 13, 2, '#142342');
+    R(wx + 45, wy + 1, 8, 2, '#1F6FD1');
+    R(wx, wy + 4, 4, 37, '#080D1C');
+    [8, 12, 16, 20].forEach(function (d, i) { R(wx + 1, wy + d, 2, 2, i === 0 ? '#4D7CFF' : '#26395E'); });
     var cols = st.nx.cols;
     for (var c = 0; c < 4; c++) {
       var cx = wx + 6 + c * 12, cy = wy + 6;
-      R(cx, cy, 11, 34, '#1f1d1b');
-      P(cx + 1, cy + 1, NX_COR[c]); R(cx + 3, cy + 1, 5, 1, '#5c5852');
+      R(cx, cy, 11, 34, '#101B35');
+      P(cx + 1, cy + 1, NX_COR[c]); R(cx + 3, cy + 1, 5, 1, '#3A4D75');
       cols[c].forEach(function (cartao, i) {
         var tx = cx + 1, ty = cy + 4 + i * 7;
         if (cartao.x === undefined) { cartao.x = tx; cartao.y = ty; }
         cartao.x += (tx - cartao.x) * .35; cartao.y += (ty - cartao.y) * .35;
         var px = Math.round(cartao.x), py = Math.round(cartao.y);
-        if (c === 0 && (f >> 2) % 2) R(px - 1, py - 1, 11, 8, '#f0a860');
-        R(px, py, 9, 6, '#2c2926');
-        R(px + 1, py + 1, 6, 1, c === 3 ? '#8f8a84' : '#d9d4cc');
-        R(px + 1, py + 3, 4, 1, '#5c5852');
+        if (c === 0 && (f >> 2) % 2) R(px - 1, py - 1, 11, 8, '#F5A748');
+        R(px, py, 9, 6, '#16264A');
+        R(px + 1, py + 1, 6, 1, c === 3 ? '#6F80A6' : '#C9D6F2');
+        R(px + 1, py + 3, 4, 1, '#3A4D75');
         if (c === 1) {
           var prog = Math.max(0, Math.min(1, (f - cartao.ent) / NX_TURNO));
-          R(px + 1, py + 4, 7, 1, '#3d3935'); R(px + 1, py + 4, Math.max(1, Math.round(7 * prog)), 1, '#f2f0ec');
+          R(px + 1, py + 4, 7, 1, '#26395E'); R(px + 1, py + 4, Math.max(1, Math.round(7 * prog)), 1, '#72A5FF');
         }
-        if (c === 0) R(px + 6, py + 3, 2, 1, '#f0a860');
-        if (c === 2) R(px + 6, py + 3, 2, 1, '#7bcb9f');
+        if (c === 0) R(px + 6, py + 3, 2, 1, '#F5A748');
+        if (c === 2) R(px + 6, py + 3, 2, 1, '#4FD08A');
       });
     }
   }
@@ -2112,7 +2107,7 @@ var Cena = (function () {
         Som.play('clic');
         st.rgb = (st.rgb + 1) % RGB_MODOS.length;
         conquista('rgb');
-        balao('pc', [T('RGB arco-íris: +10 FPS.', 'Rainbow RGB: +10 FPS.'), T('Coral, a cor do site.', 'Coral, the site\'s color.'), T('Verde HUD.', 'HUD green.'), T('Desligado. Lá se vão os 10 FPS.', 'Off. There go the 10 FPS.')][st.rgb], 2600);
+        balao('pc', [T('RGB arco-íris: +10 FPS.', 'Rainbow RGB: +10 FPS.'), T('Coral, a cor antiga do site.', 'Coral, the site\'s old color.'), T('Verde HUD.', 'HUD green.'), T('Desligado. Lá se vão os 10 FPS.', 'Off. There go the 10 FPS.')][st.rgb], 2600);
         break;
       case 'janela':
         Som.play('blip');
@@ -2231,9 +2226,9 @@ var Cena = (function () {
       for (var px = 0; px < 24; px++) {
         if (Math.pow(Math.abs(px - 11.5) / 12, 5) + Math.pow(Math.abs(py - 11.5) / 12, 5) > 1) continue;
         var t = py / 23, luz = py < 3 ? 0.1 : 0, sombra = !noN(px, py) && noN(px, py - 1) ? 0.3 : 0;
-        var r = 74 + (29 - 74) * t, g = 69 + (27 - 69) * t, b = 83 + (34 - 83) * t;
+        var r = 44 + (36 - 44) * t, g = 142 + (67 - 142) * t, b = 232 + (201 - 232) * t;
         r += (255 - r) * luz - r * sombra; g += (255 - g) * luz - g * sombra; b += (255 - b) * luz - b * sombra;
-        x.fillStyle = noN(px, py) ? (py >= 12 ? '#eeeaf5' : '#ffffff') : 'rgb(' + Math.round(r) + ',' + Math.round(g) + ',' + Math.round(b) + ')';
+        x.fillStyle = noN(px, py) ? (py >= 12 ? '#E6EEFF' : '#ffffff') : 'rgb(' + Math.round(r) + ',' + Math.round(g) + ',' + Math.round(b) + ')';
         x.fillRect(px, py, 1, 1);
       }
     }
@@ -3746,7 +3741,7 @@ window.__cena = Cena;
     projetos: function () { p([link('#app', 'simix-ponto/'), link('#ponto-cloud', 'simix-ponto-cloud/'), link('#nexora', 'nexora/'), link('#smartoca', 'smartoca/'), link('#toca', 'toca/'), link('#senna', 'senna/'), link('#banditboard', 'banditboard/'), link('#hud', 'controlsensors/')].join('  ')); },
     contato: function () { p('e-mail: ' + link('mailto:' + EMAIL, EMAIL) + '\nwhatsapp: ' + link('https://wa.me/5551982515375', '+55 51 98251-5375') + '\nlinkedin: ' + link('https://www.linkedin.com/in/viniciuspiresdasilva/', 'in/viniciuspiresdasilva')); },
     email: function () { if (navigator.clipboard) navigator.clipboard.writeText(EMAIL).then(function () { p(T('Copiei o e-mail: ', 'Copied the email: ') + EMAIL); }, function () { p(EMAIL); }); else p(EMAIL); },
-    cv: function () { p(link('/assets/Curriculo-Vinicius-Pires-da-Silva.pdf', T('Currículo em PDF ↓', 'Résumé in Portuguese ↓')) + '  ' + link('/assets/Resume-Vinicius-Pires-da-Silva.pdf', 'Résumé in English ↓')); },
+    cv: function () { p(link('/assets/Curriculo-Vinicius-Pires-da-Silva.pdf', T('Currículo em português ↓', 'Resume in Portuguese ↓')) + '  ' + link('/assets/Resume-Vinicius-Pires-da-Silva.pdf', T('Currículo em inglês ↓', 'Resume in English ↓'))); },
     github: function () { p(link('https://github.com/suiciniv-dev', 'github.com/suiciniv-dev') + '  ' + link('https://github.com/simix-viniciussilva', 'github.com/simix-viniciussilva')); },
     linkedin: function () { p(link('https://www.linkedin.com/in/viniciuspiresdasilva/', 'linkedin.com/in/viniciuspiresdasilva')); },
     whatsapp: function () { p(link('https://wa.me/5551982515375', T('Abrir conversa no WhatsApp ↗', 'Open a WhatsApp chat ↗'))); },
@@ -4558,14 +4553,16 @@ window.__cena = Cena;
     [T('Exportar CSV', 'CSV export'), 'painel', 'exportar-csv', T('Escrevendo os testes', 'Writing the tests')],
     [T('Notificações push', 'Push notifications'), 'app', 'push', T('Lendo a issue #57', 'Reading issue #57')]
   ];
+  var AGENTES = ['Claude Code', 'Codex', 'Claude Code', 'Copilot', 'Codex', 'Claude Code', 'Codex'];
   var PEDIDOS = [['Bash', 'dotnet ef database update'], ['Bash', 'npm run build'], [T('Editar', 'Edit'), 'appsettings.json'], ['Bash', 'git push origin HEAD']];
-  var TEMAS = ['padrao', 'dracula', 'alucard', 'claude'];
-  var NOMES_TEMA = { padrao: T('Padrão', 'Default'), dracula: 'Dracula', alucard: 'Alucard', claude: 'Claude Code' };
+  var TEMAS = ['midnight', 'padrao', 'dracula', 'alucard'];
+  var NOMES_TEMA = { midnight: 'Nexora Midnight', padrao: 'Classic Dark', dracula: 'Dracula', alucard: 'Alucard' };
   var seq = 0, proxTarefa = 4, proxPedido = 1, tema = 0, ultimoPedido = Date.now(), visivel = false;
   function sessao(t, col, extra) { var s = { id: ++seq, t: t, col: col, prog: 0, pedido: 0 }; for (var k in extra) s[k] = extra[k]; return s; }
   var sess = [sessao(0, 'precisa', { pedido: 0 }), sessao(1, 'trabalhando', { prog: .55 }), sessao(2, 'trabalhando', { prog: .15 }), sessao(3, 'prontas'), sessao(5, 'paradas')];
   function legenda(t) { if (falaEl) falaEl.textContent = t; }
   function tarefa(s) { return TAREFAS[s.t % TAREFAS.length]; }
+  function agente(s) { return AGENTES[s.t % AGENTES.length]; }
 
   box.innerHTML =
     '<div class="nx-topo"><span class="nx-logo" aria-hidden="true">N</span><span class="nx-busca" aria-hidden="true">' + T('Procurar conversas e projetos', 'Search conversations and projects') + '</span>' +
@@ -4577,7 +4574,7 @@ window.__cena = Cena;
   function cartao(s) {
     var t = tarefa(s), h = '<div class="nx-cartao' + (s.novo ? ' entra' : '') + '" data-s="' + s.id + '" data-col="' + s.col + '">' +
       '<div class="nx-ct"><span class="nx-av">' + t[1].slice(0, 2).toUpperCase() + '</span><b>' + t[0] + '</b></div>' +
-      '<div class="nx-co">' + t[1] + ' · ' + t[2] + '</div>';
+      '<div class="nx-co">' + agente(s) + ' · ' + t[2] + '</div>';
     if (s.col === 'trabalhando') h += '<div class="nx-ca">' + t[3] + '…</div><div class="nx-barra"><b style="width:' + Math.round(s.prog * 100) + '%"></b></div>';
     if (s.col === 'precisa') {
       var pd = PEDIDOS[s.pedido % PEDIDOS.length];
@@ -4609,7 +4606,7 @@ window.__cena = Cena;
   }
   function pede(s) {
     s.pedido = proxPedido++; mover(s, 'precisa'); ultimoPedido = Date.now();
-    legenda(T('O Claude pediu permissão em “' + tarefa(s)[0] + '”. Dá para permitir ou negar no próprio cartão, sem abrir a conversa.', 'Claude asked for permission in “' + tarefa(s)[0] + '”. You can allow or deny it right on the card, without opening the conversation.'));
+    legenda(T('O ' + agente(s) + ' pediu permissão em “' + tarefa(s)[0] + '”. Dá para permitir ou negar no próprio cartão, sem abrir a conversa.', agente(s) + ' asked for permission in “' + tarefa(s)[0] + '”. You can allow or deny it right on the card, without opening the conversation.'));
   }
   function nova() {
     var s = sessao(proxTarefa++, 'trabalhando', { novo: true }); sess.unshift(s);
@@ -4620,13 +4617,13 @@ window.__cena = Cena;
     var s = alvo ? sess.filter(function (x) { return x.id === +alvo.getAttribute('data-s'); })[0] : null;
     if (nome === 'nova') nova();
     else if (nome === 'permitir' && s) { mover(s, 'trabalhando'); legenda(T('Permitido. A sessão volta a trabalhar de onde parou.', 'Allowed. The session picks up where it stopped.')); }
-    else if (nome === 'negar' && s) { mover(s, 'trabalhando'); legenda(T('Negado. O Claude recebe a resposta e procura outro caminho.', 'Denied. Claude gets the answer and looks for another way.')); }
+    else if (nome === 'negar' && s) { mover(s, 'trabalhando'); legenda(T('Negado. O agente recebe a resposta e procura outro caminho.', 'Denied. The agent gets the answer and looks for another way.')); }
     else if (nome === 'abrir' && s) { legenda(T('Abrir leva para a conversa de “' + tarefa(s)[0] + '”, com o raciocínio, o modelo de cada turno, o terminal e os arquivos que a sessão mexeu.', 'Open takes you to the “' + tarefa(s)[0] + '” conversation, with the reasoning, the model of each turn, the terminal and the files the session touched.')); return; }
     else if (nome === 'permissao') { var tr = na('trabalhando'); if (tr.length) pede(tr[0]); else { nova(); pede(na('trabalhando')[0]); } }
     else if (nome === 'turno') { var tb = na('trabalhando'); if (tb.length) pronta(tb[tb.length - 1]); else { nova(); } }
     else if (nome === 'tema') {
       tema = (tema + 1) % TEMAS.length; box.setAttribute('data-tema', TEMAS[tema]);
-      legenda(T('Tema ' + NOMES_TEMA[TEMAS[tema]] + '. O Nexora tem 31, e 27 deles têm fundo animado que reage ao mouse.', NOMES_TEMA[TEMAS[tema]] + ' theme. Nexora has 31, and 27 of them have an animated background that reacts to the mouse.'));
+      legenda(T('Tema ' + NOMES_TEMA[TEMAS[tema]] + '. O Nexora tem 12, incluindo os animados, e você ainda pode criar o seu.', NOMES_TEMA[TEMAS[tema]] + ' theme. Nexora has 12, animated ones included, and you can make your own.'));
       return;
     }
     else return;
